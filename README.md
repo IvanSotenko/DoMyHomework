@@ -1,6 +1,6 @@
 # shapito
 
-[Enter useful description for shapito]
+### Vanya Sotenko does his homework and stuff here
 
 ---
 
