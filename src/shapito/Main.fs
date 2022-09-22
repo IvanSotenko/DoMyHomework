@@ -26,7 +26,7 @@ module AssemblyInfo =
         |> getMetaDataAttribute assembly
         |> metaDataValue
 
-    let assembly = lazy (Assembly.GetEntryAssembly())
+    let assembly = lazy Assembly.GetEntryAssembly()
 
     let printVersion () =
         let version = assembly.Force().GetName().Version
@@ -54,7 +54,9 @@ module Say =
         Console.ForegroundColor <- oldColor
 
 module First_hw =
-    let silly_pow num power =
+
+    // (1) Функция, которая умет возводить число в цилую степень
+    let silly_pow (bas: int) (power: int) =
 
         let pow num power =
 
@@ -68,23 +70,56 @@ module First_hw =
             output
 
         if power > 0 then
-            float (pow num power)
+            float (pow bas power)
 
         elif power < 0 then
-            float 1f / float (pow num (-power))
+            float 1f / float (pow bas (-power))
 
         else
             float(1)
 
-// Самая простая функция возведения в степень, принимает только натуральные показатели степени и ноль
+    // (1) Самая простая функция возведения в степень, принимает только натуральные показатели степени и ноль
     let rec silly_pow_rec (bas: int) (power: int) =
 
         if power = 0
         then 1
+
         elif power = 1
         then bas
+
         else
             bas * silly_pow_rec bas (power - 1)
+
+    // (2) Быстрое возведение в степень
+    let fast_pow (bas: float) (power: float) = bas**power
+
+    // (3) Разность между наибольшим и наименьшим элементом массива
+    let delta (arr: int array) =
+        let mutable min = arr[0]
+        let mutable max = arr[0]
+
+        for element in arr do
+            if element > max then
+                max <- element
+            elif element < min then
+                min <- element
+
+        max - min
+
+    // (4) Функция, которая возвращает массив нечётных чисел, лежащих строго между двумя входными числами
+    let odd_numbers_between (num1: int) (num2: int) =
+
+        let (right_edge: int) =
+            match (max num1 num2) % 2 with
+            | 0 -> (max num1 num2) - 1
+            | 1 -> (max num1 num2) - 2
+
+        let (left_edge: int) =
+            match (min num1 num2) % 2 with
+            | 0 -> (min num1 num2) + 1
+            | 1 -> (min num1 num2) + 2
+
+        [| for i in left_edge .. 2 .. right_edge -> i |]
 
 module Main =
     open Argu
@@ -120,6 +155,9 @@ module Main =
         else
             parser.PrintUsage() |> printfn "%s"
 
-        printfn $"res: %A{First_hw.silly_pow 2 -3}"
+        printfn $"silly_power: %A{First_hw.silly_pow 3 -4}"
+        printfn $"fast_power: %A{First_hw.fast_pow 2.5 3}"
+        printfn $"delta: %A{First_hw.delta [|1; 2; 3|]}"
+        printfn $"odd_numbers_between: %A{First_hw.odd_numbers_between 29 1}"
 
         0
