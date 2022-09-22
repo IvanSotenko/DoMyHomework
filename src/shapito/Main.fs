@@ -54,24 +54,37 @@ module Say =
         Console.ForegroundColor <- oldColor
 
 module First_hw =
-    let raise_to_silly_power num power =
+    let silly_pow num power =
 
-        let mutable output_num = 1
-        let mutable mut_power = power
+        let pow num power =
 
-        while (mut_power > 0) do
-            output_num <- output_num * num
-            mut_power <- mut_power - 1
+            let mutable output = 1
+            let mutable mut_power = power
 
-        output_num
+            while (mut_power > 0) do
+                output <- output * num
+                mut_power <- mut_power - 1
 
-    let rec raise_to_silly_power_rec (num, static_num, power) =
-        if power = 0 && num = static_num
-        then 1
+            output
+
+        if power > 0 then
+            float (pow num power)
+
+        elif power < 0 then
+            float 1f / float (pow num (-power))
+
         else
-            if power = 0
-            then num
-            else raise_to_silly_power_rec (num*static_num, static_num, power - 1)
+            float(1)
+
+// Самая простая функция возведения в степень, принимает только натуральные показатели степени и ноль
+    let rec silly_pow_rec (bas: int) (power: int) =
+
+        if power = 0
+        then 1
+        elif power = 1
+        then bas
+        else
+            bas * silly_pow_rec bas (power - 1)
 
 module Main =
     open Argu
@@ -107,6 +120,6 @@ module Main =
         else
             parser.PrintUsage() |> printfn "%s"
 
-        printfn $"res: %A{First_hw.raise_to_silly_power_rec (3, 3, 0)}"
+        printfn $"res: %A{First_hw.silly_pow 2 -3}"
 
         0
