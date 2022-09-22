@@ -53,6 +53,26 @@ module Say =
         printfn "%s" str
         Console.ForegroundColor <- oldColor
 
+module First_hw =
+    let raise_to_silly_power num power =
+
+        let mutable output_num = 1
+        let mutable mut_power = power
+
+        while (mut_power > 0) do
+            output_num <- output_num * num
+            mut_power <- mut_power - 1
+
+        output_num
+
+    let rec raise_to_silly_power_rec (num, static_num, power) =
+        if power = 0 && num = static_num
+        then 1
+        else
+            if power = 0
+            then num
+            else raise_to_silly_power_rec (num*static_num, static_num, power - 1)
+
 module Main =
     open Argu
 
@@ -86,5 +106,7 @@ module Main =
             | None -> parser.PrintUsage() |> printfn "%s"
         else
             parser.PrintUsage() |> printfn "%s"
+
+        printfn $"res: %A{First_hw.raise_to_silly_power_rec (3, 3, 0)}"
 
         0
