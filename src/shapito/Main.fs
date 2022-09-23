@@ -30,6 +30,7 @@ module AssemblyInfo =
 
     let printVersion () =
         let version = assembly.Force().GetName().Version
+
         printfn "%A" version
 
     let printInfo () =
@@ -76,22 +77,22 @@ module FirstHw =
             float 1f / float (pow bas (-power))
 
         else
-            float(1)
+            float (1)
 
     // (1) Самая простая функция возведения в степень, принимает только натуральные показатели степени и ноль
     let rec silly_pow_rec (bas: int) (power: int) =
 
-        if power = 0
-        then 1
+        if power = 0 then
+            1
 
-        elif power = 1
-        then bas
+        elif power = 1 then
+            bas
 
         else
             bas * silly_pow_rec bas (power - 1)
 
     // (2) Быстрое возведение в степень
-    let fast_pow (bas: float) (power: float) = bas**power
+    let fast_pow (bas: float) (power: float) = bas ** power
 
     // (3) Разность между наибольшим и наименьшим элементом массива
     let delta (arr: int array) =
@@ -99,10 +100,8 @@ module FirstHw =
         let mutable max = arr[0]
 
         for element in arr do
-            if element > max then
-                max <- element
-            elif element < min then
-                min <- element
+            if element > max then max <- element
+            elif element < min then min <- element
 
         max - min
 
@@ -113,13 +112,19 @@ module FirstHw =
             match abs (max num1 num2) % 2 with
             | 0 -> (max num1 num2) - 1
             | 1 -> (max num1 num2) - 2
+            | _ -> failwith "Как ты вообще сюда попал???"
 
         let (left_edge: int) =
             match abs (min num1 num2) % 2 with
             | 0 -> (min num1 num2) + 1
             | 1 -> (min num1 num2) + 2
+            | _ -> failwith "Как ты вообще сюда попал???"
 
-        [| for i in left_edge .. 2 .. right_edge -> i |]
+        // Можно было и так:
+        // let (left_edge: int) = if abs (min num1 num2) % 2 = 0 then (min num1 num2) + 1 else (min num1 num2) + 2
+        // let (right_edge: int) = if abs (min num1 num2) % 2 = 0 then (max num1 num2) - 1 else (max num1 num2) - 2
+
+        [| for i in left_edge..2..right_edge -> i |]
 
 module Main =
     open Argu
@@ -140,6 +145,7 @@ module Main =
     [<EntryPoint>]
     let main (argv: string array) =
         let parser = ArgumentParser.Create<CLIArguments>(programName = "shapito")
+
         let results = parser.Parse(argv)
 
         if results.Contains Version then
@@ -154,10 +160,5 @@ module Main =
             | None -> parser.PrintUsage() |> printfn "%s"
         else
             parser.PrintUsage() |> printfn "%s"
-
-        printfn $"silly_power: %A{FirstHw.silly_pow 674 5}"
-        printfn $"fast_power: %A{FirstHw.fast_pow 674 5}"
-        printfn $"delta: %A{FirstHw.delta [|1; 2; 3|]}"
-        printfn $"odd_numbers_between: %A{FirstHw.odd_numbers_between -67 165}"
 
         0
