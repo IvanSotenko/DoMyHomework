@@ -53,7 +53,7 @@ module Say =
         printfn "%s" str
         Console.ForegroundColor <- oldColor
 
-module First_hw =
+module FirstHw =
 
     // (1) Функция, которая умет возводить число в цилую степень
     let silly_pow (bas: int) (power: int) =
@@ -110,12 +110,12 @@ module First_hw =
     let odd_numbers_between (num1: int) (num2: int) =
 
         let (right_edge: int) =
-            match (max num1 num2) % 2 with
+            match abs (max num1 num2) % 2 with
             | 0 -> (max num1 num2) - 1
             | 1 -> (max num1 num2) - 2
 
         let (left_edge: int) =
-            match (min num1 num2) % 2 with
+            match abs (min num1 num2) % 2 with
             | 0 -> (min num1 num2) + 1
             | 1 -> (min num1 num2) + 2
 
@@ -155,9 +155,9 @@ module Main =
         else
             parser.PrintUsage() |> printfn "%s"
 
-        printfn $"silly_power: %A{First_hw.silly_pow 3 -4}"
-        printfn $"fast_power: %A{First_hw.fast_pow 2.5 3}"
-        printfn $"delta: %A{First_hw.delta [|1; 2; 3|]}"
-        printfn $"odd_numbers_between: %A{First_hw.odd_numbers_between 29 1}"
+        printfn $"silly_power: %A{FirstHw.silly_pow 674 5}"
+        printfn $"fast_power: %A{FirstHw.fast_pow 674 5}"
+        printfn $"delta: %A{FirstHw.delta [|1; 2; 3|]}"
+        printfn $"odd_numbers_between: %A{FirstHw.odd_numbers_between -67 165}"
 
         0
