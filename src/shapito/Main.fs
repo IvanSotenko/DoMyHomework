@@ -82,18 +82,18 @@ module FirstHw =
     // (1) Exponentiation to natural and zero power in a simple way by recursion
     let rec silly_pow_rec (bas: int) (power: int) =
 
-        if power = 0 then
-            1
-        elif power = 1 then
-            bas
-        else
-            bas * silly_pow_rec bas (power - 1)
+        if power = 0 then 1
+        elif power = 1 then bas
+        else bas * silly_pow_rec bas (power - 1)
 
     // (2) Fast power
     let rec fast_pow (bas: uint) (power: uint) =
-        if power = 0u then 1u
-        elif power % 2u = 0u then fast_pow (bas*bas) (power / 2u)
-        else bas * fast_pow bas (power - 1u)
+        if power = 0u then
+            1u
+        elif power % 2u = 0u then
+            fast_pow (bas * bas) (power / 2u)
+        else
+            bas * fast_pow bas (power - 1u)
 
     // (3) The difference between the largest and smallest element of the array
     let delta (arr: int array) =
