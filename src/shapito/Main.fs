@@ -56,7 +56,7 @@ module Say =
 
 module FirstHw =
 
-    // (1) Функция, которая умет возводить число в цилую степень
+    // (1) Exponentiation of ints to int power in a simple way
     let silly_pow (bas: int) (power: int) =
 
         let pow num power =
@@ -74,27 +74,28 @@ module FirstHw =
             float (pow bas power)
 
         elif power < 0 then
-            float 1f / float (pow bas (-power))
+            float 1 / float (pow bas (-power))
 
         else
-            float (1)
+            float 1
 
-    // (1) Самая простая функция возведения в степень, принимает только натуральные показатели степени и ноль
+    // (1) Exponentiation to natural and zero power in a simple way by recursion
     let rec silly_pow_rec (bas: int) (power: int) =
 
         if power = 0 then
             1
-
         elif power = 1 then
             bas
-
         else
             bas * silly_pow_rec bas (power - 1)
 
-    // (2) Быстрое возведение в степень
-    let fast_pow (bas: float) (power: float) = bas ** power
+    // (2) Fast power
+    let rec fast_pow (bas: uint) (power: uint) =
+        if power = 0u then 1u
+        elif power % 2u = 0u then fast_pow (bas*bas) (power / 2u)
+        else bas * fast_pow bas (power - 1u)
 
-    // (3) Разность между наибольшим и наименьшим элементом массива
+    // (3) The difference between the largest and smallest element of the array
     let delta (arr: int array) =
         let mutable min = arr[0]
         let mutable max = arr[0]
@@ -105,22 +106,22 @@ module FirstHw =
 
         max - min
 
-    // (4) Функция, которая возвращает массив нечётных чисел, лежащих строго между двумя входными числами
+    // (4) An array of odd numbers
     let odd_numbers_between (num1: int) (num2: int) =
 
         let (right_edge: int) =
             match abs (max num1 num2) % 2 with
             | 0 -> (max num1 num2) - 1
             | 1 -> (max num1 num2) - 2
-            | _ -> failwith "Как ты вообще сюда попал???"
+            | _ -> failwith "How? -_-"
 
         let (left_edge: int) =
             match abs (min num1 num2) % 2 with
             | 0 -> (min num1 num2) + 1
             | 1 -> (min num1 num2) + 2
-            | _ -> failwith "Как ты вообще сюда попал???"
+            | _ -> failwith "How? -_-"
 
-        // Можно было и так:
+        // Could do it like this:
         // let (left_edge: int) = if abs (min num1 num2) % 2 = 0 then (min num1 num2) + 1 else (min num1 num2) + 2
         // let (right_edge: int) = if abs (min num1 num2) % 2 = 0 then (max num1 num2) - 1 else (max num1 num2) - 2
 

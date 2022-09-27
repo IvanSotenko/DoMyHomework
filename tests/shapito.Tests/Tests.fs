@@ -130,9 +130,9 @@ module FirstHwTests =
 
                   // Тесты для (2), быстрого возведения в степень
 
-                  let input1 = 2
-                  let input2 = 1
-                  let expected_result = 2
+                  let input1 = 3u
+                  let input2 = 8u
+                  let expected_result = 6561u
 
                   let actualResult = FirstHw.fast_pow input1 input2
 
@@ -141,9 +141,9 @@ module FirstHwTests =
                       expected_result
                       (sprintf "%A to the %A power should equal %A" input1 input2 expected_result)
 
-                  let input1 = 0.1
-                  let input2 = 0.3
-                  let expected_result = 0.5011872336272724
+                  let input1 = 44u
+                  let input2 = 1u
+                  let expected_result = 44u
 
                   let actualResult = FirstHw.fast_pow input1 input2
 
@@ -152,9 +152,9 @@ module FirstHwTests =
                       expected_result
                       (sprintf "%A to the %A power should equal %A" input1 input2 expected_result)
 
-                  let input1 = 1.43
-                  let input2 = 5
-                  let expected_result = 5.979710894299998
+                  let input1 = 34534u
+                  let input2 = 0u
+                  let expected_result = 1u
 
                   let actualResult = FirstHw.fast_pow input1 input2
 
@@ -163,20 +163,9 @@ module FirstHwTests =
                       expected_result
                       (sprintf "%A to the %A power should equal %A" input1 input2 expected_result)
 
-                  let input1 = 7
-                  let input2 = 0.6
-                  let expected_result = 3.2140958497160383
-
-                  let actualResult = FirstHw.fast_pow input1 input2
-
-                  Expect.equal
-                      actualResult
-                      expected_result
-                      (sprintf "%A to the %A power should equal %A" input1 input2 expected_result)
-
-                  let input1 = 7
-                  let input2 = 4
-                  let expected_result = 2401
+                  let input1 = 89u
+                  let input2 = 4u
+                  let expected_result = 62742241u
 
                   let actualResult = FirstHw.fast_pow input1 input2
 
