@@ -97,14 +97,17 @@ module FirstHw =
 
     // (3) The difference between the largest and smallest element of the array
     let delta (arr: int array) =
-        let mutable min = arr[0]
-        let mutable max = arr[0]
+        if arr = [||] then
+            0
+        else
+            let mutable min = arr[0]
+            let mutable max = arr[0]
 
-        for element in arr do
-            if element > max then max <- element
-            elif element < min then min <- element
+            for element in arr do
+                if element > max then max <- element
+                elif element < min then min <- element
 
-        max - min
+            max - min
 
     // (4) An array of odd numbers
     let odd_numbers_between (num1: int) (num2: int) =

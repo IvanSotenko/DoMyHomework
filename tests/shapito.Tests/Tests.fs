@@ -206,6 +206,11 @@ module FirstHwTests =
                   let actualResult = FirstHw.delta input
                   Expect.equal actualResult expected_result (sprintf "Wrong result for %A" input)
 
+                  let input = [||]
+                  let expected_result = 0
+                  let actualResult = FirstHw.delta input
+                  Expect.equal actualResult expected_result (sprintf "Wrong result for %A" input)
+
               testCase "Odd numbers between"
               <| fun _ ->
 
