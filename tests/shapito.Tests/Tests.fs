@@ -25,9 +25,9 @@ module FirstHwTests =
             [ testCase "Exponential functions"
               <| fun _ ->
 
-                  // Тесты для (1), наивные степени
+                  // Tests for (1) silly_pow
 
-                  let input1 = 2
+                  let input1 = 2.
                   let input2 = 1
                   let expected_result = 2
 
@@ -38,7 +38,7 @@ module FirstHwTests =
                       expected_result
                       (sprintf "%A to the %A power should equal %A" input1 input2 expected_result)
 
-                  let input1 = 14
+                  let input1 = 14.
                   let input2 = -3
                   let expected_result = 0.00036443148688046647
 
@@ -49,7 +49,7 @@ module FirstHwTests =
                       expected_result
                       (sprintf "%A to the %A power should equal %A" input1 input2 expected_result)
 
-                  let input1 = 3
+                  let input1 = 3.
                   let input2 = -5
                   let expected_result = 0.00411522633744856
 
@@ -62,7 +62,7 @@ module FirstHwTests =
 
                   let input1 = 674
                   let input2 = 3
-                  let expected_result = 306182024
+                  let expected_result = 306182024.
 
                   let actualResult = FirstHw.silly_pow input1 input2
 
@@ -71,9 +71,9 @@ module FirstHwTests =
                       expected_result
                       (sprintf "%A to the %A power should equal %A" input1 input2 expected_result)
 
-                  let input1 = 3242
+                  let input1 = 3242.
                   let input2 = 0
-                  let expected_result = 1
+                  let expected_result = 1.
 
                   let actualResult = FirstHw.silly_pow input1 input2
 
@@ -82,44 +82,34 @@ module FirstHwTests =
                       expected_result
                       (sprintf "%A to the %A power should equal %A" input1 input2 expected_result)
 
-                  // Тесты для рекурсии silly_pow_rec
-
-                  let input1 = 3
-                  let input2 = 8
-                  let expected_result = 6561
-
-                  let actualResult = FirstHw.silly_pow_rec input1 input2
-
-                  Expect.equal
-                      actualResult
-                      expected_result
-                      (sprintf "%A to the %A power should equal %A" input1 input2 expected_result)
-
-                  let input1 = 44
-                  let input2 = 1
-                  let expected_result = 44
-
-                  let actualResult = FirstHw.silly_pow_rec input1 input2
-
-                  Expect.equal
-                      actualResult
-                      expected_result
-                      (sprintf "%A to the %A power should equal %A" input1 input2 expected_result)
-
-                  let input1 = 34534
-                  let input2 = 0
-                  let expected_result = 1
-
-                  let actualResult = FirstHw.silly_pow_rec input1 input2
-
-                  Expect.equal
-                      actualResult
-                      expected_result
-                      (sprintf "%A to the %A power should equal %A" input1 input2 expected_result)
-
-                  let input1 = 89
+                  let input1 = 0.22
                   let input2 = 4
-                  let expected_result = 62742241
+                  let expected_result = 0.00234256
+
+                  let actualResult = FirstHw.silly_pow input1 input2
+
+                  Expect.equal
+                      actualResult
+                      expected_result
+                      (sprintf "%A to the %A power should equal %A" input1 input2 expected_result)
+
+                  let input1 = 0.46
+                  let input2 = -3
+                  let expected_result = 0.46 ** -3
+                  // let expected_result = FirstHw.silly_pow input1 input2
+
+                  let actualResult = FirstHw.silly_pow input1 input2
+
+                  Expect.equal
+                      actualResult
+                      expected_result
+                      (sprintf "%A to the %A power should equal %A" input1 input2 expected_result)
+
+                  // Tests for silly_pow_rec
+
+                  let input1 = 3.
+                  let input2 = 8u
+                  let expected_result = 6561.
 
                   let actualResult = FirstHw.silly_pow_rec input1 input2
 
@@ -128,33 +118,66 @@ module FirstHwTests =
                       expected_result
                       (sprintf "%A to the %A power should equal %A" input1 input2 expected_result)
 
-                  // Тесты для (2), быстрого возведения в степень
-
-                  let input1 = 3u
-                  let input2 = 8u
-                  let expected_result = 6561u
-
-                  let actualResult = FirstHw.fast_pow input1 input2
-
-                  Expect.equal
-                      actualResult
-                      expected_result
-                      (sprintf "%A to the %A power should equal %A" input1 input2 expected_result)
-
-                  let input1 = 44u
+                  let input1 = 44.
                   let input2 = 1u
-                  let expected_result = 44u
+                  let expected_result = 44.
 
-                  let actualResult = FirstHw.fast_pow input1 input2
+                  let actualResult = FirstHw.silly_pow_rec input1 input2
 
                   Expect.equal
                       actualResult
                       expected_result
                       (sprintf "%A to the %A power should equal %A" input1 input2 expected_result)
 
-                  let input1 = 34534u
+                  let input1 = 34534.
                   let input2 = 0u
-                  let expected_result = 1u
+                  let expected_result = 1.
+
+                  let actualResult = FirstHw.silly_pow_rec input1 input2
+
+                  Expect.equal
+                      actualResult
+                      expected_result
+                      (sprintf "%A to the %A power should equal %A" input1 input2 expected_result)
+
+                  let input1 = 89.
+                  let input2 = 4u
+                  let expected_result = 62742241.
+
+                  let actualResult = FirstHw.silly_pow_rec input1 input2
+
+                  Expect.equal
+                      actualResult
+                      expected_result
+                      (sprintf "%A to the %A power should equal %A" input1 input2 expected_result)
+
+                  let input1 = 54.84
+                  let input2 = 4u
+                  let expected_result = 9044608.739535362
+
+                  let actualResult = FirstHw.silly_pow_rec input1 input2
+
+                  Expect.equal
+                      actualResult
+                      expected_result
+                      (sprintf "%A to the %A power should equal %A" input1 input2 expected_result)
+
+                  let input1 = 0.39
+                  let input2 = 5u
+                  let expected_result = 0.0090224199
+
+                  let actualResult = FirstHw.silly_pow_rec input1 input2
+
+                  Expect.equal
+                      actualResult
+                      expected_result
+                      (sprintf "%A to the %A power should equal %A" input1 input2 expected_result)
+
+                  // Tests for (2) fast_power
+
+                  let input1 = 3.
+                  let input2 = 8u
+                  let expected_result = 6561.
 
                   let actualResult = FirstHw.fast_pow input1 input2
 
@@ -163,9 +186,53 @@ module FirstHwTests =
                       expected_result
                       (sprintf "%A to the %A power should equal %A" input1 input2 expected_result)
 
-                  let input1 = 89u
+                  let input1 = 44.
+                  let input2 = 1u
+                  let expected_result = 44.
+
+                  let actualResult = FirstHw.fast_pow input1 input2
+
+                  Expect.equal
+                      actualResult
+                      expected_result
+                      (sprintf "%A to the %A power should equal %A" input1 input2 expected_result)
+
+                  let input1 = 34534.
+                  let input2 = 0u
+                  let expected_result = 1.
+
+                  let actualResult = FirstHw.fast_pow input1 input2
+
+                  Expect.equal
+                      actualResult
+                      expected_result
+                      (sprintf "%A to the %A power should equal %A" input1 input2 expected_result)
+
+                  let input1 = 89.
                   let input2 = 4u
-                  let expected_result = 62742241u
+                  let expected_result = 62742241.
+
+                  let actualResult = FirstHw.fast_pow input1 input2
+
+                  Expect.equal
+                      actualResult
+                      expected_result
+                      (sprintf "%A to the %A power should equal %A" input1 input2 expected_result)
+
+                  let input1 = 5.83
+                  let input2 = 4u
+                  let expected_result = 5.83 ** 4
+
+                  let actualResult = FirstHw.fast_pow input1 input2
+
+                  Expect.equal
+                      actualResult
+                      expected_result
+                      (sprintf "%A to the %A power should equal %A" input1 input2 expected_result)
+
+                  let input1 = 0.39
+                  let input2 = 3u
+                  let expected_result = 0.39 ** 3
 
                   let actualResult = FirstHw.fast_pow input1 input2
 
@@ -178,7 +245,7 @@ module FirstHwTests =
               testCase "Delta between min and max"
               <| fun _ ->
 
-                  // Тесты для (3) функции, находящей разницу между минимальным и максимальным элементом массива
+                  // Tests for function for the difference between the largest and smallest element of the array
 
                   let input = [| 1; 2; 3; 4; 5 |]
                   let expected_result = 4
@@ -207,15 +274,14 @@ module FirstHwTests =
                   Expect.equal actualResult expected_result (sprintf "Wrong result for %A" input)
 
                   let input = [||]
-                  let expected_result = 0
-                  let actualResult = FirstHw.delta input
-                  Expect.equal actualResult expected_result (sprintf "Wrong result for %A" input)
+                  let expected_error = "Empty array"
+                  Expect.throws (fun _ -> FirstHw.delta input |> ignore) expected_error
 
               testCase "Odd numbers between"
               <| fun _ ->
 
-                  // Тесты для (4), функции генерерирующей массив нечётных чисел,
-                  // находящихся строго между входными значениями
+                  // Tests for (4), function, that generate array of odd numbers
+                  // between the two input values
 
                   let input1 = 1
                   let input2 = 1
@@ -256,6 +322,15 @@ module FirstHwTests =
                          -39
                          -37
                          -35 |]
+
+                  let actualResult = FirstHw.odd_numbers_between input1 input2
+
+                  Expect.equal actualResult expected_result (sprintf "Wrong result for %A and %A" input1 input2)
+
+                  let input1 = 5
+                  let input2 = 4
+
+                  let expected_result = [||]
 
                   let actualResult = FirstHw.odd_numbers_between input1 input2
 
