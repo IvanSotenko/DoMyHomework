@@ -10,9 +10,9 @@ module SayTests =
             "samples"
             [ testCase "Say nothing"
               <| fun _ ->
-                  let subject = Say.nothing ()
+                  let subject = Say.Say.nothing ()
                   Expect.equal subject () "Not an absolute unit"
               testCase "Say hello all"
               <| fun _ ->
-                  let subject = Say.hello "all"
+                  let subject = Say.Say.hello "all"
                   Expect.equal subject "Hello all" "You didn't say hello" ]
