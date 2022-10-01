@@ -1,3 +1,3 @@
 namespace shapito
 module Main =
-    printf "Hello"
+    printf "Hello :)"
