@@ -3,32 +3,32 @@
 type IList<'value> = interface end
 
 //[<AllowNullLiteral>]
-type MyOOPNonEmptyList<'value> (head: 'value, tail: IList<'value>) =
+type NonEmptyList<'value> (head: 'value, tail: IList<'value>) =
     interface IList<'value>
     member this.Head = head
     member this.Tail = tail
 
-type MyOOPEmptyList<'value>() =
+type EmptyList<'value>() =
     interface IList<'value>
 
 type IActor<'inType, 'outType> =
     abstract Do: 'inType -> 'outType
 
 let rec oopMap (f:IActor<'value,'result>) (lst:IList<'value>) =
-    if lst :? MyOOPEmptyList<'value>
-    then MyOOPEmptyList() :> IList<'result>
-    elif lst :? MyOOPNonEmptyList<'value>
+    if lst :? EmptyList<'value>
+    then EmptyList() :> IList<'result>
+    elif lst :? NonEmptyList<'value>
     then
-        let lst = lst :?> MyOOPNonEmptyList<'value>
-        MyOOPNonEmptyList(f.Do lst.Head, oopMap f lst.Tail)
+        let lst = lst :?> NonEmptyList<'value>
+        NonEmptyList(f.Do lst.Head, oopMap f lst.Tail)
     else failwith "!!!"
 
 let rec oopMap2 (f:IActor<'value,'result>) (lst:IList<'value>) =
     match lst with
-    | :? MyOOPEmptyList<'value> ->
-        MyOOPEmptyList () :> IList<'result>
-    | :? MyOOPNonEmptyList<'value> as lst ->
-        MyOOPNonEmptyList(f.Do lst.Head, oopMap f lst.Tail)
+    | :? EmptyList<'value> ->
+        EmptyList () :> IList<'result>
+    | :? NonEmptyList<'value> as lst ->
+        NonEmptyList(f.Do lst.Head, oopMap f lst.Tail)
 
 
 type PlusOneActor () =
@@ -40,9 +40,9 @@ type MinusOneActor () =
         member this.Do x = x - 1
 
 let _go2() =
-    let lst = MyOOPNonEmptyList(1,MyOOPNonEmptyList(3,MyOOPEmptyList()))
+    let lst = NonEmptyList(1,NonEmptyList(3,EmptyList()))
     oopMap (PlusOneActor()) lst
 
 let go2() =
-    let lst = MyOOPNonEmptyList(1,MyOOPNonEmptyList(3,MyOOPEmptyList()))
+    let lst = NonEmptyList(1,NonEmptyList(3,EmptyList()))
     oopMap (MinusOneActor()) lst
