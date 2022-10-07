@@ -46,12 +46,17 @@ let go2() =
     let lst = NonEmptyList(1,NonEmptyList(3,EmptyList()))
     oopMap (MinusOneActor()) lst
 
+
+/// That function insert second list to the tail of first.
+/// So it concatenates them
 let rec concatenation (list1:IList<'value>) (list2:IList<'value>) =
     match list1 with
     | :? EmptyList<'value> -> list2
     | :? NonEmptyList<'value> as lst ->
         NonEmptyList( lst.Head, concatenation list2 lst.Tail)
     | _ -> failwith "fail in OOPList concatenation"
+
+
 
 let getHead (lst: IList<'value>) =
     match lst with
@@ -63,6 +68,10 @@ let getTail (lst: IList<'value>) =
     | :? NonEmptyList<'value> as list -> list.Tail
     | _ -> failwith "{working on...}"
 
+
+
+/// This function takes a MyOOPlist and sorts it using bubblesort,
+/// works the same way as a similar function for MyList
 let rec bubbleSort (list: IList<'value>) =
 
     /// This function swap the next two elements if
@@ -80,12 +89,14 @@ let rec bubbleSort (list: IList<'value>) =
                 NonEmptyList(list.Head, EmptyList())
         | _ -> failwith "{working on...}"
 
+    /// This function passes through all elements and applies swap to all on the way
     let rec passage (lst: IList<'value>) =
         match lst with
         | :? EmptyList<'value> -> EmptyList () :> IList<'value>
         | :? NonEmptyList<'value> as list -> swap (NonEmptyList (list.Head, (passage list.Tail)))
         | _ -> failwith "{working on...}"
 
+    /// This function checks if list is sorted
     let rec isSorted (lst: IList<'value>) =
         match lst with
         | :? EmptyList<'value> -> true
@@ -99,6 +110,7 @@ let rec bubbleSort (list: IList<'value>) =
                 true
         | _ -> failwith "{working on...}"
 
+    // The cycle happens here
     if isSorted list then
         list
     else

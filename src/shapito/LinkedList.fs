@@ -60,11 +60,13 @@ let rec bubbleSort (list: MyList<'value>) =
     else
         bubbleSort (passage list)
 
+
 // Converting Mylist to array
 let rec MylistToArr arr (list: MyList<'value>) =
     match list with
     | Cons (head, tail) -> MylistToArr (Array.append arr [|head|]) tail
     | Empty -> arr
+
 
 // Converting array to Mylist
 let rec arrToMyList (i: int) (arr: int array) =
@@ -73,6 +75,8 @@ let rec arrToMyList (i: int) (arr: int array) =
         Cons (arr.[i], (arrToMyList (i + 1) arr))
     else
         Empty
+
+
 
 // This function takes a Mylist and sorts it using quicksort
 let rec quickSort list =
