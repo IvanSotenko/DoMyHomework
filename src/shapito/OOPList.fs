@@ -46,3 +46,10 @@ let _go2() =
 let go2() =
     let lst = NonEmptyList(1,NonEmptyList(3,EmptyList()))
     oopMap (MinusOneActor()) lst
+
+let rec concatenation (list1:IList<'value>) (list2:IList<'value>) =
+    match list1 with
+    | :? EmptyList<'value> -> list2
+    | :? NonEmptyList<'value> as lst ->
+        lst.Tail
+    | _ -> failwith "fail in OOPList concatenation"
