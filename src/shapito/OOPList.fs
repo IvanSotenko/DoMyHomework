@@ -53,17 +53,6 @@ let rec concatenation (list1:IList<'value>) (list2:IList<'value>) =
         NonEmptyList( lst.Head, concatenation list2 lst.Tail)
     | _ -> failwith "fail in OOPList concatenation"
 
-// let bubbleSort (list: IList<'value>) =
-
-    // let  swap  = function
-    //     | Cons (head1, Cons (head2, tail)) ->
-    //         if head1 > head2 then
-    //             Cons (head2, Cons (head1, tail))
-    //         else
-    //             Cons (head1, Cons (head2, tail))
-    //     | Cons (head1, Empty) -> Cons (head1, Empty)
-    //     | Empty -> Empty
-
 let getHead (lst: IList<'value>) =
     match lst with
     | :? NonEmptyList<'value> as list -> list.Head
@@ -74,36 +63,43 @@ let getTail (lst: IList<'value>) =
     | :? NonEmptyList<'value> as list -> list.Tail
     | _ -> failwith "{working on...}"
 
+let rec bubbleSort (list: IList<'value>) =
+
     /// This function swap the next two elements if
     /// the first element is greater than second
-let swap (lst: IList<'value>) =
-    match lst with
-    | :? EmptyList<'value> -> EmptyList() :> IList<'value>
-    | :? NonEmptyList<'value> as list ->
-        if list.Tail :? NonEmptyList<'value> then
-            if list.Head > getHead list.Tail then
-                NonEmptyList(getHead list.Tail, NonEmptyList(list.Head, getTail list.Tail))
+    let swap (lst: IList<'value>) =
+        match lst with
+        | :? EmptyList<'value> -> EmptyList() :> IList<'value>
+        | :? NonEmptyList<'value> as list ->
+            if list.Tail :? NonEmptyList<'value> then
+                if list.Head > getHead list.Tail then
+                    NonEmptyList(getHead list.Tail, NonEmptyList(list.Head, getTail list.Tail))
+                else
+                    NonEmptyList(list.Head, list.Tail)
             else
-                NonEmptyList(list.Head, list.Tail)
-        else
-            NonEmptyList(list.Head, EmptyList())
-    | _ -> failwith "{working on...}"
+                NonEmptyList(list.Head, EmptyList())
+        | _ -> failwith "{working on...}"
 
-let rec passage (lst: IList<'value>) =
-    match lst with
-    | :? EmptyList<'value> -> EmptyList () :> IList<'value>
-    | :? NonEmptyList<'value> as list -> swap (NonEmptyList (list.Head, (passage list.Tail)))
-    | _ -> failwith "{working on...}"
+    let rec passage (lst: IList<'value>) =
+        match lst with
+        | :? EmptyList<'value> -> EmptyList () :> IList<'value>
+        | :? NonEmptyList<'value> as list -> swap (NonEmptyList (list.Head, (passage list.Tail)))
+        | _ -> failwith "{working on...}"
 
-let rec isSorted (lst: IList<'value>) =
-    match lst with
-    | :? EmptyList<'value> -> true
-    | :? NonEmptyList<'value> as list ->
-        if list.Tail :? NonEmptyList<'value> then
-            if list.Head <= getHead list.Tail then
-                isSorted list.Tail
+    let rec isSorted (lst: IList<'value>) =
+        match lst with
+        | :? EmptyList<'value> -> true
+        | :? NonEmptyList<'value> as list ->
+            if list.Tail :? NonEmptyList<'value> then
+                if list.Head <= getHead list.Tail then
+                    isSorted list.Tail
+                else
+                    false
             else
-                false
-        else
-            true
-    | _ -> failwith "{working on...}"
+                true
+        | _ -> failwith "{working on...}"
+
+    if isSorted list then
+        list
+    else
+        bubbleSort (passage list)
