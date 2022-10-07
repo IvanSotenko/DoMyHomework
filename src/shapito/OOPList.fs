@@ -51,5 +51,5 @@ let rec concatenation (list1:IList<'value>) (list2:IList<'value>) =
     match list1 with
     | :? EmptyList<'value> -> list2
     | :? NonEmptyList<'value> as lst ->
-        lst.Tail
+        NonEmptyList( lst.Head, concatenation list2 lst.Tail)
     | _ -> failwith "fail in OOPList concatenation"
