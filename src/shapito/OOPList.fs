@@ -94,3 +94,16 @@ let rec passage (lst: IList<'value>) =
     | :? EmptyList<'value> -> EmptyList () :> IList<'value>
     | :? NonEmptyList<'value> as list -> swap (NonEmptyList (list.Head, (passage list.Tail)))
     | _ -> failwith "{working on...}"
+
+let rec isSorted (lst: IList<'value>) =
+    match lst with
+    | :? EmptyList<'value> -> true
+    | :? NonEmptyList<'value> as list ->
+        if list.Tail :? NonEmptyList<'value> then
+            if list.Head <= getHead list.Tail then
+                isSorted list.Tail
+            else
+                false
+        else
+            true
+    | _ -> failwith "{working on...}"
