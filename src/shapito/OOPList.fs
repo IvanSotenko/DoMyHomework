@@ -88,3 +88,9 @@ let swap (lst: IList<'value>) =
         else
             NonEmptyList(list.Head, EmptyList())
     | _ -> failwith "{working on...}"
+
+let rec passage (lst: IList<'value>) =
+    match lst with
+    | :? EmptyList<'value> -> EmptyList () :> IList<'value>
+    | :? NonEmptyList<'value> as list -> swap (NonEmptyList (list.Head, (passage list.Tail)))
+    | _ -> failwith "{working on...}"
