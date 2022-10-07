@@ -1,4 +1,6 @@
 namespace shapito
 
 module Main =
-    printf "Hello :)"
+    [<EntryPoint>]
+    let main argv =
+        0
