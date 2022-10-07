@@ -26,7 +26,7 @@ let rec concatenation (list1: MyList<'value>) (list2: MyList<'value>) =
 /// This function takes a Mylist and sorts it using bubblesort
 let rec bubbleSort (list: MyList<'value>) =
 
-    /// That function swap the next two elements if
+    /// This function swap the next two elements if
     /// the first element is greater than second
     let  swap  = function
         | Cons (head1, Cons (head2, tail)) ->

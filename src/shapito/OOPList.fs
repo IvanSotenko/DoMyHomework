@@ -30,7 +30,6 @@ let rec oopMap2 (f:IActor<'value,'result>) (lst:IList<'value>) =
     | :? NonEmptyList<'value> as lst ->
         NonEmptyList(f.Do lst.Head, oopMap f lst.Tail)
 
-
 type PlusOneActor () =
     interface IActor<int,int> with
         member this.Do x = x + 1
@@ -53,3 +52,39 @@ let rec concatenation (list1:IList<'value>) (list2:IList<'value>) =
     | :? NonEmptyList<'value> as lst ->
         NonEmptyList( lst.Head, concatenation list2 lst.Tail)
     | _ -> failwith "fail in OOPList concatenation"
+
+// let bubbleSort (list: IList<'value>) =
+
+    // let  swap  = function
+    //     | Cons (head1, Cons (head2, tail)) ->
+    //         if head1 > head2 then
+    //             Cons (head2, Cons (head1, tail))
+    //         else
+    //             Cons (head1, Cons (head2, tail))
+    //     | Cons (head1, Empty) -> Cons (head1, Empty)
+    //     | Empty -> Empty
+
+let getHead (lst: IList<'value>) =
+    match lst with
+    | :? NonEmptyList<'value> as list -> list.Head
+    | _ -> failwith "{working on...}"
+
+let getTail (lst: IList<'value>) =
+    match lst with
+    | :? NonEmptyList<'value> as list -> list.Tail
+    | _ -> failwith "{working on...}"
+
+    /// This function swap the next two elements if
+    /// the first element is greater than second
+let swap (lst: IList<'value>) =
+    match lst with
+    | :? EmptyList<'value> -> EmptyList() :> IList<'value>
+    | :? NonEmptyList<'value> as list ->
+        if list.Tail :? NonEmptyList<'value> then
+            if list.Head > getHead list.Tail then
+                NonEmptyList(getHead list.Tail, NonEmptyList(list.Head, getTail list.Tail))
+            else
+                NonEmptyList(list.Head, list.Tail)
+        else
+            NonEmptyList(list.Head, EmptyList())
+    | _ -> failwith "{working on...}"
