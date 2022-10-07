@@ -18,6 +18,8 @@
         <None Include="App.config" />
         <Compile Include="Main.fs" />
         <Compile Include="Say.fs" />
+        <Compile Include="OOPList.fs" />
+        <Compile Include="LinkedList.fs" />
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
