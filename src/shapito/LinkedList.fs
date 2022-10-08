@@ -78,7 +78,7 @@ let rec arrToMyList (i: int) (arr: int array) =
 
 
 
-// This function takes a Mylist and sorts it using quicksort
+/// This function takes a Mylist and sorts it using quicksort
 let rec quickSort list =
 
     /// That function divides the array into three parts:

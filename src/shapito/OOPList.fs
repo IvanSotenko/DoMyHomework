@@ -53,7 +53,7 @@ let rec concatenation (list1:IList<'value>) (list2:IList<'value>) =
     match list1 with
     | :? EmptyList<'value> -> list2
     | :? NonEmptyList<'value> as lst ->
-        NonEmptyList( lst.Head, concatenation list2 lst.Tail)
+        NonEmptyList( lst.Head, concatenation lst.Tail list2)
     | _ -> failwith "fail in OOPList concatenation"
 
 
@@ -115,3 +115,29 @@ let rec bubbleSort (list: IList<'value>) =
         list
     else
         bubbleSort (passage list)
+
+
+/// This function takes a OOPList and sorts it using quicksort
+/// works the same way as one for Mylist
+let rec quickSort (lst: IList<'value>) =
+
+
+    let rec separator (lst: IList<'value>) (less: IList<'value>) (equal: IList<'value>) (more: IList<'value>) pivot =
+
+        match lst with
+        | :? EmptyList<'value> -> concatenation (concatenation (quickSort less) equal) (quickSort more)
+        | :? NonEmptyList<'value> as list ->
+            if list.Head < pivot then
+                separator list.Tail (concatenation less (NonEmptyList (list.Head, EmptyList ()))) equal more pivot
+            elif list.Head = pivot then
+                separator list.Tail less (concatenation equal (NonEmptyList (list.Head, EmptyList ()))) more pivot
+            else
+                separator list.Tail less equal (concatenation more (NonEmptyList (list.Head, EmptyList ()))) pivot
+        | _ -> failwith "{working on...}"
+
+
+    match lst with
+    | :? EmptyList<'value> -> EmptyList() :> IList<'value>
+    | :? NonEmptyList<'value> as list ->
+        separator list (EmptyList ()) (EmptyList ()) (EmptyList ()) list.Head
+    | _ -> failwith "{working on...}"
