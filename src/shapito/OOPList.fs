@@ -1,9 +1,11 @@
 ﻿module shapito.OOPList
 
-type IList<'value> = interface end
+type IList<'value> =
+    interface
+    end
 
 //[<AllowNullLiteral>]
-type NonEmptyList<'value> (head: 'value, tail: IList<'value>) =
+type NonEmptyList<'value>(head: 'value, tail: IList<'value>) =
     interface IList<'value>
     member this.Head = head
     member this.Tail = tail
@@ -14,47 +16,45 @@ type EmptyList<'value>() =
 type IActor<'inType, 'outType> =
     abstract Do: 'inType -> 'outType
 
-let rec oopMap (f:IActor<'value,'result>) (lst:IList<'value>) =
-    if lst :? EmptyList<'value>
-    then EmptyList() :> IList<'result>
-    elif lst :? NonEmptyList<'value>
-    then
+let rec oopMap (f: IActor<'value, 'result>) (lst: IList<'value>) =
+    if lst :? EmptyList<'value> then
+        EmptyList() :> IList<'result>
+    elif lst :? NonEmptyList<'value> then
         let lst = lst :?> NonEmptyList<'value>
         NonEmptyList(f.Do lst.Head, oopMap f lst.Tail)
-    else failwith "!!!"
+    else
+        failwith "!!!"
 
-let rec oopMap2 (f:IActor<'value,'result>) (lst:IList<'value>) =
+let rec oopMap2 (f: IActor<'value, 'result>) (lst: IList<'value>) =
     match lst with
-    | :? EmptyList<'value> ->
-        EmptyList () :> IList<'result>
-    | :? NonEmptyList<'value> as lst ->
-        NonEmptyList(f.Do lst.Head, oopMap f lst.Tail)
+    | :? EmptyList<'value> -> EmptyList() :> IList<'result>
+    | :? NonEmptyList<'value> as lst -> NonEmptyList(f.Do lst.Head, oopMap f lst.Tail)
+    | _ -> failwith "{working on...}"
 
-type PlusOneActor () =
-    interface IActor<int,int> with
+type PlusOneActor() =
+    interface IActor<int, int> with
         member this.Do x = x + 1
 
-type MinusOneActor () =
-    interface IActor<int,int> with
+type MinusOneActor() =
+    interface IActor<int, int> with
         member this.Do x = x - 1
 
-let _go2() =
-    let lst = NonEmptyList(1,NonEmptyList(3,EmptyList()))
+let _go2 () =
+    let lst = NonEmptyList(1, NonEmptyList(3, EmptyList()))
     oopMap (PlusOneActor()) lst
 
-let go2() =
-    let lst = NonEmptyList(1,NonEmptyList(3,EmptyList()))
+let go2 () =
+    let lst = NonEmptyList(1, NonEmptyList(3, EmptyList()))
     oopMap (MinusOneActor()) lst
 
 
 
 /// That function insert second list to the tail of first.
 /// So it concatenates them
-let rec concatenation (list1:IList<'value>) (list2:IList<'value>) =
+let rec concatenation (list1: IList<'value>) (list2: IList<'value>) =
     match list1 with
     | :? EmptyList<'value> -> list2
-    | :? NonEmptyList<'value> as lst ->
-        NonEmptyList( lst.Head, concatenation lst.Tail list2)
+    | :? NonEmptyList<'value> as lst -> NonEmptyList(lst.Head, concatenation lst.Tail list2)
     | _ -> failwith "fail in OOPList concatenation"
 
 
@@ -94,8 +94,8 @@ let rec bubbleSort (list: IList<'value>) =
     /// This function passes through all elements and applies swap to all on the way
     let rec passage (lst: IList<'value>) =
         match lst with
-        | :? EmptyList<'value> -> EmptyList () :> IList<'value>
-        | :? NonEmptyList<'value> as list -> swap (NonEmptyList (list.Head, (passage list.Tail)))
+        | :? EmptyList<'value> -> EmptyList() :> IList<'value>
+        | :? NonEmptyList<'value> as list -> swap (NonEmptyList(list.Head, (passage list.Tail)))
         | _ -> failwith "{working on...}"
 
     /// This function checks if list is sorted
@@ -139,17 +139,16 @@ let rec quickSort (lst: IList<'value>) =
         // If there is elements in list we divide them into groups
         | :? NonEmptyList<'value> as list ->
             if list.Head < pivot then
-                separator list.Tail (concatenation less (NonEmptyList (list.Head, EmptyList ()))) equal more pivot
+                separator list.Tail (concatenation less (NonEmptyList(list.Head, EmptyList()))) equal more pivot
             elif list.Head = pivot then
-                separator list.Tail less (concatenation equal (NonEmptyList (list.Head, EmptyList ()))) more pivot
+                separator list.Tail less (concatenation equal (NonEmptyList(list.Head, EmptyList()))) more pivot
             else
-                separator list.Tail less equal (concatenation more (NonEmptyList (list.Head, EmptyList ()))) pivot
+                separator list.Tail less equal (concatenation more (NonEmptyList(list.Head, EmptyList()))) pivot
         | _ -> failwith "{working on...}"
 
     // That part is responsible for choosing the pivot
     // and calling separator with Empty values for less more and equal
     match lst with
     | :? EmptyList<'value> -> EmptyList() :> IList<'value>
-    | :? NonEmptyList<'value> as list ->
-        separator list (EmptyList ()) (EmptyList ()) (EmptyList ()) list.Head
+    | :? NonEmptyList<'value> as list -> separator list (EmptyList()) (EmptyList()) (EmptyList()) list.Head
     | _ -> failwith "{working on...}"
