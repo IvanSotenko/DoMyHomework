@@ -9,24 +9,24 @@ let rec map f lst =
     | Empty -> Empty
     | Cons (hd, tl) -> Cons(f hd, map f tl)
 
-let go () = map ((+) 1) (Cons(1, Cons(3, Empty)))
+let go (): MyList<int> = map ((+) 1) (Cons(1, Cons(3, Empty)))
 
-let _go () = map ((-) 1) (Cons(1, Cons(3, Empty)))
+let _go (): MyList<int> = map ((-) 1) (Cons(1, Cons(3, Empty)))
 
 
 /// That function insert second list to the tail of first
-let rec concatenation (list1: MyList<'value>) (list2: MyList<'value>) =
+let rec concatenation (list1: MyList<'value>) (list2: MyList<'value>): MyList<'value> =
     match list1 with
     | Cons (head, tail) -> Cons(head, concatenation tail list2)
     | Empty -> list2
 
 
 /// This function takes a Mylist and sorts it using bubblesort
-let rec bubbleSort (list: MyList<'value>) =
+let rec bubbleSort (list: MyList<'value>): MyList<'value> =
 
     /// This function swap the next two elements if
     /// the first element is greater than second
-    let swap =
+    let swap: MyList<'a> -> MyList<'a> =
         function
         | Cons (head1, Cons (head2, tail)) ->
             if head1 > head2 then
@@ -37,13 +37,13 @@ let rec bubbleSort (list: MyList<'value>) =
         | Empty -> Empty
 
     /// This function passes through all elements and applies swap to all on the way
-    let rec passage (list: MyList<'value>) =
+    let rec passage (list: MyList<'value>): MyList<'value> =
         match list with
         | Cons (head, tail) -> swap (Cons(head, passage tail))
         | Empty -> Empty
 
     /// This function checks if list is sorted
-    let rec isSorted list =
+    let rec isSorted (list: MyList<'a>): bool =
         match list with
         | Cons (value1, Cons (value2, tail)) ->
             if value1 <= value2 then
@@ -62,7 +62,7 @@ let rec bubbleSort (list: MyList<'value>) =
 
 
 /// This function takes a Mylist and sorts it using quicksort
-let rec quickSort list =
+let rec quickSort (list: MyList<'a>): MyList<'a> =
 
     /// That function divides the array into three parts:
     /// elements that are more than pivot

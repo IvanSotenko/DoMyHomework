@@ -16,7 +16,7 @@ type EmptyList<'value>() =
 type IActor<'inType, 'outType> =
     abstract Do: 'inType -> 'outType
 
-let rec oopMap (f: IActor<'value, 'result>) (lst: IList<'value>) =
+let rec oopMap (f: IActor<'value, 'result>) (lst: IList<'value>): IList<'result> =
     if lst :? EmptyList<'value> then
         EmptyList() :> IList<'result>
     elif lst :? NonEmptyList<'value> then
@@ -25,7 +25,7 @@ let rec oopMap (f: IActor<'value, 'result>) (lst: IList<'value>) =
     else
         failwith "!!!"
 
-let rec oopMap2 (f: IActor<'value, 'result>) (lst: IList<'value>) =
+let rec oopMap2 (f: IActor<'value, 'result>) (lst: IList<'value>): IList<'result> =
     match lst with
     | :? EmptyList<'value> -> EmptyList() :> IList<'result>
     | :? NonEmptyList<'value> as lst -> NonEmptyList(f.Do lst.Head, oopMap f lst.Tail)
@@ -39,11 +39,11 @@ type MinusOneActor() =
     interface IActor<int, int> with
         member this.Do x = x - 1
 
-let _go2 () =
+let _go2 (): IList<int> =
     let lst = NonEmptyList(1, NonEmptyList(3, EmptyList()))
     oopMap (PlusOneActor()) lst
 
-let go2 () =
+let go2 (): IList<int> =
     let lst = NonEmptyList(1, NonEmptyList(3, EmptyList()))
     oopMap (MinusOneActor()) lst
 
@@ -51,7 +51,7 @@ let go2 () =
 
 /// That function insert second list to the tail of first.
 /// So it concatenates them
-let rec concatenation (list1: IList<'value>) (list2: IList<'value>) =
+let rec concatenation (list1: IList<'value>) (list2: IList<'value>): IList<'value> =
     match list1 with
     | :? EmptyList<'value> -> list2
     | :? NonEmptyList<'value> as lst -> NonEmptyList(lst.Head, concatenation lst.Tail list2)
@@ -59,13 +59,13 @@ let rec concatenation (list1: IList<'value>) (list2: IList<'value>) =
 
 
 /// This function takes a OOPList and returns its head
-let getHead (lst: IList<'value>) =
+let getHead (lst: IList<'value>): 'value =
     match lst with
     | :? NonEmptyList<'value> as list -> list.Head
     | _ -> failwith "{working on...}"
 
 /// This function takes a OOPList and returns its Tail
-let getTail (lst: IList<'value>) =
+let getTail (lst: IList<'value>): IList<'value> =
     match lst with
     | :? NonEmptyList<'value> as list -> list.Tail
     | _ -> failwith "{working on...}"
@@ -74,11 +74,11 @@ let getTail (lst: IList<'value>) =
 
 /// This function takes a MyOOPlist and sorts it using bubblesort,
 /// works the same way as a similar function for MyList
-let rec bubbleSort (list: IList<'value>) =
+let rec bubbleSort (list: IList<'value>): IList<'value> =
 
     /// This function swap the next two elements if
     /// the first element is greater than second
-    let swap (lst: IList<'value>) =
+    let swap (lst: IList<'value>): IList<'value> =
         match lst with
         | :? EmptyList<'value> -> EmptyList() :> IList<'value>
         | :? NonEmptyList<'value> as list ->
@@ -92,14 +92,14 @@ let rec bubbleSort (list: IList<'value>) =
         | _ -> failwith "{working on...}"
 
     /// This function passes through all elements and applies swap to all on the way
-    let rec passage (lst: IList<'value>) =
+    let rec passage (lst: IList<'value>): IList<'value> =
         match lst with
         | :? EmptyList<'value> -> EmptyList() :> IList<'value>
         | :? NonEmptyList<'value> as list -> swap (NonEmptyList(list.Head, (passage list.Tail)))
         | _ -> failwith "{working on...}"
 
     /// This function checks if list is sorted
-    let rec isSorted (lst: IList<'value>) =
+    let rec isSorted (lst: IList<'value>): bool =
         match lst with
         | :? EmptyList<'value> -> true
         | :? NonEmptyList<'value> as list ->
@@ -121,14 +121,14 @@ let rec bubbleSort (list: IList<'value>) =
 
 /// This function takes a OOPList and sorts it using quicksort
 /// works the same way as one for Mylist
-let rec quickSort (lst: IList<'value>) =
+let rec quickSort (lst: IList<'value>): IList<'value> =
 
     /// That function divides the array into three parts:
     /// elements that are more than pivot
     /// less than pivot
     /// and equal to pivot.
     /// Then it applies quicksort to each part and concatenates them
-    let rec separator (lst: IList<'value>) (less: IList<'value>) (equal: IList<'value>) (more: IList<'value>) pivot =
+    let rec separator (lst: IList<'value>) (less: IList<'value>) (equal: IList<'value>) (more: IList<'value>) (pivot: 'value): IList<'value> =
 
         match lst with
 
