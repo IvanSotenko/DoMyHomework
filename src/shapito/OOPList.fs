@@ -47,6 +47,7 @@ let go2() =
     oopMap (MinusOneActor()) lst
 
 
+
 /// That function insert second list to the tail of first.
 /// So it concatenates them
 let rec concatenation (list1:IList<'value>) (list2:IList<'value>) =
@@ -57,12 +58,13 @@ let rec concatenation (list1:IList<'value>) (list2:IList<'value>) =
     | _ -> failwith "fail in OOPList concatenation"
 
 
-
+/// This function takes a OOPList and returns its head
 let getHead (lst: IList<'value>) =
     match lst with
     | :? NonEmptyList<'value> as list -> list.Head
     | _ -> failwith "{working on...}"
 
+/// This function takes a OOPList and returns its Tail
 let getTail (lst: IList<'value>) =
     match lst with
     | :? NonEmptyList<'value> as list -> list.Tail
@@ -121,11 +123,20 @@ let rec bubbleSort (list: IList<'value>) =
 /// works the same way as one for Mylist
 let rec quickSort (lst: IList<'value>) =
 
-
+    /// That function divides the array into three parts:
+    /// elements that are more than pivot
+    /// less than pivot
+    /// and equal to pivot.
+    /// Then it applies quicksort to each part and concatenates them
     let rec separator (lst: IList<'value>) (less: IList<'value>) (equal: IList<'value>) (more: IList<'value>) pivot =
 
         match lst with
+
+        // If all elements divided into groups then we sorting each group and
+        // concatenates them
         | :? EmptyList<'value> -> concatenation (concatenation (quickSort less) equal) (quickSort more)
+
+        // If there is elements in list we divide them into groups
         | :? NonEmptyList<'value> as list ->
             if list.Head < pivot then
                 separator list.Tail (concatenation less (NonEmptyList (list.Head, EmptyList ()))) equal more pivot
@@ -135,7 +146,8 @@ let rec quickSort (lst: IList<'value>) =
                 separator list.Tail less equal (concatenation more (NonEmptyList (list.Head, EmptyList ()))) pivot
         | _ -> failwith "{working on...}"
 
-
+    // That part is responsible for choosing the pivot
+    // and calling separator with Empty values for less more and equal
     match lst with
     | :? EmptyList<'value> -> EmptyList() :> IList<'value>
     | :? NonEmptyList<'value> as list ->
