@@ -1,4 +1,4 @@
-﻿module LinkedList
+﻿module MyList
 
 type MyList<'value> =
     | Cons of head: 'value * tail: MyList<'value>
@@ -58,21 +58,6 @@ let rec bubbleSort (list: MyList<'value>) =
         list
     else
         bubbleSort (passage list)
-
-
-// Converting Mylist to array
-let rec MylistToArr arr (list: MyList<'value>) =
-    match list with
-    | Cons (head, tail) -> MylistToArr(Array.append arr [| head |]) tail
-    | Empty -> arr
-
-// Converting array to Mylist
-let rec arrToMyList (i: int) (arr: int array) =
-    if arr.Length <> i then
-        // This dot is not redundant!
-        Cons(arr.[i], (arrToMyList (i + 1) arr))
-    else
-        Empty
 
 
 

@@ -18,7 +18,7 @@
         <None Include="App.config" />
         <Compile Include="Say.fs" />
         <Compile Include="OOPList.fs" />
-        <Compile Include="LinkedList.fs" />
+        <Compile Include="MyList.fs" />
         <Compile Include="Translator.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
