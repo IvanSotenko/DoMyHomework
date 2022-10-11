@@ -2,6 +2,7 @@
 
 open OOPList
 open MyList
+open shapito.OOPList
 
 /// Converts an MyList into a OOPList
 let rec MyListToMyOOPList (lst: MyList<'value>): IList<'value> =
@@ -44,8 +45,21 @@ let rec listToMyList (lst: 'a list): MyList<'a> =
     | [] -> Empty
     | head :: tail -> Cons(head, listToMyList tail)
 
-/// Convertung MyList to regular list
-let rec MyListToList (lst: MyList<'a>): 'a list =
-    match lst with
+/// Converting MyList to regular list
+let rec MyListToList (mlst: MyList<'a>): 'a list =
+    match mlst with
     | Empty -> []
     | Cons (head, tail) -> head :: MyListToList tail
+
+/// Converting regular list to OOPList
+let rec listToOOPList (lst: 'value list): IList<'value> =
+    match lst with
+    | [] -> EmptyList() :> IList<'value>
+    | head :: tail -> NonEmptyList(head, listToOOPList tail)
+
+/// Converting MyList to regular list
+let rec OOPListToList (ooplst: IList<'value>): 'value list =
+    match ooplst with
+    | :? EmptyList<'value> -> []
+    | :? NonEmptyList<'value> as lst -> lst.Head :: OOPListToList lst.Tail
+    | _ -> failwith "Coming soon..."
