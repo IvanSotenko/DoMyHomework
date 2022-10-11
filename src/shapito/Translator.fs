@@ -37,3 +37,15 @@ let arrToMyList (arr: 'value[]) : MyList<'value> =
             Empty
 
     SubArrToMyList 0 arr
+
+/// Converting regular list to MyList
+let rec listToMyList (lst: 'a list): MyList<'a> =
+    match lst with
+    | [] -> Empty
+    | head :: tail -> Cons(head, listToMyList tail)
+
+/// Convertung MyList to regular list
+let rec MyListToList (lst: MyList<'a>): 'a list =
+    match lst with
+    | Empty -> []
+    | Cons (head, tail) -> head :: MyListToList tail
