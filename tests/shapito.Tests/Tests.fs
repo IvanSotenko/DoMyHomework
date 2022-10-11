@@ -274,7 +274,7 @@ module FirstHwTests =
                   Expect.equal actualResult expected_result (sprintf "Wrong result for %A" input)
 
                   let input = [||]
-                  let expected_error = "Empty array"
+                  let expected_error = "Error in Main.fs/FirstHw/delta: empty array was given. Doesn't make sense"
                   Expect.throws (fun _ -> FirstHw.delta input |> ignore) expected_error
 
               testCase "Odd numbers between"

@@ -99,9 +99,10 @@ module FirstHw =
             bas * fast_pow bas (power - 1u)
 
     // (3) The difference between the largest and smallest element of the array
-    let delta (arr: int array) =
+    let delta arr =
         if arr = [||] then
-            failwith "Empty array"
+            failwith "Error in Main.fs/FirstHw/delta: empty array was given. Doesn't make sense"
+
         else
             let mutable min = arr[0]
             let mutable max = arr[0]
@@ -164,4 +165,5 @@ module Main =
         else
             parser.PrintUsage() |> printfn "%s"
 
+        printf "%A" (FirstHw.delta [||])
         0
