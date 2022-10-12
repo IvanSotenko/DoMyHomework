@@ -51,10 +51,10 @@ let go2 (): IList<int> =
 
 /// That function insert second list to the tail of first.
 /// So it concatenates them
-let rec concatenation (list1: IList<'value>) (list2: IList<'value>): IList<'value> =
+let rec concat (list1: IList<'value>) (list2: IList<'value>): IList<'value> =
     match list1 with
     | :? EmptyList<'value> -> list2
-    | :? NonEmptyList<'value> as lst -> NonEmptyList(lst.Head, concatenation lst.Tail list2)
+    | :? NonEmptyList<'value> as lst -> NonEmptyList(lst.Head, concat lst.Tail list2)
     | _ -> failwith "fail in OOPList concatenation"
 
 
@@ -134,16 +134,16 @@ let rec quickSort (lst: IList<'value>): IList<'value> =
 
         // If all elements divided into groups then we sorting each group and
         // concatenates them
-        | :? EmptyList<'value> -> concatenation (concatenation (quickSort less) equal) (quickSort more)
+        | :? EmptyList<'value> -> concat (concat (quickSort less) equal) (quickSort more)
 
         // If there is elements in list we divide them into groups
         | :? NonEmptyList<'value> as list ->
             if list.Head < pivot then
-                separator list.Tail (concatenation less (NonEmptyList(list.Head, EmptyList()))) equal more pivot
+                separator list.Tail (concat less (NonEmptyList(list.Head, EmptyList()))) equal more pivot
             elif list.Head = pivot then
-                separator list.Tail less (concatenation equal (NonEmptyList(list.Head, EmptyList()))) more pivot
+                separator list.Tail less (concat equal (NonEmptyList(list.Head, EmptyList()))) more pivot
             else
-                separator list.Tail less equal (concatenation more (NonEmptyList(list.Head, EmptyList()))) pivot
+                separator list.Tail less equal (concat more (NonEmptyList(list.Head, EmptyList()))) pivot
         | _ -> failwith "{working on...}"
 
     // That part is responsible for choosing the pivot
