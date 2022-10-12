@@ -1,5 +1,6 @@
 ﻿module shapito.Tests.TestExamples
 
+open shapito
 open Expecto
 
 module SayTests =

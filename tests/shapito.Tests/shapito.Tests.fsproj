@@ -7,10 +7,9 @@
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="AssemblyInfo.fs" />
-        <Compile Include="Tests.fs" />
+        <Compile Include="TestExamples.fs" />
         <Compile Include="Homework1Tests.fs" />
         <Compile Include="Main.fs" />
-        <Compile Include="TestExamples.fs" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="../../src/shapito/shapito.fsproj" />
