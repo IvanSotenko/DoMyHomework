@@ -16,3 +16,5 @@ module SayTests =
               <| fun _ ->
                   let subject = Say.Say.hello "all"
                   Expect.equal subject "Hello all" "You didn't say hello" ]
+
+(-0.31) ** (-4)
