@@ -2,7 +2,6 @@
 
 open OOPList
 open MyList
-open shapito.OOPList
 
 /// Converts an MyList into a OOPList
 let rec MyListToMyOOPList (lst: MyList<'value>): IList<'value> =
