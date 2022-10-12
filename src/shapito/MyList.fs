@@ -15,9 +15,9 @@ let _go (): MyList<int> = map ((-) 1) (Cons(1, Cons(3, Empty)))
 
 
 /// That function insert second list to the tail of first
-let rec concatenation (list1: MyList<'value>) (list2: MyList<'value>): MyList<'value> =
+let rec concat (list1: MyList<'value>) (list2: MyList<'value>): MyList<'value> =
     match list1 with
-    | Cons (head, tail) -> Cons(head, concatenation tail list2)
+    | Cons (head, tail) -> Cons(head, concat tail list2)
     | Empty -> list2
 
 
@@ -75,15 +75,15 @@ let rec quickSort (list: MyList<'a>): MyList<'a> =
         match list with
         | Cons (head, tail) ->
             if head < pivot then
-                separator tail (concatenation less (Cons(head, Empty))) equal more pivot
+                separator tail (concat less (Cons(head, Empty))) equal more pivot
             elif head = pivot then
-                separator tail less (concatenation equal (Cons(head, Empty))) more pivot
+                separator tail less (concat equal (Cons(head, Empty))) more pivot
             else
-                separator tail less equal (concatenation more (Cons(head, Empty))) pivot
+                separator tail less equal (concat more (Cons(head, Empty))) pivot
 
         // If all elements divided into groups then we sorting each group and
         // concatenates them
-        | Empty -> concatenation (concatenation (quickSort less) equal) (quickSort more)
+        | Empty -> concat (concat (quickSort less) equal) (quickSort more)
 
     // That part is responsible for choosing the pivot
     // and calling separator with Empty values for less more and equal

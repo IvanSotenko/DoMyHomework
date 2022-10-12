@@ -4,10 +4,10 @@ open OOPList
 open MyList
 
 /// Converts an MyList into a OOPList
-let rec MyListToMyOOPList (lst: MyList<'value>): IList<'value> =
+let rec MyListToOOPList (lst: MyList<'value>): IList<'value> =
     match lst with
     | Empty -> EmptyList<'value>() :> IList<'value>
-    | Cons (hd, tl) -> NonEmptyList<'value>(hd, MyListToMyOOPList tl)
+    | Cons (hd, tl) -> NonEmptyList<'value>(hd, MyListToOOPList tl)
 
 /// Converts an OOPList into a MyList
 let rec OOPListToMyList (list: IList<'value>): MyList<'value> =
