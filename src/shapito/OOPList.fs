@@ -29,7 +29,7 @@ let rec oopMap2 (f: IActor<'value, 'result>) (lst: IList<'value>) : IList<'resul
     match lst with
     | :? EmptyList<'value> -> EmptyList() :> IList<'result>
     | :? NonEmptyList<'value> as lst -> NonEmptyList(f.Do lst.Head, oopMap f lst.Tail)
-    | _ -> failwith "{working on...}"
+    | _ -> failwith "Unknown type"
 
 type PlusOneActor() =
     interface IActor<int, int> with
@@ -55,20 +55,20 @@ let rec concat (list1: IList<'value>) (list2: IList<'value>) : IList<'value> =
     match list1 with
     | :? EmptyList<'value> -> list2
     | :? NonEmptyList<'value> as lst -> NonEmptyList(lst.Head, concat lst.Tail list2)
-    | _ -> failwith "fail in OOPList concatenation"
+    | _ -> failwith "concat can only handle NonEmptyList and EmptyList"
 
 
 /// This function takes a OOPList and returns its head
 let getHead (lst: IList<'value>) : 'value =
     match lst with
     | :? NonEmptyList<'value> as list -> list.Head
-    | _ -> failwith "{working on...}"
+    | _ -> failwith "Head can only be taken from NonEmptyList"
 
 /// This function takes a OOPList and returns its Tail
 let getTail (lst: IList<'value>) : IList<'value> =
     match lst with
     | :? NonEmptyList<'value> as list -> list.Tail
-    | _ -> failwith "{working on...}"
+    | _ -> failwith "Tail can only be taken from NonEmptyList"
 
 
 
@@ -89,14 +89,14 @@ let rec bubbleSort (list: IList<'value>) : IList<'value> =
                     NonEmptyList(list.Head, list.Tail)
             else
                 NonEmptyList(list.Head, EmptyList())
-        | _ -> failwith "{working on...}"
+        | _ -> failwith "swap can only handle NonEmptyList and EmptyList"
 
     /// This function passes through all elements and applies swap to all on the way
     let rec passage (lst: IList<'value>) : IList<'value> =
         match lst with
         | :? EmptyList<'value> -> EmptyList() :> IList<'value>
         | :? NonEmptyList<'value> as list -> swap (NonEmptyList(list.Head, (passage list.Tail)))
-        | _ -> failwith "{working on...}"
+        | _ -> failwith "passage can only handle NonEmptyList and EmptyList"
 
     /// This function checks if list is sorted
     let rec isSorted (lst: IList<'value>) : bool =
@@ -110,7 +110,7 @@ let rec bubbleSort (list: IList<'value>) : IList<'value> =
                     false
             else
                 true
-        | _ -> failwith "{working on...}"
+        | _ -> failwith "isSorted can only handle NonEmptyList and EmptyList"
 
     // The cycle happens here
     if isSorted list then
@@ -150,11 +150,11 @@ let rec quickSort (lst: IList<'value>) : IList<'value> =
                 separator list.Tail less (concat equal (NonEmptyList(list.Head, EmptyList()))) more pivot
             else
                 separator list.Tail less equal (concat more (NonEmptyList(list.Head, EmptyList()))) pivot
-        | _ -> failwith "{working on...}"
+        | _ -> failwith "separator can only handle NonEmptyList and EmptyList"
 
     // That part is responsible for choosing the pivot
     // and calling separator with Empty values for less more and equal
     match lst with
     | :? EmptyList<'value> -> EmptyList() :> IList<'value>
     | :? NonEmptyList<'value> as list -> separator list (EmptyList()) (EmptyList()) (EmptyList()) list.Head
-    | _ -> failwith "{working on...}"
+    | _ -> failwith "quickSort can only handle NonEmptyList and EmptyList"

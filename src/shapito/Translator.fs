@@ -14,7 +14,7 @@ let rec OOPListToMyList (list: IList<'value>) : MyList<'value> =
     match list with
     | :? EmptyList<'value> -> Empty
     | :? NonEmptyList<'value> as lst -> Cons(lst.Head, OOPListToMyList lst.Tail)
-    | _ -> failwith "fail in OOPList concatenation"
+    | _ -> failwith "OOPListToMyList can only handle NonEmptyList and EmptyList"
 
 // Converting Mylist to array
 let MyListToArr (list: MyList<'value>) : 'value [] =
@@ -61,4 +61,4 @@ let rec OOPListToList (ooplst: IList<'value>) : 'value list =
     match ooplst with
     | :? EmptyList<'value> -> []
     | :? NonEmptyList<'value> as lst -> lst.Head :: OOPListToList lst.Tail
-    | _ -> failwith "Coming soon..."
+    | _ -> failwith "OOPListToList can only handle NonEmptyList and EmptyList"
