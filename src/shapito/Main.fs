@@ -8,8 +8,8 @@ module Main =
     [<EntryPoint>]
     let main argv =
 
-        let test = Node ("a", Cons (Node ("b", Cons (Leaf "d", Cons (Leaf "e", Empty))), Cons (Leaf "c", Empty)))
+        let testTree = Node (1, Cons (Node (2, Cons (Leaf 4, Cons (Leaf 5, Empty))), Cons (Leaf 3, Empty)))
 
-        printf "%A" (treeSet test)
+        printf "%A" (treeList2 testTree)
 
         0
