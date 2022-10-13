@@ -16,11 +16,11 @@
     <ItemGroup>
         <Compile Include="AssemblyInfo.fs" />
         <None Include="App.config" />
-        <Compile Include="Main.fs" />
         <Compile Include="Say.fs" />
+        <Compile Include="MyList.fs" />
         <Compile Include="BinTree.fs" />
         <Compile Include="GeneralTree.fs" />
-        <Compile Include="MyList.fs" />
+        <Compile Include="Main.fs" />
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
