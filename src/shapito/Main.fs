@@ -8,7 +8,7 @@ module Main =
     [<EntryPoint>]
     let main argv =
 
-        let testTree = Node (1, Cons (Node (2, Cons (Leaf 4, Cons (Leaf 5, Empty))), Cons (Leaf 3, Empty)))
+        let testTree = Node (Some 1, Cons (Node (Some 2, Cons (Leaf 4, Cons (Leaf 5, Empty))), Cons (Leaf 3, Empty)))
 
         printf "%A" (treeList2 testTree)
 
