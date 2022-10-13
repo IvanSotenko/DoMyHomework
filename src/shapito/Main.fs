@@ -10,6 +10,6 @@ module Main =
 
         let test = Node ("a", Cons (Node ("b", Cons (Leaf "d", Cons (Leaf "e", Empty))), Cons (Leaf "c", Empty)))
 
-        printf "%A" (move2 test)
+        printf "%A" (treeSet test)
 
         0
