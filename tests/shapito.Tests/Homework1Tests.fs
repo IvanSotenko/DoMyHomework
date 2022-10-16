@@ -10,17 +10,42 @@ module FirstHwTests =
     let tests =
         testList
             "samples"
-            [ testProperty "Testing regular exponential function (silly_pow)"
+            [
+            testProperty "Testing regular exponential function (silly_pow)"
             <| fun (bas: float) (pow: int) ->
                 let expectedResult = bas ** pow
                 let actualResult = silly_pow bas pow
 
                 if (expectedResult = infinity) || (expectedResult = (-infinity)) then
-                    Expect.equal actualResult expectedResult (sprintf "1. a=%A e=%A %A**%A" actualResult expectedResult bas pow)
+                    Expect.equal actualResult expectedResult (sprintf "%A^%A: actualResult=%A, expectedResult=%A" bas pow actualResult expectedResult)
                 elif System.Double.IsNaN actualResult then
-                    Expect.isTrue (System.Double.IsNaN actualResult) (sprintf "2. a=%A e=%A %A**%A" actualResult expectedResult bas pow)
+                    Expect.isTrue (System.Double.IsNaN actualResult) (sprintf "%A^%A: actualResult=%A, expectedResult=%A" bas pow actualResult expectedResult)
                 else
-                    Expect.floatClose Accuracy.high actualResult expectedResult (sprintf "3. a=%A e=%A %A**%A" actualResult expectedResult bas pow)
+                    Expect.floatClose Accuracy.high actualResult expectedResult (sprintf "%A^%A: actualResult=%A, expectedResult=%A" bas pow actualResult expectedResult)
+
+            testProperty "Testing regular exponential function (silly_pow_rec)"
+            <| fun (bas: float) (pow: uint) ->
+                let expectedResult = bas ** (int pow)
+                let actualResult = silly_pow_rec bas pow
+
+                if (expectedResult = infinity) || (expectedResult = (-infinity)) then
+                    Expect.equal actualResult expectedResult (sprintf "%A^%A: actualResult=%A, expectedResult=%A" bas pow actualResult expectedResult)
+                elif System.Double.IsNaN actualResult then
+                    Expect.isTrue (System.Double.IsNaN actualResult) (sprintf "%A^%A: actualResult=%A, expectedResult=%A" bas pow actualResult expectedResult)
+                else
+                    Expect.floatClose Accuracy.high actualResult expectedResult (sprintf "%A^%A: actualResult=%A, expectedResult=%A" bas pow actualResult expectedResult)
+
+            testProperty "Testing fast exponential function (fast_pow)"
+            <| fun (bas: float) (pow: uint) ->
+                let expectedResult = bas ** (int pow)
+                let actualResult = fast_pow bas pow
+
+                if (expectedResult = infinity) || (expectedResult = (-infinity)) then
+                    Expect.equal actualResult expectedResult (sprintf "%A^%A: actualResult=%A, expectedResult=%A" bas pow actualResult expectedResult)
+                elif System.Double.IsNaN actualResult then
+                    Expect.isTrue (System.Double.IsNaN actualResult) (sprintf "%A^%A: actualResult=%A, expectedResult=%A" bas pow actualResult expectedResult)
+                else
+                    Expect.floatClose Accuracy.high actualResult expectedResult (sprintf "%A^%A: actualResult=%A, expectedResult=%A" bas pow actualResult expectedResult)
         ]
 
           // <| fun _ ->

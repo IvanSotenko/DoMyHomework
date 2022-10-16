@@ -2,19 +2,6 @@
 
 let silly_pow (bas: float) (power: int) =
 
-    if power = 0 then
-        1.
-    elif (bas <> bas) then
-        nan
-
-    elif (bas = infinity) || (bas = (-infinity)) then
-        if power < 0 then
-            0.
-        else
-            if (bas < 0) && (power % 2 <> 0) then -infinity else infinity
-
-    else
-
         let pow (num: float) (power: int) =
 
             let mutable output = 1.
