@@ -2,26 +2,35 @@
 
 let silly_pow (bas: float) (power: int) =
 
-    let pow (num: float) (power: int) =
+    if power = 0 then
+        1.
+    elif (bas <> bas) then
+        nan
 
-        let mutable output = 1.
-        let mutable mut_power = power
-
-        while mut_power > 0 do
-            output <- output * num
-            mut_power <- mut_power - 1
-
-        output
-
-    if power > 0 then
-        pow bas power
-
-    elif power < 0 then
-        1. / pow bas (-power)
+    elif (bas = infinity) || (bas = (-infinity)) then
+        if power < 0 then
+            0.
+        else
+            if (bas < 0) && (power % 2 <> 0) then -infinity else infinity
 
     else
-        1.
 
+        let pow (num: float) (power: int) =
+
+            let mutable output = 1.
+            let mutable mut_power = power
+
+            while mut_power > 0 do
+                output <- output * num
+                mut_power <- mut_power - 1
+
+            output
+
+        if power > 0 then
+            pow bas power
+
+        else
+            1. / pow bas (-power)
 
 // (1) Exponentiation to natural and zero power in a simple way by recursion
 let rec silly_pow_rec (bas: float) (power: uint) =

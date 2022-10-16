@@ -6,4 +6,7 @@ module ExpectoTemplate =
 
     [<EntryPoint>]
     let main argv =
+
+        infinity ** -3
+
         Tests.runTestsInAssembly defaultConfig argv
