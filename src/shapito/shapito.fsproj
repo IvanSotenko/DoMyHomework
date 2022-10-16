@@ -16,7 +16,6 @@
     <ItemGroup>
         <Compile Include="AssemblyInfo.fs" />
         <None Include="App.config" />
-        <Compile Include="Say.fs" />
         <Compile Include="Homework1.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
