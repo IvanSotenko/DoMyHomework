@@ -10,6 +10,7 @@ let tests =
     testList
         "samples"
         [
+
           // Silly power tests
           testProperty "silly_pow a b should give the same result as (a**b)"
           <| fun (bas: float) (pow: int) ->
