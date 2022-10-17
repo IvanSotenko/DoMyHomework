@@ -3,7 +3,7 @@
 // (1) Exponentiation to integer in a simple way using mutable variables
 let silly_pow (bas: float) (power: int) =
 
-    let pow (num: float) (power: int) =
+    let silly_pow_sub (num: float) (power: int) =
 
         let mutable output = 1.
         let mutable mut_power = power
@@ -14,11 +14,10 @@ let silly_pow (bas: float) (power: int) =
 
         output
 
-    if power > 0 then
-        pow bas power
-
+    if power < 0 then
+        1. / silly_pow_sub bas (abs power)
     else
-        1. / pow bas (-power)
+        silly_pow_sub bas power
 
 
 // (1) Exponentiation to natural and zero power in a simple way by recursion
