@@ -1,5 +1,6 @@
 ﻿module shapito.Homework1
 
+// (1) Exponentiation to integer in a simple way using mutable variables
 let silly_pow (bas: float) (power: int) =
 
     let pow (num: float) (power: int) =

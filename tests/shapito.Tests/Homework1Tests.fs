@@ -23,7 +23,7 @@ let tests =
                       actualResult
                       expectedResult
                       (sprintf "%A^%A: actualResult=%A, expectedResult=%A" bas pow actualResult expectedResult)
-              elif System.Double.IsNaN actualResult then
+              elif System.Double.IsNaN expectedResult then
                   Expect.isTrue
                       (System.Double.IsNaN actualResult)
                       (sprintf "%A^%A: actualResult=%A, expectedResult=%A" bas pow actualResult expectedResult)
@@ -47,7 +47,7 @@ let tests =
                       actualResult
                       expectedResult
                       (sprintf "%A^%A: actualResult=%A, expectedResult=%A" bas pow actualResult expectedResult)
-              elif System.Double.IsNaN actualResult then
+              elif System.Double.IsNaN expectedResult then
                   Expect.isTrue
                       (System.Double.IsNaN actualResult)
                       (sprintf "%A^%A: actualResult=%A, expectedResult=%A" bas pow actualResult expectedResult)
@@ -71,7 +71,7 @@ let tests =
                       actualResult
                       expectedResult
                       (sprintf "%A^%A: actualResult=%A, expectedResult=%A" bas pow actualResult expectedResult)
-              elif System.Double.IsNaN actualResult then
+              elif System.Double.IsNaN expectedResult then
                   Expect.isTrue
                       (System.Double.IsNaN actualResult)
                       (sprintf "%A^%A: actualResult=%A, expectedResult=%A" bas pow actualResult expectedResult)
