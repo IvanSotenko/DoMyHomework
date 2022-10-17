@@ -37,8 +37,8 @@ let tests =
 
           //Silly recursive power tests
           testProperty "silly_pow_rec a b should give the same result as (a**b))"
-          <| fun (bas: float) (pow: uint) ->
-              let expectedResult = bas ** (int pow)
+          <| fun (bas: float) (pow: int) ->
+              let expectedResult = bas ** pow
               let actualResult = silly_pow_rec bas pow
 
               if (expectedResult = infinity)
@@ -61,8 +61,8 @@ let tests =
 
           //Fast power tests
           testProperty "fast_pow a b should give the same result as (a**b)"
-          <| fun (bas: float) (pow: uint) ->
-              let expectedResult = bas ** (int pow)
+          <| fun (bas: float) (pow: int) ->
+              let expectedResult = bas ** pow
               let actualResult = fast_pow bas pow
 
               if (expectedResult = infinity)

@@ -20,25 +20,40 @@ let silly_pow (bas: float) (power: int) =
     else
         1. / pow bas (-power)
 
-// (1) Exponentiation to natural and zero power in a simple way by recursion
-let rec silly_pow_rec (bas: float) (power: uint) =
 
-    if power = 0u then
-        1.
-    elif power = 1u then
-        bas
+// (1) Exponentiation to natural and zero power in a simple way by recursion
+let silly_pow_rec (bas: float) (power: int) =
+
+    let rec silly_pow_rec_sub (bas: float) (power: int) =
+
+        if power = 0 then
+            1.
+        elif power = 1 then
+            bas
+        else
+            bas * silly_pow_rec_sub bas (power - 1)
+
+    if power < 0 then
+        1. / silly_pow_rec_sub bas (abs power)
     else
-        bas * silly_pow_rec bas (power - 1u)
+        silly_pow_rec_sub bas power
 
 
 // (2) Fast power
-let rec fast_pow (bas: float) (power: uint) =
-    if power = 0u then
-        1.
-    elif power % 2u = 0u then
-        fast_pow (bas * bas) (power / 2u)
+let rec fast_pow (bas: float) (power: int) =
+
+    let rec fast_pow_sub (bas: float) (power: int) =
+        if power = 0 then
+            1.
+        elif power % 2 = 0 then
+            fast_pow (bas * bas) (power / 2)
+        else
+            bas * fast_pow bas (power - 1)
+
+    if power < 0 then
+        1. / fast_pow_sub bas (abs power)
     else
-        bas * fast_pow bas (power - 1u)
+        fast_pow_sub bas power
 
 
 // (3) The difference between the largest and smallest element of the array
