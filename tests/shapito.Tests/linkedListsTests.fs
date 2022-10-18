@@ -64,7 +64,7 @@ let MyListTests =
 
 
           // BubbleSort
-          testProperty "(List ->) MyList.bubbleSort (-> List) should give the same result as List.Sort (nums)"
+          testProperty "(List ->) MyList.bubbleSort (-> List) should give the same result as List.Sort (int)"
           <| fun (list: list<int>) ->
               let actualResult =
                   MyListToList
@@ -73,8 +73,26 @@ let MyListTests =
               let expectedResult = List.sort list
               Expect.equal actualResult expectedResult "The results were different"
 
-          testProperty "(List ->) MyList.bubbleSort (-> List) should give the same result as List.Sort (strings)"
+          testProperty "(List ->) MyList.bubbleSort (-> List) should give the same result as List.Sort (float)"
+          <| fun (list: list<NormalFloat>) ->
+              let actualResult =
+                  MyListToList
+                  <| (MyList.bubbleSort (ListToMyList <| list))
+
+              let expectedResult = List.sort list
+              Expect.equal actualResult expectedResult "The results were different"
+
+          testProperty "(List ->) MyList.bubbleSort (-> List) should give the same result as List.Sort (string)"
           <| fun (list: list<string>) ->
+              let actualResult =
+                  MyListToList
+                  <| (MyList.bubbleSort (ListToMyList <| list))
+
+              let expectedResult = List.sort list
+              Expect.equal actualResult expectedResult "The results were different"
+
+          testProperty "(List ->) MyList.bubbleSort (-> List) should give the same result as List.Sort (char)"
+          <| fun (list: list<char>) ->
               let actualResult =
                   MyListToList
                   <| (MyList.bubbleSort (ListToMyList <| list))
@@ -94,7 +112,7 @@ let MyListTests =
 
 
           // QuickSort
-          testProperty "(List ->) MyList.quickSort (-> List) should give the same result as List.Sort (nums)"
+          testProperty "(List ->) MyList.quickSort (-> List) should give the same result as List.Sort (int)"
           <| fun (list: list<int>) ->
               let actualResult =
                   MyListToList
@@ -103,8 +121,26 @@ let MyListTests =
               let expectedResult = List.sort list
               Expect.equal actualResult expectedResult "The results were different"
 
-          testProperty "(List ->) MyList.quickSort (-> List) should give the same result as List.Sort (strings)"
+          testProperty "(List ->) MyList.quickSort (-> List) should give the same result as List.Sort (float)"
+          <| fun (list: list<NormalFloat>) ->
+              let actualResult =
+                  MyListToList
+                  <| (MyList.quickSort (ListToMyList <| list))
+
+              let expectedResult = List.sort list
+              Expect.equal actualResult expectedResult "The results were different"
+
+          testProperty "(List ->) MyList.quickSort (-> List) should give the same result as List.Sort (string)"
           <| fun (list: list<string>) ->
+              let actualResult =
+                  MyListToList
+                  <| (MyList.quickSort (ListToMyList <| list))
+
+              let expectedResult = List.sort list
+              Expect.equal actualResult expectedResult "The results were different"
+
+          testProperty "(List ->) MyList.quickSort (-> List) should give the same result as List.Sort (char)"
+          <| fun (list: list<char>) ->
               let actualResult =
                   MyListToList
                   <| (MyList.quickSort (ListToMyList <| list))
@@ -121,6 +157,8 @@ let MyListTests =
                   |> MyListToList
 
               Expect.equal result [] "The results were different" ]
+
+
 
 [<Tests>]
 let OOPListTests =
@@ -178,8 +216,17 @@ let OOPListTests =
 
 
           // BubbleSort
-          testProperty "(List ->) OOPList.bubbleSort (-> List) should give the same result as List.Sort (nums)"
+          testProperty "(List ->) OOPList.bubbleSort (-> List) should give the same result as List.Sort (int)"
           <| fun (list: list<int>) ->
+              let actualResult =
+                  OOPListToList
+                  <| (OOPList.bubbleSort (ListToOOPList <| list))
+
+              let expectedResult = List.sort list
+              Expect.equal actualResult expectedResult "The results were different"
+
+          testProperty "(List ->) OOPList.bubbleSort (-> List) should give the same result as List.Sort (float)"
+          <| fun (list: list<NormalFloat>) ->
               let actualResult =
                   OOPListToList
                   <| (OOPList.bubbleSort (ListToOOPList <| list))
@@ -189,6 +236,15 @@ let OOPListTests =
 
           testProperty "(List ->) OOPList.bubbleSort (-> List) should give the same result as List.Sort (strings)"
           <| fun (list: list<string>) ->
+              let actualResult =
+                  OOPListToList
+                  <| (OOPList.bubbleSort (ListToOOPList <| list))
+
+              let expectedResult = List.sort list
+              Expect.equal actualResult expectedResult "The results were different"
+
+          testProperty "(List ->) OOPList.bubbleSort (-> List) should give the same result as List.Sort (char)"
+          <| fun (list: list<char>) ->
               let actualResult =
                   OOPListToList
                   <| (OOPList.bubbleSort (ListToOOPList <| list))
@@ -208,7 +264,7 @@ let OOPListTests =
 
 
           // QuickSort
-          testProperty "(List ->) OOPList.quickSort (-> List) should give the same result as List.Sort (nums)"
+          testProperty "(List ->) OOPList.quickSort (-> List) should give the same result as List.Sort (int)"
           <| fun (list: list<int>) ->
               let actualResult =
                   OOPListToList
@@ -217,8 +273,26 @@ let OOPListTests =
               let expectedResult = List.sort list
               Expect.equal actualResult expectedResult "The results were different"
 
-          testProperty "(List ->) OOPList.quickSort (-> List) should give the same result as List.Sort (strings)"
+          testProperty "(List ->) OOPList.quickSort (-> List) should give the same result as List.Sort (float)"
+          <| fun (list: list<NormalFloat>) ->
+              let actualResult =
+                  OOPListToList
+                  <| (OOPList.quickSort (ListToOOPList <| list))
+
+              let expectedResult = List.sort list
+              Expect.equal actualResult expectedResult "The results were different"
+
+          testProperty "(List ->) OOPList.quickSort (-> List) should give the same result as List.Sort (string)"
           <| fun (list: list<string>) ->
+              let actualResult =
+                  OOPListToList
+                  <| (OOPList.quickSort (ListToOOPList <| list))
+
+              let expectedResult = List.sort list
+              Expect.equal actualResult expectedResult "The results were different"
+
+          testProperty "(List ->) OOPList.quickSort (-> List) should give the same result as List.Sort (char)"
+          <| fun (list: list<char>) ->
               let actualResult =
                   OOPListToList
                   <| (OOPList.quickSort (ListToOOPList <| list))
