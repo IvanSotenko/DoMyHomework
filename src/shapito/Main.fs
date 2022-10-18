@@ -1,4 +1,5 @@
 namespace shapito
+
 module Main =
 
     [<EntryPoint>]

@@ -8,6 +8,7 @@
     <ItemGroup>
         <Compile Include="AssemblyInfo.fs" />
         <Compile Include="Homework1Tests.fs" />
+        <Compile Include="TestExamples.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
     <ItemGroup>

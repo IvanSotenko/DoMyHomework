@@ -18,6 +18,7 @@
         <None Include="App.config" />
         <Compile Include="Homework1.fs" />
         <Compile Include="Main.fs" />
+        <Compile Include="Say.fs" />
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
