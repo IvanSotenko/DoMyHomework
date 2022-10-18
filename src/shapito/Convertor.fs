@@ -1,4 +1,4 @@
-﻿module DoMyHomework.Translator
+﻿module DoMyHomework.Convertor
 
 open OOPList
 open MyList
@@ -29,11 +29,10 @@ let MyListToArr (list: MyList<'value>) : 'value [] =
     SubMyListToArr [||] list
 
 // Converting array to Mylist
-let arrToMyList (arr: 'value []) : MyList<'value> =
+let arrToMyList (arr: array<'value>) : MyList<'value> =
 
-    let rec SubArrToMyList (i: int) (arr: 'value []) : MyList<int> =
+    let rec SubArrToMyList (i: int) (arr: 'value []) : MyList<'value> =
         if arr.Length <> i then
-            // This dot is not redundant!
             Cons(arr[i], (SubArrToMyList(i + 1) arr))
         else
             Empty

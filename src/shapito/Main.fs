@@ -12,4 +12,6 @@ module Main =
 
         // let b = concat c a
         // printfn "%A" (c.GetType())
+        let b = [|"3"; "4"|]
+        printf $"{b[1]}"
         0

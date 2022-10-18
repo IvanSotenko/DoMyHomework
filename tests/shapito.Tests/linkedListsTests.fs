@@ -4,7 +4,7 @@ open DoMyHomework
 open Expecto
 open FsCheck
 
-open Translator
+open Convertor
 
 let config = { Config.Default with MaxTest = 10000 }
 

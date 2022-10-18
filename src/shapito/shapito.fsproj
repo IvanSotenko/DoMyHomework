@@ -18,7 +18,7 @@
         <None Include="App.config" />
         <Compile Include="OOPList.fs" />
         <Compile Include="MyList.fs" />
-        <Compile Include="Translator.fs" />
+        <Compile Include="Convertor.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets" />
