@@ -1,4 +1,4 @@
-﻿module shapito.OOPList
+﻿module DoMyHomework.OOPList
 
 type IList<'value> =
     interface

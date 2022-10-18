@@ -16,7 +16,6 @@
     <ItemGroup>
         <Compile Include="AssemblyInfo.fs" />
         <None Include="App.config" />
-        <Compile Include="Say.fs" />
         <Compile Include="OOPList.fs" />
         <Compile Include="MyList.fs" />
         <Compile Include="Translator.fs" />

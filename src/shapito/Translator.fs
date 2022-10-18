@@ -1,4 +1,4 @@
-﻿module shapito.Translator
+﻿module DoMyHomework.Translator
 
 open OOPList
 open MyList

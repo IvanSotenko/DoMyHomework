@@ -1,6 +1,6 @@
-﻿module shapito.Tests.linkedListsTests
+﻿module DoMyHomework.Tests.linkedListsTests
 
-open shapito
+open DoMyHomework
 open Expecto
 open FsCheck
 
