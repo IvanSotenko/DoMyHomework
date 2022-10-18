@@ -4,8 +4,8 @@ open OOPList
 open MyList
 
 /// Converts an MyList into a OOPList
-let rec MyListToOOPList (lst: MyList<'value>) : IList<'value> =
-    match lst with
+let rec MyListToOOPList (list: MyList<'value>) : IList<'value> =
+    match list with
     | Empty -> EmptyList<'value>() :> IList<'value>
     | Cons (hd, tl) -> NonEmptyList<'value>(hd, MyListToOOPList tl)
 
@@ -13,7 +13,7 @@ let rec MyListToOOPList (lst: MyList<'value>) : IList<'value> =
 let rec OOPListToMyList (list: IList<'value>) : MyList<'value> =
     match list with
     | :? EmptyList<'value> -> Empty
-    | :? NonEmptyList<'value> as lst -> Cons(lst.Head, OOPListToMyList lst.Tail)
+    | :? NonEmptyList<'value> as list -> Cons(list.Head, OOPListToMyList list.Tail)
     | _ -> failwith $"Translator.OOPListToMyList: the input data type was expected to be \
                     OOPList+NonEmptyList or OOPList+EmptyList, \
                     but {(list.GetType())} was given"
@@ -40,28 +40,28 @@ let arrToMyList (arr: array<'value>) : MyList<'value> =
     SubArrToMyList 0 arr
 
 /// Converting regular list to MyList
-let rec listToMyList (lst: 'a list) : MyList<'a> =
-    match lst with
+let rec ListToMyList (list: 'a list) : MyList<'a> =
+    match list with
     | [] -> Empty
-    | head :: tail -> Cons(head, listToMyList tail)
+    | head :: tail -> Cons(head, ListToMyList tail)
 
 /// Converting MyList to regular list
-let rec MyListToList (mlst: MyList<'a>) : 'a list =
-    match mlst with
+let rec MyListToList (mlist: MyList<'a>) : 'a list =
+    match mlist with
     | Empty -> []
     | Cons (head, tail) -> head :: MyListToList tail
 
 /// Converting regular list to OOPList
-let rec listToOOPList (lst: 'value list) : IList<'value> =
-    match lst with
+let rec ListToOOPList (list: 'value list) : IList<'value> =
+    match list with
     | [] -> EmptyList() :> IList<'value>
-    | head :: tail -> NonEmptyList(head, listToOOPList tail)
+    | head :: tail -> NonEmptyList(head, ListToOOPList tail)
 
 /// Converting MyList to regular list
-let rec OOPListToList (ooplst: IList<'value>) : 'value list =
-    match ooplst with
+let rec OOPListToList (ooplist: IList<'value>) : 'value list =
+    match ooplist with
     | :? EmptyList<'value> -> []
-    | :? NonEmptyList<'value> as lst -> lst.Head :: OOPListToList lst.Tail
+    | :? NonEmptyList<'value> as list -> list.Head :: OOPListToList list.Tail
     | _ -> failwith $"Translator.OOPListToList: the input data type was expected to be \
                     OOPList+NonEmptyList or OOPList+EmptyList, \
-                    but {(ooplst.GetType())} was given"
+                    but {(ooplist.GetType())} was given"

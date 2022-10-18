@@ -17,39 +17,39 @@ let MyListTests =
 
           // Conversions
           testProperty "List -> MyList -> List is the original list"
-          <| fun lst ->
-              let result = MyListToList(listToMyList lst)
-              Expect.equal lst result "The results were different"
+          <| fun list ->
+              let result = MyListToList(ListToMyList list)
+              Expect.equal list result "The results were different"
 
           testProperty "(List ->) OOPList -> MyList -> OOPList (-> List) is the original List"
-          <| fun lst ->
+          <| fun list ->
               let result =
-                  lst
-                  |> listToOOPList
+                  list
+                  |> ListToOOPList
                   |> OOPListToMyList
                   |> MyListToOOPList
                   |> OOPListToList
 
-              Expect.equal lst result "The results were different"
+              Expect.equal list result "The results were different"
 
 
           // Concatenation
           testProperty "(MyList.concat list1 list2) is (list1 @ list2)"
-          <| fun lst1 lst2 ->
+          <| fun list1 list2 ->
               let actualResult =
-                  MyListToList(MyList.concat (lst1 |> listToMyList) (lst2 |> listToMyList))
+                  MyListToList(MyList.concat (list1 |> ListToMyList) (list2 |> ListToMyList))
 
-              let expectedResult = lst1 @ lst2
+              let expectedResult = list1 @ list2
               Expect.equal actualResult expectedResult "The results were different"
 
           testProperty "(MyList.concat list []) is (MyList.concat [] list)"
-          <| fun lst ->
+          <| fun list ->
               let result1 =
-                  (MyList.concat (lst |> listToMyList) ([] |> listToMyList))
+                  (MyList.concat (list |> ListToMyList) ([] |> ListToMyList))
                   |> MyListToList
 
               let result2 =
-                  (MyList.concat ([] |> listToMyList) (lst |> listToMyList))
+                  (MyList.concat ([] |> ListToMyList) (list |> ListToMyList))
                   |> MyListToList
 
               Expect.equal result1 result2 "The results were different"
@@ -57,7 +57,7 @@ let MyListTests =
           testCase "MyList.concat [] [] is []"
           <| fun _ ->
               let result =
-                  (MyList.concat (listToMyList []) (listToMyList []))
+                  (MyList.concat (ListToMyList []) (ListToMyList []))
                   |> MyListToList
 
               Expect.equal result [] "The results were different"
@@ -65,28 +65,28 @@ let MyListTests =
 
           // BubbleSort
           testProperty "(List ->) MyList.bubbleSort (-> List) should give the same result as List.Sort (nums)"
-          <| fun (lst: list<int>) ->
+          <| fun (list: list<int>) ->
               let actualResult =
                   MyListToList
-                  <| (MyList.bubbleSort (listToMyList <| lst))
+                  <| (MyList.bubbleSort (ListToMyList <| list))
 
-              let expectedResult = List.sort lst
+              let expectedResult = List.sort list
               Expect.equal actualResult expectedResult "The results were different"
 
           testProperty "(List ->) MyList.bubbleSort (-> List) should give the same result as List.Sort (strings)"
-          <| fun (lst: list<string>) ->
+          <| fun (list: list<string>) ->
               let actualResult =
                   MyListToList
-                  <| (MyList.bubbleSort (listToMyList <| lst))
+                  <| (MyList.bubbleSort (ListToMyList <| list))
 
-              let expectedResult = List.sort lst
+              let expectedResult = List.sort list
               Expect.equal actualResult expectedResult "The results were different"
 
           testCase "[] -> MyList -> MyList.bubbleSort -> List is []"
           <| fun _ ->
               let result =
                   []
-                  |> listToMyList
+                  |> ListToMyList
                   |> MyList.bubbleSort
                   |> MyListToList
 
@@ -95,28 +95,28 @@ let MyListTests =
 
           // QuickSort
           testProperty "(List ->) MyList.quickSort (-> List) should give the same result as List.Sort (nums)"
-          <| fun (lst: list<int>) ->
+          <| fun (list: list<int>) ->
               let actualResult =
                   MyListToList
-                  <| (MyList.quickSort (listToMyList <| lst))
+                  <| (MyList.quickSort (ListToMyList <| list))
 
-              let expectedResult = List.sort lst
+              let expectedResult = List.sort list
               Expect.equal actualResult expectedResult "The results were different"
 
           testProperty "(List ->) MyList.quickSort (-> List) should give the same result as List.Sort (strings)"
-          <| fun (lst: list<string>) ->
+          <| fun (list: list<string>) ->
               let actualResult =
                   MyListToList
-                  <| (MyList.quickSort (listToMyList <| lst))
+                  <| (MyList.quickSort (ListToMyList <| list))
 
-              let expectedResult = List.sort lst
+              let expectedResult = List.sort list
               Expect.equal actualResult expectedResult "The results were different"
 
           testCase "[] -> MyList -> MyList.quickSort -> List is []"
           <| fun _ ->
               let result =
                   []
-                  |> listToMyList
+                  |> ListToMyList
                   |> MyList.quickSort
                   |> MyListToList
 
@@ -131,39 +131,39 @@ let OOPListTests =
 
           // Conversions
           testProperty "List -> OOPList -> List is the original list"
-          <| fun lst ->
-              let result = OOPListToList(listToOOPList lst)
-              Expect.equal lst result "The results were different"
+          <| fun list ->
+              let result = OOPListToList(ListToOOPList list)
+              Expect.equal list result "The results were different"
 
           testProperty "(List ->) MyList -> OOPList -> MyList (-> List) is the original List"
-          <| fun lst ->
+          <| fun list ->
               let result =
-                  lst
-                  |> listToMyList
+                  list
+                  |> ListToMyList
                   |> MyListToOOPList
                   |> OOPListToMyList
                   |> MyListToList
 
-              Expect.equal lst result "The results were different"
+              Expect.equal list result "The results were different"
 
 
           // Concatenation
           testProperty "(OOPList.concat list1 list2) is (list1 @ list2)"
-          <| fun lst1 lst2 ->
+          <| fun list1 list2 ->
               let actualResult =
-                  OOPListToList(OOPList.concat (lst1 |> listToOOPList) (lst2 |> listToOOPList))
+                  OOPListToList(OOPList.concat (list1 |> ListToOOPList) (list2 |> ListToOOPList))
 
-              let expectedResult = lst1 @ lst2
+              let expectedResult = list1 @ list2
               Expect.equal actualResult expectedResult "The results were different"
 
           testProperty "(OOPList.concat list []) is (OOPList.concat [] list)"
-          <| fun lst ->
+          <| fun list ->
               let result1 =
-                  (OOPList.concat (lst |> listToOOPList) ([] |> listToOOPList))
+                  (OOPList.concat (list |> ListToOOPList) ([] |> ListToOOPList))
                   |> OOPListToList
 
               let result2 =
-                  (OOPList.concat ([] |> listToOOPList) (lst |> listToOOPList))
+                  (OOPList.concat ([] |> ListToOOPList) (list |> ListToOOPList))
                   |> OOPListToList
 
               Expect.equal result1 result2 "The results were different"
@@ -171,7 +171,7 @@ let OOPListTests =
           testCase "OOPList.concat [] [] is []"
           <| fun _ ->
               let result =
-                  (OOPList.concat (listToOOPList []) (listToOOPList []))
+                  (OOPList.concat (ListToOOPList []) (ListToOOPList []))
                   |> OOPListToList
 
               Expect.equal result [] "The results were different"
@@ -179,28 +179,28 @@ let OOPListTests =
 
           // BubbleSort
           testProperty "(List ->) OOPList.bubbleSort (-> List) should give the same result as List.Sort (nums)"
-          <| fun (lst: list<int>) ->
+          <| fun (list: list<int>) ->
               let actualResult =
                   OOPListToList
-                  <| (OOPList.bubbleSort (listToOOPList <| lst))
+                  <| (OOPList.bubbleSort (ListToOOPList <| list))
 
-              let expectedResult = List.sort lst
+              let expectedResult = List.sort list
               Expect.equal actualResult expectedResult "The results were different"
 
           testProperty "(List ->) OOPList.bubbleSort (-> List) should give the same result as List.Sort (strings)"
-          <| fun (lst: list<string>) ->
+          <| fun (list: list<string>) ->
               let actualResult =
                   OOPListToList
-                  <| (OOPList.bubbleSort (listToOOPList <| lst))
+                  <| (OOPList.bubbleSort (ListToOOPList <| list))
 
-              let expectedResult = List.sort lst
+              let expectedResult = List.sort list
               Expect.equal actualResult expectedResult "The results were different"
 
           testCase "[] -> OOPList -> OOPList.bubbleSort -> List is []"
           <| fun _ ->
               let result =
                   []
-                  |> listToOOPList
+                  |> ListToOOPList
                   |> OOPList.bubbleSort
                   |> OOPListToList
 
@@ -209,28 +209,28 @@ let OOPListTests =
 
           // QuickSort
           testProperty "(List ->) OOPList.quickSort (-> List) should give the same result as List.Sort (nums)"
-          <| fun (lst: list<int>) ->
+          <| fun (list: list<int>) ->
               let actualResult =
                   OOPListToList
-                  <| (OOPList.quickSort (listToOOPList <| lst))
+                  <| (OOPList.quickSort (ListToOOPList <| list))
 
-              let expectedResult = List.sort lst
+              let expectedResult = List.sort list
               Expect.equal actualResult expectedResult "The results were different"
 
           testProperty "(List ->) OOPList.quickSort (-> List) should give the same result as List.Sort (strings)"
-          <| fun (lst: list<string>) ->
+          <| fun (list: list<string>) ->
               let actualResult =
                   OOPListToList
-                  <| (OOPList.quickSort (listToOOPList <| lst))
+                  <| (OOPList.quickSort (ListToOOPList <| list))
 
-              let expectedResult = List.sort lst
+              let expectedResult = List.sort list
               Expect.equal actualResult expectedResult "The results were different"
 
           testCase "[] -> OOPList -> OOPList.quickSort -> List is []"
           <| fun _ ->
               let result =
                   []
-                  |> listToOOPList
+                  |> ListToOOPList
                   |> OOPList.quickSort
                   |> OOPListToList
 
