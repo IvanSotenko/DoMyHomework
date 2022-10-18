@@ -19,20 +19,24 @@ let rec concat (list1: IList<'value>) (list2: IList<'value>) : IList<'value> =
     match list1 with
     | :? EmptyList<'value> -> list2
     | :? NonEmptyList<'value> as lst -> NonEmptyList(lst.Head, concat lst.Tail list2)
-    | _ -> failwith "concat can only handle NonEmptyList and EmptyList"
+    | _ -> failwith $"OOPList.concat: the input data type was expected to be \
+                    OOPList+NonEmptyList or OOPList+EmptyList, \
+                    but {(list1.GetType())} was given"
 
 
 /// This function takes a OOPList and returns its head
 let getHead (lst: IList<'value>) : 'value =
     match lst with
     | :? NonEmptyList<'value> as list -> list.Head
-    | _ -> failwith "Head can only be taken from NonEmptyList"
+    | _ -> failwith $"OOPList.getHead: the input data type was expected to be \
+                    OOPList+NonEmptyList, but {(lst.GetType())} was given"
 
 /// This function takes a OOPList and returns its Tail
 let getTail (lst: IList<'value>) : IList<'value> =
     match lst with
     | :? NonEmptyList<'value> as list -> list.Tail
-    | _ -> failwith "Tail can only be taken from NonEmptyList"
+    | _ -> failwith $"OOPList.getTail: the input data type was expected to be \
+                    OOPList+NonEmptyList, but {(lst.GetType())} was given"
 
 
 
@@ -53,14 +57,18 @@ let rec bubbleSort (list: IList<'value>) : IList<'value> =
                     NonEmptyList(list.Head, list.Tail)
             else
                 NonEmptyList(list.Head, EmptyList())
-        | _ -> failwith "swap can only handle NonEmptyList and EmptyList"
+        | _ -> failwith $"OOPList.bubbleSort.swap: the input data type was expected to be \
+                        OOPList+NonEmptyList or OOPList+EmptyList, \
+                        but {(lst.GetType())} was given"
 
     /// This function passes through all elements and applies swap to all on the way
     let rec passage (lst: IList<'value>) : IList<'value> =
         match lst with
         | :? EmptyList<'value> -> EmptyList() :> IList<'value>
         | :? NonEmptyList<'value> as list -> swap (NonEmptyList(list.Head, (passage list.Tail)))
-        | _ -> failwith "passage can only handle NonEmptyList and EmptyList"
+        | _ -> failwith $"OOPList.bubbleSort.passage: the input data type was expected to be \
+                        OOPList+NonEmptyList or OOPList+EmptyList, \
+                        but {(lst.GetType())} was given"
 
     /// This function checks if list is sorted
     let rec isSorted (lst: IList<'value>) : bool =
@@ -74,7 +82,9 @@ let rec bubbleSort (list: IList<'value>) : IList<'value> =
                     false
             else
                 true
-        | _ -> failwith "isSorted can only handle NonEmptyList and EmptyList"
+        | _ -> failwith $"OOPList.bubbleSort.isSorted: the input data type was expected to be \
+                        OOPList+NonEmptyList or OOPList+EmptyList, \
+                        but {(lst.GetType())} was given"
 
     // The cycle happens here
     if isSorted list then
@@ -115,11 +125,15 @@ let rec quickSort (lst: IList<'value>) : IList<'value> =
                 divideAndApplyQuickSort list.Tail less (NonEmptyList(list.Head, equal)) more pivot
             else
                 divideAndApplyQuickSort list.Tail less equal (NonEmptyList(list.Head, more)) pivot
-        | _ -> failwith "divideAndApplyQuickSort can only handle NonEmptyList and EmptyList"
+        | _ -> failwith $"OOPList.quickSort.divideAndApplyQuickSort: the input data type was expected to be \
+                        OOPList+NonEmptyList or OOPList+EmptyList, \
+                        but {(lst.GetType())} was given"
 
     // That part is responsible for choosing the pivot
     // and calling divideAndApplyQuickSort with Empty values for less more and equal
     match lst with
     | :? EmptyList<'value> -> EmptyList() :> IList<'value>
     | :? NonEmptyList<'value> as list -> divideAndApplyQuickSort list (EmptyList()) (EmptyList()) (EmptyList()) list.Head
-    | _ -> failwith "quickSort can only handle NonEmptyList and EmptyList"
+    | _ -> failwith $"OOPList.quickSort: the input data type was expected to be \
+                    OOPList+NonEmptyList or OOPList+EmptyList, \
+                    but {(lst.GetType())} was given"

@@ -14,7 +14,9 @@ let rec OOPListToMyList (list: IList<'value>) : MyList<'value> =
     match list with
     | :? EmptyList<'value> -> Empty
     | :? NonEmptyList<'value> as lst -> Cons(lst.Head, OOPListToMyList lst.Tail)
-    | _ -> failwith "OOPListToMyList can only handle NonEmptyList and EmptyList"
+    | _ -> failwith $"Translator.OOPListToMyList: the input data type was expected to be \
+                    OOPList+NonEmptyList or OOPList+EmptyList, \
+                    but {(list.GetType())} was given"
 
 // Converting Mylist to array
 let MyListToArr (list: MyList<'value>) : 'value [] =
@@ -61,4 +63,6 @@ let rec OOPListToList (ooplst: IList<'value>) : 'value list =
     match ooplst with
     | :? EmptyList<'value> -> []
     | :? NonEmptyList<'value> as lst -> lst.Head :: OOPListToList lst.Tail
-    | _ -> failwith "OOPListToList can only handle NonEmptyList and EmptyList"
+    | _ -> failwith $"Translator.OOPListToList: the input data type was expected to be \
+                    OOPList+NonEmptyList or OOPList+EmptyList, \
+                    but {(ooplst.GetType())} was given"
