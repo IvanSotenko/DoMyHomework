@@ -92,7 +92,7 @@ let rec quickSort (lst: IList<'value>) : IList<'value> =
     /// less than pivot
     /// and equal to pivot.
     /// Then it applies quicksort to each part and concatenates them
-    let rec separator
+    let rec divideAndApplyQuickSort
         (lst: IList<'value>)
         (less: IList<'value>)
         (equal: IList<'value>)
@@ -109,16 +109,17 @@ let rec quickSort (lst: IList<'value>) : IList<'value> =
         // If there is elements in list we divide them into groups
         | :? NonEmptyList<'value> as list ->
             if list.Head < pivot then
-                separator list.Tail (concat less (NonEmptyList(list.Head, EmptyList()))) equal more pivot
+                // divideAndApplyQuickSort list.Tail (concat less (NonEmptyList(list.Head, EmptyList()))) equal more pivot
+                divideAndApplyQuickSort list.Tail (NonEmptyList(list.Head, less)) equal more pivot
             elif list.Head = pivot then
-                separator list.Tail less (concat equal (NonEmptyList(list.Head, EmptyList()))) more pivot
+                divideAndApplyQuickSort list.Tail less (NonEmptyList(list.Head, equal)) more pivot
             else
-                separator list.Tail less equal (concat more (NonEmptyList(list.Head, EmptyList()))) pivot
-        | _ -> failwith "separator can only handle NonEmptyList and EmptyList"
+                divideAndApplyQuickSort list.Tail less equal (NonEmptyList(list.Head, more)) pivot
+        | _ -> failwith "divideAndApplyQuickSort can only handle NonEmptyList and EmptyList"
 
     // That part is responsible for choosing the pivot
-    // and calling separator with Empty values for less more and equal
+    // and calling divideAndApplyQuickSort with Empty values for less more and equal
     match lst with
     | :? EmptyList<'value> -> EmptyList() :> IList<'value>
-    | :? NonEmptyList<'value> as list -> separator list (EmptyList()) (EmptyList()) (EmptyList()) list.Head
+    | :? NonEmptyList<'value> as list -> divideAndApplyQuickSort list (EmptyList()) (EmptyList()) (EmptyList()) list.Head
     | _ -> failwith "quickSort can only handle NonEmptyList and EmptyList"
