@@ -4,15 +4,6 @@ type MyList<'value> =
     | Cons of head: 'value * tail: MyList<'value>
     | Empty
 
-let rec map f lst =
-    match lst with
-    | Empty -> Empty
-    | Cons (hd, tl) -> Cons(f hd, map f tl)
-
-let go () : MyList<int> = map ((+) 1) (Cons(1, Cons(3, Empty)))
-
-let _go () : MyList<int> = map ((-) 1) (Cons(1, Cons(3, Empty)))
-
 
 /// That function insert second list to the tail of first
 let rec concat (list1: MyList<'value>) (list2: MyList<'value>) : MyList<'value> =

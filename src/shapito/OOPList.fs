@@ -13,42 +13,6 @@ type NonEmptyList<'value>(head: 'value, tail: IList<'value>) =
 type EmptyList<'value>() =
     interface IList<'value>
 
-type IActor<'inType, 'outType> =
-    abstract Do: 'inType -> 'outType
-
-let rec oopMap (f: IActor<'value, 'result>) (lst: IList<'value>) : IList<'result> =
-    if lst :? EmptyList<'value> then
-        EmptyList() :> IList<'result>
-    elif lst :? NonEmptyList<'value> then
-        let lst = lst :?> NonEmptyList<'value>
-        NonEmptyList(f.Do lst.Head, oopMap f lst.Tail)
-    else
-        failwith "!!!"
-
-let rec oopMap2 (f: IActor<'value, 'result>) (lst: IList<'value>) : IList<'result> =
-    match lst with
-    | :? EmptyList<'value> -> EmptyList() :> IList<'result>
-    | :? NonEmptyList<'value> as lst -> NonEmptyList(f.Do lst.Head, oopMap f lst.Tail)
-    | _ -> failwith "Unknown type"
-
-type PlusOneActor() =
-    interface IActor<int, int> with
-        member this.Do x = x + 1
-
-type MinusOneActor() =
-    interface IActor<int, int> with
-        member this.Do x = x - 1
-
-let _go2 () : IList<int> =
-    let lst = NonEmptyList(1, NonEmptyList(3, EmptyList()))
-    oopMap (PlusOneActor()) lst
-
-let go2 () : IList<int> =
-    let lst = NonEmptyList(1, NonEmptyList(3, EmptyList()))
-    oopMap (MinusOneActor()) lst
-
-
-
 /// That function insert second list to the tail of first.
 /// So it concatenates them
 let rec concat (list1: IList<'value>) (list2: IList<'value>) : IList<'value> =
