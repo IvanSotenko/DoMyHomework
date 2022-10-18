@@ -7,8 +7,8 @@
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="AssemblyInfo.fs" />
-        <Compile Include="Main.fs" />
         <Compile Include="GeneralTreeTests.fs" />
+        <Compile Include="Main.fs" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="../../src/shapito/shapito.fsproj" />

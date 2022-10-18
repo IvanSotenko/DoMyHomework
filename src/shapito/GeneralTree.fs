@@ -31,7 +31,7 @@ let treeToList tree =
 
         | Node (v, children), true ->
             match children with
-            | Cons (kid, tail) -> concat (concat (Cons (v, Empty)) (treeToListSub kid true)) (treeToListSub (Node (v, tail)) false)
+            | Cons (kid, tail) -> concat  (Cons (v, treeToListSub kid true)) (treeToListSub (Node (v, tail)) false)
             | Empty -> Empty
 
     treeToListSub tree true

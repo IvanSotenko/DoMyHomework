@@ -6,5 +6,5 @@ type MyList<'value> =
 
 let rec concat (list1: MyList<'value>) (list2: MyList<'value>) : MyList<'value> =
     match list1 with
-    | Cons (head, tail) -> Cons(head, concat tail list2)
+    | Cons (head, tail) -> Cons (head, concat tail list2)
     | Empty -> list2
