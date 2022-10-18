@@ -58,7 +58,7 @@ let rec fast_pow (bas: float) (power: int) =
 // (3) The difference between the largest and smallest element of the array
 let delta arr =
     if arr = [||] then
-        failwith "Error in Main.fs/FirstHw/delta: empty array was given. Doesn't make sense"
+        failwith "Error in Homework1.delta: empty array was given. Doesn't make sense"
 
     else
         let mutable min = arr[0]

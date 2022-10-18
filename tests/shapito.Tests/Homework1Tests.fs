@@ -88,9 +88,9 @@ let tests =
           <| fun arr ->
               if arr = [||] then
                   let expectedError =
-                      "Error in Main.fs/FirstHw/delta: empty array was given. Doesn't make sense"
+                      "Error in Homework1.delta: empty array was given. Doesn't make sense"
 
-                  Expect.throws (fun _ -> FirstHw.delta arr |> ignore) expectedError
+                  Expect.throws (fun _ -> delta arr |> ignore) expectedError
               else
                   let expectedResult = (Array.max arr) - (Array.min arr)
                   let actualResult = delta arr
@@ -104,7 +104,7 @@ let tests =
               let input1 = 1
               let input2 = 1
               let expectedResult = [||]
-              let actualResult = FirstHw.odd_numbers_between input1 input2
+              let actualResult = odd_numbers_between input1 input2
 
               Expect.equal
                   actualResult
@@ -121,7 +121,7 @@ let tests =
               let input1 = 1
               let input2 = 4
               let expectedResult = [| 3 |]
-              let actualResult = FirstHw.odd_numbers_between input1 input2
+              let actualResult = odd_numbers_between input1 input2
 
               Expect.equal
                   actualResult
@@ -138,7 +138,7 @@ let tests =
               let input1 = 3
               let input2 = 22
               let expectedResult = [| 5; 7; 9; 11; 13; 15; 17; 19; 21 |]
-              let actualResult = FirstHw.odd_numbers_between input1 input2
+              let actualResult = odd_numbers_between input1 input2
 
               Expect.equal
                   actualResult
@@ -167,7 +167,7 @@ let tests =
                      -37
                      -35 |]
 
-              let actualResult = FirstHw.odd_numbers_between input1 input2
+              let actualResult = odd_numbers_between input1 input2
 
               Expect.equal
                   actualResult
@@ -184,7 +184,7 @@ let tests =
               let input1 = 5
               let input2 = 4
               let expectedResult = [||]
-              let actualResult = FirstHw.odd_numbers_between input1 input2
+              let actualResult = odd_numbers_between input1 input2
 
               Expect.equal
                   actualResult
