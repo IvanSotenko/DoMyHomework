@@ -1,7 +1,5 @@
 ﻿module DoMyHomework.MyList
 
-open DoMyHomework.OOPList
-
 type MyList<'value> =
     | Cons of head: 'value * tail: MyList<'value>
     | Empty
@@ -68,11 +66,11 @@ let rec quickSort (list: MyList<'a>) : MyList<'a> =
         match list with
         | Cons (head, tail) ->
             if head > pivot then
-                divideAndApplyQuickSort tail less equal (Cons (head, more)) pivot
+                divideAndApplyQuickSort tail less equal (Cons(head, more)) pivot
             elif head < pivot then
-                divideAndApplyQuickSort tail (Cons (head, less)) equal more pivot
+                divideAndApplyQuickSort tail (Cons(head, less)) equal more pivot
             else
-                divideAndApplyQuickSort tail less (Cons (head, equal)) more pivot
+                divideAndApplyQuickSort tail less (Cons(head, equal)) more pivot
 
         // If all elements divided into groups then we sorting each group and
         // concatenates them

@@ -14,7 +14,9 @@ let rec OOPListToMyList (list: IList<'value>) : MyList<'value> =
     match list with
     | :? EmptyList<'value> -> Empty
     | :? NonEmptyList<'value> as list -> Cons(list.Head, OOPListToMyList list.Tail)
-    | _ -> failwith $"Translator.OOPListToMyList: the input data type was expected to be \
+    | _ ->
+        failwith
+            $"Translator.OOPListToMyList: the input data type was expected to be \
                     OOPList+NonEmptyList or OOPList+EmptyList, \
                     but {(list.GetType())} was given"
 
@@ -62,6 +64,8 @@ let rec OOPListToList (ooplist: IList<'value>) : 'value list =
     match ooplist with
     | :? EmptyList<'value> -> []
     | :? NonEmptyList<'value> as list -> list.Head :: OOPListToList list.Tail
-    | _ -> failwith $"Translator.OOPListToList: the input data type was expected to be \
+    | _ ->
+        failwith
+            $"Translator.OOPListToList: the input data type was expected to be \
                     OOPList+NonEmptyList or OOPList+EmptyList, \
                     but {(ooplist.GetType())} was given"
