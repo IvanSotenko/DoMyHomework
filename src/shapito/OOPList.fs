@@ -85,7 +85,9 @@ let rec bubbleSort (list: IList<'value>) : IList<'value> =
         match lst with
         | :? EmptyList<'value> -> true
         | :? NonEmptyList<'value> as list ->
-            (list.Tail :? EmptyList<'value>) || ((list.Head <= getHead list.Tail) && (isSorted list.Tail))
+            (list.Tail :? EmptyList<'value>)
+            || ((list.Head <= getHead list.Tail)
+                && (isSorted list.Tail))
         | _ ->
             failwith
                 $"OOPList.bubbleSort.isSorted: the input data type was expected to be \
