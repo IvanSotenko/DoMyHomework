@@ -1,4 +1,4 @@
-﻿module DoMyHomework.Tests.linkedListsTests
+﻿module DoMyHomework.Tests.LinkedListsTests
 
 open DoMyHomework
 open Expecto

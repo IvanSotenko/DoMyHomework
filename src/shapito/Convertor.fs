@@ -21,25 +21,25 @@ let rec OOPListToMyList (list: IList<'value>) : MyList<'value> =
                     but {(list.GetType())} was given"
 
 // Converting Mylist to array
-let MyListToArr (list: MyList<'value>) : 'value [] =
+let MyListToArray (list: MyList<'value>) : 'value [] =
 
-    let rec SubMyListToArr (arr: 'value []) (list: MyList<'value>) : 'value [] =
+    let rec SubMyListToArray (arr: 'value []) (list: MyList<'value>) : 'value [] =
         match list with
-        | Cons (head, tail) -> SubMyListToArr(Array.append arr [| head |]) tail
+        | Cons (head, tail) -> SubMyListToArray(Array.append arr [| head |]) tail
         | Empty -> arr
 
-    SubMyListToArr [||] list
+    SubMyListToArray [||] list
 
 // Converting array to Mylist
-let arrToMyList (arr: array<'value>) : MyList<'value> =
+let ArrayToMyList (arr: array<'value>) : MyList<'value> =
 
-    let rec SubArrToMyList (i: int) (arr: 'value []) : MyList<'value> =
+    let rec SubArrayToMyList (i: int) (arr: 'value []) : MyList<'value> =
         if arr.Length <> i then
-            Cons(arr[i], (SubArrToMyList(i + 1) arr))
+            Cons(arr[i], (SubArrayToMyList(i + 1) arr))
         else
             Empty
 
-    SubArrToMyList 0 arr
+    SubArrayToMyList 0 arr
 
 /// Converting regular list to MyList
 let rec ListToMyList (list: 'a list) : MyList<'a> =
