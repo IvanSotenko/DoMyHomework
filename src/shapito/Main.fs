@@ -4,21 +4,37 @@ module Main =
 
     open MyList
     open GeneralTree
+    open FsCheck
 
     [<EntryPoint>]
     let main argv =
 
-        let testTree1 = Node (1, Cons (Node (2, Cons (Leaf 4, Cons (Leaf 5, Empty))), Cons (Leaf 3, Empty)))
+        // let testTree1 = Node (1, Cons (Node (2, Cons (Leaf 4, Cons (Leaf 5, Empty))), Cons (Leaf 3, Empty)))
+        //
+        // let testTree2 = Node (1, Cons (Node (2, Cons (Leaf 9, Cons (Leaf 3, Cons (Leaf 0, Cons (Leaf -4, Empty))))), Cons (Leaf 3, Empty)))
+        //
+        // let testTree3 = Node ("a", Cons (Node ("b", Cons (Leaf "d", Cons (Leaf "e", Empty))), Cons (Leaf "c", Empty)))
 
-        let testTree2 = Node (1, Cons (Node (2, Cons (Leaf 9, Cons (Leaf 3, Cons (Leaf 0, Cons (Leaf -4, Empty))))), Cons (Leaf 3, Empty)))
+        let rec unsafelist() = Gen.oneof [ gen { return Empty }
+                                           Gen.map2 (fun x y -> Cons (x, y)) Arb.generate<int> (unsafelist())]
+        // let rec unsafeTree() =
+        //     Gen.oneof [ Gen.map Leaf Arb.generate<int>
+        //                 Gen.map2 (fun x y -> Branch (x,y)) (unsafeTree()) (unsafeTree())]
 
-        let testTree3 = Node ("a", Cons (Node ("b", Cons (Leaf "d", Cons (Leaf "e", Empty))), Cons (Leaf "c", Empty)))
 
-        printfn "%A" (treeToList testTree2)
-        printfn "%A" (countDistinct testTree2)
 
-        let da = dict<string, int>["Canada", 10; "Germany", 20]
-        let db = dict<string, int>["Canada", 10; "Germany", 20]
+        let lst =
+            let rec lst' s =
+                match s with
+                | 0 -> gen { return Empty }
+                | n when n > 0 ->
+                    let sublst = lst' (n - 1)
+                    Gen.oneof [ gen { return Empty }
+                                Gen.map2 (fun x y -> Cons (x, y)) Arb.generate<int> sublst]
+                | _ -> invalidArg "s" "Only positive arguments are allowed"
+            Gen.sized lst'
 
-        printfn "%A" (da = db)
+        let a = lst
+        printf $"{a}"
+
         0
