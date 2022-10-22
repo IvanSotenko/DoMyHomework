@@ -13,27 +13,6 @@ open FsCheck
 open GeneralTree
 open MyList
 
-
-let genlst =
-    let rec lst' s =
-        match (s + 10) with
-        | 0 -> gen { return Empty }
-        | n when n > 0 ->
-            let sublst = lst' (n - 1)
-            Gen.map2 (fun x y -> Cons (x, y)) Arb.generate<int> sublst
-        | _ -> invalidArg "s" "Only positive arguments are allowed"
-    Gen.sized lst'
-    // Gen.sized <| fun s -> Gen.resize (s*10) lst`
-
-type MyGenerators =
-  static member MyList() =
-      {new Arbitrary<MyList<int>>() with
-          override x.Generator = genlst
-          override x.Shrinker t = Seq.empty }
-
-
-Arb.register<MyGenerators>() |> ignore
-
 let config = { Config.Default with MaxTest = 10000 }
 
 [<Tests>]

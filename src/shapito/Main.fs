@@ -9,17 +9,11 @@ module Main =
     [<EntryPoint>]
     let main argv =
 
-        let lst =
-            let rec lst' s =
-                match s with
-                | 0 -> gen { return Empty }
-                | n when n > 0 ->
-                    let sublst = lst' (n - 1)
-                    Gen.map2 (fun x y -> Cons (x, y)) Arb.generate<int> sublst
-                | _ -> invalidArg "s" "Only positive arguments are allowed"
-            Gen.sized lst'
+        let testTree2 = Node (1, Cons (Node (2, Cons (Node (9, Empty), Cons (Node (3, Empty), Cons (Node (0, Empty), Cons (Node (-4, Empty), Empty))))), Cons (Node (3, Empty), Empty)))
+        let testTree4 = Node (3, Cons (Node (5, Empty), Cons (Node (2, Empty), Empty)))
 
-        printf $"{lst}"
+        printfn "%A" (GeneralTreeToList testTree2)
+        printfn $"{countDistinct testTree2}"
         0
 
         // let testTree1 = Node (1, Cons (Node (2, Cons (Leaf 4, Cons (Leaf 5, Empty))), Cons (Leaf 3, Empty)))
