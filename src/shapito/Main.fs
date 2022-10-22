@@ -1,4 +1,4 @@
-namespace shapito
+namespace DoMyHomework
 
 module Main =
 
@@ -22,7 +22,7 @@ module Main =
         //                 Gen.map2 (fun x y -> Branch (x,y)) (unsafeTree()) (unsafeTree())]
 
 
-
+        (*
         let lst =
             let rec lst' s =
                 match s with
@@ -36,5 +36,9 @@ module Main =
 
         let a = lst
         printf $"{a}"
+        *)
+
+        let b = Cons (3, Cons (6, Cons (6, Cons (4, Empty))))
+        let c = SetOfMyList b
 
         0

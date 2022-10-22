@@ -19,6 +19,7 @@
         <Compile Include="MyList.fs" />
         <Compile Include="BinTree.fs" />
         <Compile Include="GeneralTree.fs" />
+        <Compile Include="Convertor.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
     <ItemGroup>

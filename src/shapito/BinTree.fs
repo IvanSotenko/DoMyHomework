@@ -1,4 +1,4 @@
-﻿module shapito.BinTree
+﻿module DoMyHomework.BinTree
 
 type BinTree<'value> =
     | FullNode of value: 'value * left: BinTree<'value> * right: BinTree<'value>

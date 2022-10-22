@@ -1,4 +1,4 @@
-﻿module shapito.GeneralTree
+﻿module DoMyHomework.GeneralTree
 
 open MyList
 
@@ -6,19 +6,19 @@ type GeneralTree<'value> =
     | Node of value: 'value * children: MyList<GeneralTree<'value>>
     | Leaf of value: 'value
 
-let rec treeToSet tree =
+let rec SetOfGeneralTree tree =
         match tree with
             | Leaf v -> Set.empty.Add(v)
             | Node (v, children) ->
                     match children with
-                    | Cons (kid, tail) -> (treeToSet kid) + Set.empty.Add(v) + (treeToSet (Node (v, tail)))
+                    | Cons (kid, tail) -> (SetOfGeneralTree kid) + Set.empty.Add(v) + (SetOfGeneralTree (Node (v, tail)))
                     | Empty -> Set.empty
 
 
-let countDistinct tree = Set.count (treeToSet tree)
+let countDistinct tree = Set.count (SetOfGeneralTree tree)
 
 
-let treeToList tree =
+let GeneralTreeToList tree =
 
     let rec treeToListSub tree isis =
         match tree, isis with

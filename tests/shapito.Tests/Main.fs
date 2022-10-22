@@ -1,4 +1,4 @@
-namespace shapito.Tests
+namespace DoMyHomework.Tests
 
 module ExpectoTemplate =
 
