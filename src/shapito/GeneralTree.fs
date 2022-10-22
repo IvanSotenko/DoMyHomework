@@ -5,17 +5,17 @@ open MyList
 type GeneralTree<'value> =
     | Node of value: 'value * children: MyList<GeneralTree<'value>>
 
-let rec set tree =
+let rec toSet tree =
         match tree with
             | Node (v, children) ->
                     match children with
-                    | Cons (kid, tail) -> (set kid) + Set.empty.Add(v) + (set (Node (v, tail)))
+                    | Cons (kid, tail) -> (toSet kid) + Set.empty.Add(v) + (toSet (Node (v, tail)))
                     | Empty -> Set.empty.Add(v)
 
 
-let countDistinct tree = Set.count (set tree)
+let countDistinct tree = Set.count (toSet tree)
 
-let toList tree =
+let toMyList tree =
 
     let rec toListSub tree isis =
         match tree, isis with

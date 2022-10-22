@@ -9,14 +9,9 @@ module Main =
     [<EntryPoint>]
     let main argv =
 
-        let testTree2 = Node (1, Cons (Node (2, Cons (Node (9, Empty), Cons (Node (3, Empty), Cons (Node (0, Empty), Cons (Node (-4, Empty), Empty))))), Cons (Node (3, Empty), Empty)))
-        let testTree4 = Node (3, Cons (Node (5, Empty), Cons (Node (2, Empty), Empty)))
-
-        printfn "%A" (toList testTree2)
-        printfn $"{countDistinct testTree2}"
-
-        let a = Cons(3, Cons (3, Cons (6, Empty)))
-        printfn "%A" (length a)
+        let a = Set.ofList [2; 4; 5]
+        let b = Set.ofList [2; 4; 5]
+        printfn $"{a = b}"
 
         0
 
