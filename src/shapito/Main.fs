@@ -14,6 +14,7 @@ module Main =
 
         printfn "%A" (GeneralTreeToList testTree2)
         printfn $"{countDistinct testTree2}"
+
         0
 
         // let testTree1 = Node (1, Cons (Node (2, Cons (Leaf 4, Cons (Leaf 5, Empty))), Cons (Leaf 3, Empty)))

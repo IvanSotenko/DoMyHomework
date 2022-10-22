@@ -15,25 +15,6 @@ let rec SetOfGeneralTree tree =
 
 let countDistinct tree = Set.count (SetOfGeneralTree tree)
 
-
-// let GeneralTreeToList tree =
-//
-//     let rec treeToListSub tree isis =
-//         match tree, isis with
-//         | Leaf v, _ -> Cons (v, Empty)
-//
-//         | Node (v, children), false ->
-//             match children with
-//             | Cons (kid, tail) -> concat (treeToListSub kid true) (treeToListSub (Node (v, tail)) false)
-//             | Empty -> Empty
-//
-//         | Node (v, children), true ->
-//             match children with
-//             | Cons (kid, tail) -> concat  (Cons (v, treeToListSub kid true)) (treeToListSub (Node (v, tail)) false)
-//             | Empty -> Empty
-//
-//     treeToListSub tree true
-
 let GeneralTreeToList tree =
 
     let rec treeToListSub tree isis =
