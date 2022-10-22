@@ -17,4 +17,4 @@ let rec minInTree tree =
     | LeafWithLeft (n, l) -> min n (minInTree l)
     | LeafWithRight (n, r) -> min n (minInTree r)
 
-let tree = FullNode(5, FullNode(3, FullNode (8, Leaf 2, Leaf 9), Leaf 6), LeafWithLeft(4, FullNode (10, Leaf 11, Leaf 7)))
+// let tree = FullNode(5, FullNode(3, FullNode (8, Leaf 2, Leaf 9), Leaf 6), LeafWithLeft(4, FullNode (10, Leaf 11, Leaf 7)))

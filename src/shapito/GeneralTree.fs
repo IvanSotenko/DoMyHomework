@@ -5,6 +5,10 @@ open MyList
 type GeneralTree<'value> =
     | Node of value: 'value * children: MyList<GeneralTree<'value>>
 
+
+// The problem was that function could not take both GeneralTree and MyList
+// at the same time to move both "down" the tree and to the "right" on its list.
+// The solution is to "wrap" the element in a Node each time so function works with the same type.
 let rec toSet tree =
         match tree with
             | Node (v, children) ->
@@ -15,6 +19,10 @@ let rec toSet tree =
 
 let countDistinct tree = Set.count (toSet tree)
 
+
+// The problem with the MyList was that when we "wrap" an element in a Node, it is duplicated.
+// So by "wrapping" the element, we just tell the function that it does not need to be taken into account,
+// passing the false parameter to it
 let toMyList tree =
 
     let rec toListSub tree isis =
@@ -31,4 +39,3 @@ let toMyList tree =
             | Empty -> Cons (v, Empty)
 
     toListSub tree true
-// let testTree = Node ("a", Cons (Node ("b", Cons (Leaf "d", Cons (Leaf "e", Empty))), Cons (Leaf "c", Empty)))
