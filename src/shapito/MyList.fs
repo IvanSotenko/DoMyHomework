@@ -12,10 +12,17 @@ let rec concat (list1: MyList<'value>) (list2: MyList<'value>) : MyList<'value> 
     | Empty -> list2
 
 
-let SetOfMyList list =
+let set list =
     let rec SetOfMyListSub list st =
         match list with
         | Empty -> Set.empty
         | Cons (head, tail) -> st + Set.empty.Add(head) + SetOfMyListSub tail st
 
     SetOfMyListSub list Set.empty
+
+let length list =
+    let rec lengthSub list n =
+        match list with
+        | Empty -> n
+        | Cons (head, tail) -> lengthSub tail (n + 1)
+    lengthSub list 0

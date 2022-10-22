@@ -12,8 +12,11 @@ module Main =
         let testTree2 = Node (1, Cons (Node (2, Cons (Node (9, Empty), Cons (Node (3, Empty), Cons (Node (0, Empty), Cons (Node (-4, Empty), Empty))))), Cons (Node (3, Empty), Empty)))
         let testTree4 = Node (3, Cons (Node (5, Empty), Cons (Node (2, Empty), Empty)))
 
-        printfn "%A" (GeneralTreeToList testTree2)
+        printfn "%A" (toList testTree2)
         printfn $"{countDistinct testTree2}"
+
+        let a = Cons(3, Cons (3, Cons (6, Empty)))
+        printfn "%A" (length a)
 
         0
 
