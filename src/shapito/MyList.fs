@@ -21,7 +21,7 @@ let rec concat (list1: MyList<'value>) (list2: MyList<'value>) : MyList<'value> 
     | Empty -> list2
 
 
-let toSet (list: MyList<'a>): Set<'a> =
+let toSet (list: MyList<'a>) : Set<'a> =
     let rec SetOfMyListSub list st =
         match list with
         | Empty -> Set.empty
@@ -30,9 +30,10 @@ let toSet (list: MyList<'a>): Set<'a> =
     SetOfMyListSub list Set.empty
 
 
-let length (list: MyList<'a>): int =
+let length (list: MyList<'a>) : int =
     let rec lengthSub list n =
         match list with
         | Empty -> n
         | Cons (_, tail) -> lengthSub tail (n + 1)
+
     lengthSub list 0
