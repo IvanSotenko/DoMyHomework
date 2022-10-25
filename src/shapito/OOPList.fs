@@ -4,7 +4,6 @@ type IList<'value> =
     interface
     end
 
-//[<AllowNullLiteral>]
 type NonEmptyList<'value>(head: 'value, tail: IList<'value>) =
     interface IList<'value>
     member this.Head = head
