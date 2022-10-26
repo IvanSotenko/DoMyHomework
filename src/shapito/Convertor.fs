@@ -4,16 +4,16 @@ open OOPList
 open MyList
 
 /// Converts an MyList into a OOPList
-let rec MyListToOOPList (list: MyList<'value>) : IList<'value> =
+let rec MyListToOOPList (list: MyList<'Value>) : IList<'Value> =
     match list with
-    | Empty -> EmptyList<'value>() :> IList<'value>
-    | Cons (hd, tl) -> NonEmptyList<'value>(hd, MyListToOOPList tl)
+    | Empty -> EmptyList<'Value>() :> IList<'Value>
+    | Cons (hd, tl) -> NonEmptyList<'Value>(hd, MyListToOOPList tl)
 
 /// Converts an OOPList into a MyList
-let rec OOPListToMyList (list: IList<'value>) : MyList<'value> =
+let rec OOPListToMyList (list: IList<'Value>) : MyList<'Value> =
     match list with
-    | :? EmptyList<'value> -> Empty
-    | :? NonEmptyList<'value> as list -> Cons(list.Head, OOPListToMyList list.Tail)
+    | :? EmptyList<'Value> -> Empty
+    | :? NonEmptyList<'Value> as list -> Cons(list.Head, OOPListToMyList list.Tail)
     | _ ->
         failwith
             $"Translator.OOPListToMyList: the input data type was expected to be \
@@ -21,49 +21,49 @@ let rec OOPListToMyList (list: IList<'value>) : MyList<'value> =
                     but {(list.GetType())} was given"
 
 // Converting Mylist to array
-let MyListToArray (list: MyList<'value>) : 'value [] =
+let MyListToArray (list: MyList<'Value>) : 'Value [] =
 
-    let rec SubMyListToArray (arr: 'value []) (list: MyList<'value>) : 'value [] =
+    let rec subMyListToArray (arr: 'Value []) (list: MyList<'Value>) : 'Value [] =
         match list with
-        | Cons (head, tail) -> SubMyListToArray(Array.append arr [| head |]) tail
+        | Cons (head, tail) -> subMyListToArray(Array.append arr [| head |]) tail
         | Empty -> arr
 
-    SubMyListToArray [||] list
+    subMyListToArray [||] list
 
 // Converting array to Mylist
-let ArrayToMyList (arr: array<'value>) : MyList<'value> =
+let ArrayToMyList (arr: array<'Value>) : MyList<'Value> =
 
-    let rec SubArrayToMyList (i: int) (arr: 'value []) : MyList<'value> =
+    let rec subArrayToMyList (i: int) (arr: 'Value []) : MyList<'Value> =
         if arr.Length <> i then
-            Cons(arr[i], (SubArrayToMyList(i + 1) arr))
+            Cons(arr[i], (subArrayToMyList(i + 1) arr))
         else
             Empty
 
-    SubArrayToMyList 0 arr
+    subArrayToMyList 0 arr
 
 /// Converting regular list to MyList
-let rec ListToMyList (list: 'a list) : MyList<'a> =
+let rec ListToMyList (list: 'A list) : MyList<'A> =
     match list with
     | [] -> Empty
     | head :: tail -> Cons(head, ListToMyList tail)
 
 /// Converting MyList to regular list
-let rec MyListToList (mlist: MyList<'a>) : 'a list =
+let rec MyListToList (mlist: MyList<'A>) : 'A list =
     match mlist with
     | Empty -> []
     | Cons (head, tail) -> head :: MyListToList tail
 
 /// Converting regular list to OOPList
-let rec ListToOOPList (list: 'value list) : IList<'value> =
+let rec ListToOOPList (list: 'Value list) : IList<'Value> =
     match list with
-    | [] -> EmptyList() :> IList<'value>
+    | [] -> EmptyList() :> IList<'Value>
     | head :: tail -> NonEmptyList(head, ListToOOPList tail)
 
 /// Converting MyList to regular list
-let rec OOPListToList (ooplist: IList<'value>) : 'value list =
+let rec OOPListToList (ooplist: IList<'Value>) : 'Value list =
     match ooplist with
-    | :? EmptyList<'value> -> []
-    | :? NonEmptyList<'value> as list -> list.Head :: OOPListToList list.Tail
+    | :? EmptyList<'Value> -> []
+    | :? NonEmptyList<'Value> as list -> list.Head :: OOPListToList list.Tail
     | _ ->
         failwith
             $"Translator.OOPListToList: the input data type was expected to be \

@@ -1,7 +1,7 @@
-﻿module shapito.Tests.Homework1Tests
+﻿module DoMyHomework.Tests.Homework1Tests
 
 open Expecto
-open shapito
+open DoMyHomework
 
 open Homework1
 
@@ -15,7 +15,7 @@ let tests =
           testProperty "silly_pow a b should give the same result as (a**b)"
           <| fun (bas: float) (pow: int) ->
               let expectedResult = bas ** pow
-              let actualResult = silly_pow bas pow
+              let actualResult = sillyPow bas pow
 
               if (expectedResult = infinity)
                  || (expectedResult = (-infinity)) then
@@ -39,7 +39,7 @@ let tests =
           testProperty "silly_pow_rec a b should give the same result as (a**b))"
           <| fun (bas: float) (pow: int) ->
               let expectedResult = bas ** pow
-              let actualResult = silly_pow_rec bas pow
+              let actualResult = sillyPowRec bas pow
 
               if (expectedResult = infinity)
                  || (expectedResult = (-infinity)) then
@@ -63,7 +63,7 @@ let tests =
           testProperty "fast_pow a b should give the same result as (a**b)"
           <| fun (bas: float) (pow: int) ->
               let expectedResult = bas ** pow
-              let actualResult = fast_pow bas pow
+              let actualResult = fastPow bas pow
 
               if (expectedResult = infinity)
                  || (expectedResult = (-infinity)) then
@@ -86,7 +86,7 @@ let tests =
           // Difference between max and min element of array
           testProperty "(delta arr) should work the same as ((Array.max arr) - (Array.min arr))"
           <| fun arr ->
-              if arr = [||] then
+              if Array.isEmpty arr then
                   let expectedError =
                       "Error in Homework1.delta: empty array was given. Doesn't make sense"
 
@@ -104,7 +104,7 @@ let tests =
               let input1 = 1
               let input2 = 1
               let expectedResult = [||]
-              let actualResult = odd_numbers_between input1 input2
+              let actualResult = oddNumbersBetween input1 input2
 
               Expect.equal
                   actualResult
@@ -121,7 +121,7 @@ let tests =
               let input1 = 1
               let input2 = 4
               let expectedResult = [| 3 |]
-              let actualResult = odd_numbers_between input1 input2
+              let actualResult = oddNumbersBetween input1 input2
 
               Expect.equal
                   actualResult
@@ -138,7 +138,7 @@ let tests =
               let input1 = 3
               let input2 = 22
               let expectedResult = [| 5; 7; 9; 11; 13; 15; 17; 19; 21 |]
-              let actualResult = odd_numbers_between input1 input2
+              let actualResult = oddNumbersBetween input1 input2
 
               Expect.equal
                   actualResult
@@ -167,7 +167,7 @@ let tests =
                      -37
                      -35 |]
 
-              let actualResult = odd_numbers_between input1 input2
+              let actualResult = oddNumbersBetween input1 input2
 
               Expect.equal
                   actualResult
@@ -184,7 +184,7 @@ let tests =
               let input1 = 5
               let input2 = 4
               let expectedResult = [||]
-              let actualResult = odd_numbers_between input1 input2
+              let actualResult = oddNumbersBetween input1 input2
 
               Expect.equal
                   actualResult

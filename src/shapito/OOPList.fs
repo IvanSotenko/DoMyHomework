@@ -1,23 +1,23 @@
 ﻿module DoMyHomework.OOPList
 
-type IList<'value> =
+type IList<'Value> =
     interface
     end
 
-type NonEmptyList<'value>(head: 'value, tail: IList<'value>) =
-    interface IList<'value>
+type NonEmptyList<'Value>(head: 'Value, tail: IList<'Value>) =
+    interface IList<'Value>
     member this.Head = head
     member this.Tail = tail
 
-type EmptyList<'value>() =
-    interface IList<'value>
+type EmptyList<'Value>() =
+    interface IList<'Value>
 
 /// That function insert second list to the tail of first.
 /// So it concatenates them
-let rec concat (list1: IList<'value>) (list2: IList<'value>) : IList<'value> =
+let rec concat (list1: IList<'Value>) (list2: IList<'Value>) : IList<'Value> =
     match list1 with
-    | :? EmptyList<'value> -> list2
-    | :? NonEmptyList<'value> as lst -> NonEmptyList(lst.Head, concat lst.Tail list2)
+    | :? EmptyList<'Value> -> list2
+    | :? NonEmptyList<'Value> as lst -> NonEmptyList(lst.Head, concat lst.Tail list2)
     | _ ->
         failwith
             $"OOPList.concat: the input data type was expected to be \
@@ -26,18 +26,18 @@ let rec concat (list1: IList<'value>) (list2: IList<'value>) : IList<'value> =
 
 
 /// This function takes a OOPList and returns its head
-let getHead (lst: IList<'value>) : 'value =
+let getHead (lst: IList<'Value>) : 'Value =
     match lst with
-    | :? NonEmptyList<'value> as list -> list.Head
+    | :? NonEmptyList<'Value> as list -> list.Head
     | _ ->
         failwith
             $"OOPList.getHead: the input data type was expected to be \
                     OOPList+NonEmptyList, but {(lst.GetType())} was given"
 
 /// This function takes a OOPList and returns its Tail
-let getTail (lst: IList<'value>) : IList<'value> =
+let getTail (lst: IList<'Value>) : IList<'Value> =
     match lst with
-    | :? NonEmptyList<'value> as list -> list.Tail
+    | :? NonEmptyList<'Value> as list -> list.Tail
     | _ ->
         failwith
             $"OOPList.getTail: the input data type was expected to be \
@@ -47,15 +47,15 @@ let getTail (lst: IList<'value>) : IList<'value> =
 
 /// This function takes a MyOOPlist and sorts it using bubblesort,
 /// works the same way as a similar function for MyList
-let rec bubbleSort (list: IList<'value>) : IList<'value> =
+let rec bubbleSort (list: IList<'Value>) : IList<'Value> =
 
     /// This function swap the next two elements if
     /// the first element is greater than second
-    let swap (lst: IList<'value>) : IList<'value> =
+    let swap (lst: IList<'Value>) : IList<'Value> =
         match lst with
-        | :? EmptyList<'value> -> EmptyList() :> IList<'value>
-        | :? NonEmptyList<'value> as list ->
-            if list.Tail :? NonEmptyList<'value> then
+        | :? EmptyList<'Value> -> EmptyList() :> IList<'Value>
+        | :? NonEmptyList<'Value> as list ->
+            if list.Tail :? NonEmptyList<'Value> then
                 if list.Head > getHead list.Tail then
                     NonEmptyList(getHead list.Tail, NonEmptyList(list.Head, getTail list.Tail))
                 else
@@ -69,10 +69,10 @@ let rec bubbleSort (list: IList<'value>) : IList<'value> =
                         but {(lst.GetType())} was given"
 
     /// This function passes through all elements and applies swap to all on the way
-    let rec passage (lst: IList<'value>) : IList<'value> =
+    let rec passage (lst: IList<'Value>) : IList<'Value> =
         match lst with
-        | :? EmptyList<'value> -> EmptyList() :> IList<'value>
-        | :? NonEmptyList<'value> as list -> swap (NonEmptyList(list.Head, (passage list.Tail)))
+        | :? EmptyList<'Value> -> EmptyList() :> IList<'Value>
+        | :? NonEmptyList<'Value> as list -> swap (NonEmptyList(list.Head, (passage list.Tail)))
         | _ ->
             failwith
                 $"OOPList.bubbleSort.passage: the input data type was expected to be \
@@ -80,11 +80,11 @@ let rec bubbleSort (list: IList<'value>) : IList<'value> =
                         but {(lst.GetType())} was given"
 
     /// This function checks if list is sorted
-    let rec isSorted (lst: IList<'value>) : bool =
+    let rec isSorted (lst: IList<'Value>) : bool =
         match lst with
-        | :? EmptyList<'value> -> true
-        | :? NonEmptyList<'value> as list ->
-            list.Tail :? EmptyList<'value>
+        | :? EmptyList<'Value> -> true
+        | :? NonEmptyList<'Value> as list ->
+            list.Tail :? EmptyList<'Value>
             || list.Head <= getHead list.Tail
                && isSorted list.Tail
         | _ ->
@@ -102,7 +102,7 @@ let rec bubbleSort (list: IList<'value>) : IList<'value> =
 
 /// This function takes a OOPList and sorts it using quicksort
 /// works the same way as one for Mylist
-let rec quickSort (lst: IList<'value>) : IList<'value> =
+let rec quickSort (lst: IList<'Value>) : IList<'Value> =
 
     /// That function divides the array into three parts:
     /// elements that are more than pivot
@@ -110,21 +110,21 @@ let rec quickSort (lst: IList<'value>) : IList<'value> =
     /// and equal to pivot.
     /// Then it applies quicksort to each part and concatenates them
     let rec divideAndApplyQuickSort
-        (lst: IList<'value>)
-        (less: IList<'value>)
-        (equal: IList<'value>)
-        (more: IList<'value>)
-        (pivot: 'value)
-        : IList<'value> =
+        (lst: IList<'Value>)
+        (less: IList<'Value>)
+        (equal: IList<'Value>)
+        (more: IList<'Value>)
+        (pivot: 'Value)
+        : IList<'Value> =
 
         match lst with
 
         // If all elements divided into groups then we sorting each group and
         // concatenates them
-        | :? EmptyList<'value> -> concat (concat (quickSort less) equal) (quickSort more)
+        | :? EmptyList<'Value> -> concat (concat (quickSort less) equal) (quickSort more)
 
         // If there is elements in list we divide them into groups
-        | :? NonEmptyList<'value> as list ->
+        | :? NonEmptyList<'Value> as list ->
             if list.Head < pivot then
                 // divideAndApplyQuickSort list.Tail (concat less (NonEmptyList(list.Head, EmptyList()))) equal more pivot
                 divideAndApplyQuickSort list.Tail (NonEmptyList(list.Head, less)) equal more pivot
@@ -139,10 +139,10 @@ let rec quickSort (lst: IList<'value>) : IList<'value> =
                         but {(lst.GetType())} was given"
 
     // That part is responsible for choosing the pivot
-    // and calling divideAndApplyQuickSort with Empty values for less more and equal
+    // and calling divideAndApplyQuickSort with Empty Values for less more and equal
     match lst with
-    | :? EmptyList<'value> -> EmptyList() :> IList<'value>
-    | :? NonEmptyList<'value> as list ->
+    | :? EmptyList<'Value> -> EmptyList() :> IList<'Value>
+    | :? NonEmptyList<'Value> as list ->
         divideAndApplyQuickSort list (EmptyList()) (EmptyList()) (EmptyList()) list.Head
     | _ ->
         failwith
