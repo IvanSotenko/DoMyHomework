@@ -25,7 +25,7 @@ let MyListToArray (list: MyList<'Value>) : 'Value [] =
 
     let rec subMyListToArray (arr: 'Value []) (list: MyList<'Value>) : 'Value [] =
         match list with
-        | Cons (head, tail) -> subMyListToArray(Array.append arr [| head |]) tail
+        | Cons (head, tail) -> subMyListToArray (Array.append arr [| head |]) tail
         | Empty -> arr
 
     subMyListToArray [||] list
@@ -35,7 +35,7 @@ let ArrayToMyList (arr: array<'Value>) : MyList<'Value> =
 
     let rec subArrayToMyList (i: int) (arr: 'Value []) : MyList<'Value> =
         if arr.Length <> i then
-            Cons(arr[i], (subArrayToMyList(i + 1) arr))
+            Cons(arr[i], (subArrayToMyList (i + 1) arr))
         else
             Empty
 

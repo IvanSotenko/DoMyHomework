@@ -113,7 +113,8 @@ let rec quickSort (lst: IList<'Value>) : IList<'Value> =
         (less: IList<'Value>)
         (equal: IList<'Value>)
         (more: IList<'Value>)
-        (pivot: 'Value) =
+        (pivot: 'Value)
+        =
 
         match lst with
 
