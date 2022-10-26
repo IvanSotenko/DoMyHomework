@@ -108,42 +108,43 @@ let rec quickSort (lst: IList<'Value>) : IList<'Value> =
     /// elements that are more than pivot
     /// less than pivot
     /// and equal to pivot.
-    /// Then it applies quicksort to each part and concatenates them
-    let rec divideAndApplyQuickSort
+    let rec split
         (lst: IList<'Value>)
         (less: IList<'Value>)
         (equal: IList<'Value>)
         (more: IList<'Value>)
-        (pivot: 'Value)
-        : IList<'Value> =
+        (pivot: 'Value) =
 
         match lst with
 
-        // If all elements divided into groups then we sorting each group and
-        // concatenates them
-        | :? EmptyList<'Value> -> concat (concat (quickSort less) equal) (quickSort more)
+        | :? EmptyList<'Value> -> less, equal, more
 
-        // If there is elements in list we divide them into groups
         | :? NonEmptyList<'Value> as list ->
             if list.Head < pivot then
-                // divideAndApplyQuickSort list.Tail (concat less (NonEmptyList(list.Head, EmptyList()))) equal more pivot
-                divideAndApplyQuickSort list.Tail (NonEmptyList(list.Head, less)) equal more pivot
+                split list.Tail (NonEmptyList(list.Head, less)) equal more pivot
             elif list.Head = pivot then
-                divideAndApplyQuickSort list.Tail less (NonEmptyList(list.Head, equal)) more pivot
+                split list.Tail less (NonEmptyList(list.Head, equal)) more pivot
             else
-                divideAndApplyQuickSort list.Tail less equal (NonEmptyList(list.Head, more)) pivot
+                split list.Tail less equal (NonEmptyList(list.Head, more)) pivot
+
+
         | _ ->
             failwith
                 $"OOPList.quickSort.divideAndApplyQuickSort: the input data type was expected to be \
                         OOPList+NonEmptyList or OOPList+EmptyList, \
                         but {(lst.GetType())} was given"
 
-    // That part is responsible for choosing the pivot
-    // and calling divideAndApplyQuickSort with Empty Values for less more and equal
     match lst with
     | :? EmptyList<'Value> -> EmptyList() :> IList<'Value>
     | :? NonEmptyList<'Value> as list ->
-        divideAndApplyQuickSort list (EmptyList()) (EmptyList()) (EmptyList()) list.Head
+
+        // Divide the list into several parts
+        let parts = split list (EmptyList()) (EmptyList()) (EmptyList()) list.Head
+
+        // Sort less and more, then concatenate everything together
+        match parts with
+        | less, equal, more -> concat (concat (quickSort less) equal) (quickSort more)
+
     | _ ->
         failwith
             $"OOPList.quickSort: the input data type was expected to be \

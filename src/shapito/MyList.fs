@@ -59,25 +59,26 @@ let rec quickSort (list: MyList<'A>) : MyList<'A> =
     /// elements that are more than pivot
     /// less than pivot
     /// and equal to pivot.
-    /// Then it applies quicksort to each part and concatenates them
-    let rec divideAndApplyQuickSort list less equal more pivot =
+    let rec split list less equal more pivot =
 
-        // If there is elements in list we divide them into groups
         match list with
         | Cons (head, tail) ->
             if head > pivot then
-                divideAndApplyQuickSort tail less equal (Cons(head, more)) pivot
+                split tail less equal (Cons(head, more)) pivot
             elif head < pivot then
-                divideAndApplyQuickSort tail (Cons(head, less)) equal more pivot
+                split tail (Cons(head, less)) equal more pivot
             else
-                divideAndApplyQuickSort tail less (Cons(head, equal)) more pivot
+                split tail less (Cons(head, equal)) more pivot
 
-        // If all elements divided into groups then we sorting each group and
-        // concatenates them
-        | Empty -> concat (concat (quickSort less) equal) (quickSort more)
+        | Empty -> less, equal, more
 
-    // That part is responsible for choosing the pivot
-    // and calling divideAndApplyQuickSort with Empty values for less more and equal
     match list with
     | Empty -> Empty
-    | Cons (head, tail) -> divideAndApplyQuickSort (Cons(head, tail)) Empty Empty Empty head
+    | Cons (head, _) ->
+
+        // Divide the list into several parts
+        let parts = split list Empty Empty Empty head
+
+        // Sort less and more, then concatenate everything together
+        match parts with
+        | less, equal, more -> concat (concat (quickSort less) equal) (quickSort more)
