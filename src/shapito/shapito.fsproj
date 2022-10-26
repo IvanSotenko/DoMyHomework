@@ -20,7 +20,6 @@
         <Compile Include="BinTree.fs" />
         <Compile Include="GeneralTree.fs" />
         <Compile Include="Convertor.fs" />
-        <Compile Include="Main.fs" />
     </ItemGroup>
     <ItemGroup>
       <PackageReference Include="Expecto.FsCheck" Version="9.0.4" />
