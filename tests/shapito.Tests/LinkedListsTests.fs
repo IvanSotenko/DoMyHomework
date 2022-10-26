@@ -37,7 +37,7 @@ let MyListTests =
           testProperty "(MyList.concat list1 list2) is (list1 @ list2)"
           <| fun list1 list2 ->
               let actualResult =
-                  MyListToList(MyList.concat (list1 |> ListToMyList) (list2 |> ListToMyList))
+                  MyListToList (MyList.concat (list1 |> ListToMyList) (list2 |> ListToMyList))
 
               let expectedResult = list1 @ list2
               Expect.equal actualResult expectedResult "The results were different"
@@ -53,6 +53,16 @@ let MyListTests =
                   |> MyListToList
 
               Expect.equal result1 result2 "The results were different"
+
+          testProperty "Length of MyList.concat list1 list2 is equal to (length of list1) + (length of list2)"
+          <| fun list1 list2 ->
+              let actualResult =
+                  MyListToList (MyList.concat (list1 |> ListToMyList) (list2 |> ListToMyList))
+                  |> List.length
+
+              let expectedResult = List.length list1 + List.length list2
+
+              Expect.equal actualResult expectedResult "The results were different"
 
           testCase "MyList.concat [] [] is []"
           <| fun _ ->
@@ -205,6 +215,16 @@ let OOPListTests =
                   |> OOPListToList
 
               Expect.equal result1 result2 "The results were different"
+
+          testProperty "Length of OOPList.concat list1 list2 is equal to (length of list1) + (length of list2)"
+          <| fun list1 list2 ->
+              let actualResult =
+                  OOPListToList (OOPList.concat (list1 |> ListToOOPList) (list2 |> ListToOOPList))
+                  |> List.length
+
+              let expectedResult = List.length list1 + List.length list2
+
+              Expect.equal actualResult expectedResult "The results were different"
 
           testCase "OOPList.concat [] [] is []"
           <| fun _ ->
