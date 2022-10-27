@@ -37,3 +37,5 @@ let length (list: MyList<'a>) : int =
         | Cons (_, tail) -> lengthSub tail (n + 1)
 
     lengthSub list 0
+
+let oneElementList v = Cons(v, Empty)

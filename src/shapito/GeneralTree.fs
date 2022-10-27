@@ -41,3 +41,20 @@ let toMyList tree =
             | Empty -> Cons(v, Empty)
 
     toListSub tree true
+
+let collectInTree (joinFunc: 'a -> 'a -> 'a) (singleton: 'value -> 'a) (empty: 'a) (tree: GeneralTree<'value>) =
+
+    let rec collectInTreeSub tree isNew =
+        match tree, isNew with
+
+        | Node (v, children), false ->
+            match children with
+            | Cons (kid, tail) -> joinFunc (collectInTreeSub kid true) (collectInTreeSub (Node(v, tail)) false)
+            | Empty -> empty
+
+        | Node (v, children), true ->
+            match children with
+            | Cons (kid, tail) -> joinFunc (joinFunc (singleton v) (collectInTreeSub kid true)) (collectInTreeSub (Node(v, tail)) false)
+            | Empty -> singleton v
+
+    collectInTreeSub tree true
