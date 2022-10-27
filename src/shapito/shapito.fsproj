@@ -16,6 +16,9 @@
     <ItemGroup>
         <Compile Include="AssemblyInfo.fs" />
         <None Include="App.config" />
+        <Compile Include="OOPList.fs" />
+        <Compile Include="MyList.fs" />
+        <Compile Include="Convertor.fs" />
         <Compile Include="Homework1.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>

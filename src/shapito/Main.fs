@@ -1,4 +1,4 @@
-namespace shapito
+namespace DoMyHomework
 
 module Main =
 
