@@ -36,11 +36,7 @@ let rec bubbleSort (list: MyList<'Value>) : MyList<'Value> =
     /// This function checks if list is sorted
     let rec isSorted (list: MyList<'A>) : bool =
         match list with
-        | Cons (value1, Cons (value2, tail)) ->
-            if value1 <= value2 then
-                isSorted (Cons(value2, tail))
-            else
-                false
+        | Cons (value1, Cons (value2, tail)) -> value1 <= value2 && isSorted (Cons(value2, tail))
         | Cons (_, Empty) -> true
         | Empty -> true
 
