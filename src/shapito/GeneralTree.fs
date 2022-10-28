@@ -16,12 +16,17 @@ let collectInTree (joinFunc: 'a -> 'a -> 'a) (singleton: 'value -> 'a) (empty: '
 
         | Node (v, children), true ->
             match children with
-            | Cons (kid, tail) -> joinFunc (joinFunc (singleton v) (collectInTreeSub kid true)) (collectInTreeSub (Node(v, tail)) false)
+            | Cons (kid, tail) ->
+                joinFunc (joinFunc (singleton v) (collectInTreeSub kid true)) (collectInTreeSub (Node(v, tail)) false)
             | Empty -> singleton v
 
     collectInTreeSub tree true
 
 
-let toList tree = collectInTree concat (fun x -> Cons(x, Empty)) Empty tree
-let toSet tree = collectInTree Set.union Set.empty.Add Set.empty tree
+let toList tree =
+    collectInTree concat (fun x -> Cons(x, Empty)) Empty tree
+
+let toSet tree =
+    collectInTree Set.union Set.empty.Add Set.empty tree
+
 let countDistinct tree = Set.count (toSet tree)
