@@ -78,3 +78,20 @@ let rec quickSort (list: MyList<'A>) : MyList<'A> =
         // Sort less and more, then concatenate everything together
         match parts with
         | less, equal, more -> concat (concat (quickSort less) equal) (quickSort more)
+
+let toSet (list: MyList<'a>) : Set<'a> =
+    let rec SetOfMyListSub list st =
+        match list with
+        | Empty -> Set.empty
+        | Cons (head, tail) -> st + Set.empty.Add(head) + SetOfMyListSub tail st
+
+    SetOfMyListSub list Set.empty
+
+
+let length (list: MyList<'a>) : int =
+    let rec lengthSub list n =
+        match list with
+        | Empty -> n
+        | Cons (_, tail) -> lengthSub tail (n + 1)
+
+    lengthSub list 0
