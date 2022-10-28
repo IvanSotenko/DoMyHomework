@@ -88,19 +88,19 @@ let GeneralTreeTests =
           // GeneralTree.toMyList
           testCase "One element tree for GeneralTree.toMyList"
           <| fun _ ->
-              let actualResult = collectInTree (Node(4, Empty))
+              let actualResult = toList (Node(4, Empty))
               let expectedResult = Cons(4, Empty)
               Expect.equal actualResult expectedResult "The results were different"
 
-              let actualResult = collectInTree (Node(4.12, Empty))
+              let actualResult = toList (Node(4.12, Empty))
               let expectedResult = Cons(4.12, Empty)
               Expect.equal actualResult expectedResult "The results were different"
 
-              let actualResult = collectInTree (Node("finn", Empty))
+              let actualResult = toList (Node("finn", Empty))
               let expectedResult = Cons("finn", Empty)
               Expect.equal actualResult expectedResult "The results were different"
 
-              let actualResult = collectInTree (Node('a', Empty))
+              let actualResult = toList (Node('a', Empty))
               let expectedResult = Cons('a', Empty)
               Expect.equal actualResult expectedResult "The results were different"
 
@@ -121,7 +121,7 @@ let GeneralTreeTests =
                       )
                   )
 
-              let actualResult = collectInTree input
+              let actualResult = toList input
 
               let expectedResult =
                   Cons(1, Cons(2, Cons(1, Cons(3, Cons(0, Cons(-4, Cons(3, Empty)))))))
@@ -139,7 +139,7 @@ let GeneralTreeTests =
                       )
                   )
 
-              let actualResult = collectInTree input
+              let actualResult = toList input
 
               let expectedResult =
                   Cons("jake", Cons("bubblegum", Cons("marceline", Cons("bubblegum", Empty))))
@@ -157,7 +157,7 @@ let GeneralTreeTests =
                       )
                   )
 
-              let actualResult = collectInTree input
+              let actualResult = toList input
 
               let expectedResult =
                   Cons(3.2345, Cons(9.2345, Cons(2.4232, Cons(3.2345, Cons(2.4232, Cons(9.2333, Empty))))))
@@ -170,48 +170,48 @@ let GeneralTreeTests =
           testProperty "(tree |> countDistinct) should be less or equal (tree |> toMyList |> length) (int)"
           <| fun (tree: GeneralTree<int>) ->
               let input1 = tree |> countDistinct
-              let input2 = tree |> collectInTree |> length
+              let input2 = tree |> toList |> length
               Expect.isLessThanOrEqual input1 input2
 
           testProperty "(tree |> countDistinct) should be less or equal (tree |> toMyList |> length) (string)"
           <| fun (tree: GeneralTree<string>) ->
               let input1 = tree |> countDistinct
-              let input2 = tree |> collectInTree |> length
+              let input2 = tree |> toList |> length
               Expect.isLessThanOrEqual input1 input2
 
           testProperty "(tree |> countDistinct) should be less or equal (tree |> toMyList |> length) (float)"
           <| fun (tree: GeneralTree<float>) ->
               let input1 = tree |> countDistinct
-              let input2 = tree |> collectInTree |> length
+              let input2 = tree |> toList |> length
               Expect.isLessThanOrEqual input1 input2
 
           testProperty "(tree |> countDistinct) should be less or equal (tree |> toMyList |> length) (char)"
           <| fun (tree: GeneralTree<char>) ->
               let input1 = tree |> countDistinct
-              let input2 = tree |> collectInTree |> length
+              let input2 = tree |> toList |> length
               Expect.isLessThanOrEqual input1 input2
 
 
           testProperty "(tree |> set) should be the same as (tree |> toMyList |> toSet ) (int)"
           <| fun (tree: GeneralTree<int>) ->
               let input1 = tree |> GeneralTree.toSet
-              let input2 = tree |> collectInTree |> toSet
+              let input2 = tree |> toList |> toSet
               Expect.equal input1 input2
 
           testProperty "(tree |> toSet) should be the same as (tree |> toMyList |> toSet ) (string)"
           <| fun (tree: GeneralTree<string>) ->
               let input1 = tree |> GeneralTree.toSet
-              let input2 = tree |> collectInTree |> toSet
+              let input2 = tree |> toList |> toSet
               Expect.equal input1 input2
 
           testProperty "(tree |> toSet) should be the same as (tree |> toMyList |> toSet ) (float)"
           <| fun (tree: GeneralTree<NormalFloat>) ->
               let input1 = tree |> GeneralTree.toSet
-              let input2 = tree |> collectInTree |> toSet
+              let input2 = tree |> toList |> toSet
               Expect.equal input1 input2
 
           testProperty "(tree |> toSet) should be the same as (tree |> toMyList |> toSet ) (char)"
           <| fun (tree: GeneralTree<char>) ->
               let input1 = tree |> GeneralTree.toSet
-              let input2 = tree |> collectInTree |> toSet
+              let input2 = tree |> toList |> toSet
               Expect.equal input1 input2 ]

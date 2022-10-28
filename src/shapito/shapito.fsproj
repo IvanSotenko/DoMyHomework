@@ -20,7 +20,6 @@
         <Compile Include="BinTree.fs" />
         <Compile Include="GeneralTree.fs" />
         <Compile Include="OOPList.fs" />
-        <Compile Include="MyList.fs" />
         <Compile Include="Convertor.fs" />
         <Compile Include="Homework1.fs" />
         <Compile Include="Main.fs" />
