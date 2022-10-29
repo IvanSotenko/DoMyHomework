@@ -7,9 +7,9 @@
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="AssemblyInfo.fs" />
-        <Compile Include="GeneralTreeTests.fs" />
-        <Compile Include="LinkedListsTests.fs" />
         <Compile Include="Homework1Tests.fs" />
+        <Compile Include="LinkedListsTests.fs" />
+        <Compile Include="GeneralTreeTests.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
     <ItemGroup>
