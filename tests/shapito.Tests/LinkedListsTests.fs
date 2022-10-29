@@ -166,7 +166,59 @@ let MyListTests =
                   |> MyList.quickSort
                   |> MyListToList
 
-              Expect.equal result [] "The results were different" ]
+              Expect.equal result [] "The results were different"
+
+
+          // toSet
+          testProperty "(list |> MyList.ofList |> toSet) should be equal to (list |> Set.ofList) (int)"
+          <| fun (list: list<int>) ->
+              let actualResult = list |> ListToMyList |> MyList.toSet
+              let expectedResult = list |> Set.ofList
+              Expect.equal actualResult expectedResult "The results were different"
+
+          testProperty "(list |> MyList.ofList |> toSet) should be equal to (list |> Set.ofList) (string)"
+          <| fun (list: list<string>) ->
+              let actualResult = list |> ListToMyList |> MyList.toSet
+              let expectedResult = list |> Set.ofList
+              Expect.equal actualResult expectedResult "The results were different"
+
+          testProperty "(list |> MyList.ofList |> toSet) should be equal to (list |> Set.ofList) (char)"
+          <| fun (list: list<char>) ->
+              let actualResult = list |> ListToMyList |> MyList.toSet
+              let expectedResult = list |> Set.ofList
+              Expect.equal actualResult expectedResult "The results were different"
+
+          testProperty "(list |> MyList.ofList |> toSet) should be equal to (list |> Set.ofList) (float)"
+          <| fun (list: list<NormalFloat>) ->
+              let actualResult = list |> ListToMyList |> MyList.toSet
+              let expectedResult = list |> Set.ofList
+              Expect.equal actualResult expectedResult "The results were different"
+
+
+          // length
+          testProperty "(list |> MyList.ofList |> length) should be equal to (list |> length) (int)"
+          <| fun (list: list<int>) ->
+              let actualResult = list |> ListToMyList |> MyList.length
+              let expectedResult = list |> List.length
+              Expect.equal actualResult expectedResult "The results were different"
+
+          testProperty "(list |> MyList.ofList |> length) should be equal to (list |> length) (string)"
+          <| fun (list: list<string>) ->
+              let actualResult = list |> ListToMyList |> MyList.length
+              let expectedResult = list |> List.length
+              Expect.equal actualResult expectedResult "The results were different"
+
+          testProperty "(list |> MyList.ofList |> length) should be equal to (list |> length) (char)"
+          <| fun (list: list<char>) ->
+              let actualResult = list |> ListToMyList |> MyList.length
+              let expectedResult = list |> List.length
+              Expect.equal actualResult expectedResult "The results were different"
+
+          testProperty "(list |> MyList.ofList |> length) should be equal to (list |> length) (float)"
+          <| fun (list: list<NormalFloat>) ->
+              let actualResult = list |> ListToMyList |> MyList.length
+              let expectedResult = list |> List.length
+              Expect.equal actualResult expectedResult "The results were different" ]
 
 
 
