@@ -4,23 +4,25 @@ open MyList
 
 type GeneralTree<'Value> = Node of value: 'Value * children: MyList<GeneralTree<'Value>>
 
-let traversal (coreFunc: 'A -> 'A -> 'A) (singleton: 'Value -> 'A) (neutralElement: 'A) (tree: GeneralTree<'Value>) =
+let traversal (operation: 'A -> 'A -> 'A) (singleton: 'Value -> 'A) (neutralElement: 'A) (tree: GeneralTree<'Value>) =
 
-    let rec traversalSub tree isNew =
-        match tree, isNew with
+    let separate tree =
+        match tree with
+        | Node (v, children) -> v, children
 
-        | Node (v, children), false ->
-            match children with
-            | Cons (kid, tail) -> coreFunc (traversalSub kid true) (traversalSub (Node(v, tail)) false)
-            | Empty -> neutralElement
+    let rec subTraversal list accumulator =
+        match list with
+        | Cons (tree, nextTrees) ->
 
-        | Node (v, children), true ->
-            match children with
-            | Cons (kid, tail) ->
-                coreFunc (coreFunc (singleton v) (traversalSub kid true)) (traversalSub (Node(v, tail)) false)
-            | Empty -> singleton v
+            let v, children = separate tree
+            let updatedAccumulator = operation accumulator (singleton v)
 
-    traversalSub tree true
+            operation (subTraversal children updatedAccumulator) (subTraversal nextTrees neutralElement)
+
+        | Empty -> accumulator
+
+    let v, children = separate tree
+    subTraversal children (singleton v)
 
 
 let toList tree =
