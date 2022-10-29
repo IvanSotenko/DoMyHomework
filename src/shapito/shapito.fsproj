@@ -21,6 +21,7 @@
         <Compile Include="MyList.fs" />
         <Compile Include="Convertor.fs" />
         <Compile Include="Homework1.fs" />
+        <Compile Include="QTree.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets" />
