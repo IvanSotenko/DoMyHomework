@@ -1,13 +1,13 @@
 ﻿module DoMyHomework.BinTree
 
-type BinTree<'value> =
-    | FullNode of value: 'value * left: BinTree<'value> * right: BinTree<'value>
-    | LeafWithLeft of value: 'value * left: BinTree<'value>
-    | LeafWithRight of value: 'value * right: BinTree<'value>
-    | Leaf of value: 'value
+type BinTree<'Value> =
+    | FullNode of value: 'Value * left: BinTree<'Value> * right: BinTree<'Value>
+    | LeafWithLeft of value: 'Value * left: BinTree<'Value>
+    | LeafWithRight of value: 'Value * right: BinTree<'Value>
+    | Leaf of value: 'Value
 
-type BinTree2<'value> =
-    | Node of value: 'value * left: Option<BinTree2<'value> * 'value> * right: Option<BinTree2<'value> * 'value>
+type BinTree2<'Value> =
+    | Node of value: 'Value * left: Option<BinTree2<'Value> * 'Value> * right: Option<BinTree2<'Value> * 'Value>
 
 let rec minInTree tree =
     match tree with

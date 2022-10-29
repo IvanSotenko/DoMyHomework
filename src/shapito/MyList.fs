@@ -79,16 +79,16 @@ let rec quickSort (list: MyList<'A>) : MyList<'A> =
         match parts with
         | less, equal, more -> concat (concat (quickSort less) equal) (quickSort more)
 
-let toSet (list: MyList<'a>) : Set<'a> =
-    let rec SetOfMyListSub list st =
+let toSet (list: MyList<'A>) : Set<'A> =
+    let rec toSetSub list st =
         match list with
         | Empty -> Set.empty
-        | Cons (head, tail) -> st + Set.empty.Add(head) + SetOfMyListSub tail st
+        | Cons (head, tail) -> st + Set.empty.Add(head) + toSetSub tail st
 
-    SetOfMyListSub list Set.empty
+    toSetSub list Set.empty
 
 
-let length (list: MyList<'a>) : int =
+let length (list: MyList<'A>) : int =
     let rec lengthSub list n =
         match list with
         | Empty -> n

@@ -2,9 +2,9 @@
 
 open MyList
 
-type GeneralTree<'value> = Node of value: 'value * children: MyList<GeneralTree<'value>>
+type GeneralTree<'Value> = Node of value: 'Value * children: MyList<GeneralTree<'Value>>
 
-let traversal (coreFunc: 'a -> 'a -> 'a) (singleton: 'value -> 'a) (neutralElement: 'a) (tree: GeneralTree<'value>) =
+let traversal (coreFunc: 'A -> 'A -> 'A) (singleton: 'Value -> 'A) (neutralElement: 'A) (tree: GeneralTree<'Value>) =
 
     let rec traversalSub tree isNew =
         match tree, isNew with
