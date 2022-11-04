@@ -1,5 +1,7 @@
 ﻿module DoMyHomework.MyList
 
+open System.Globalization
+
 type MyList<'Value> =
     | Cons of head: 'Value * tail: MyList<'Value>
     | Empty
@@ -100,6 +102,14 @@ let fold (folder: 'State -> 'A -> 'State) (state: 'State) (list: MyList<'A>) : '
     let rec foldSub acc list =
         match list with
         | Cons (head, tail) -> foldSub (folder acc head) tail
+        | Empty -> acc
+
+    foldSub state list
+
+let foldRev (folder: 'State -> 'A -> 'State) (state: 'State) (list: MyList<'A>) : 'State =
+    let rec foldSub acc list =
+        match list with
+        | Cons (head, tail) -> folder (foldSub acc tail) head
         | Empty -> acc
 
     foldSub state list
