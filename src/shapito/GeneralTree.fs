@@ -31,10 +31,16 @@ let rec treeFoldSub (acc: MyList<'A>) (tree: GeneralTree<'A>) =
 
 
 let treeFold (folder: 'State -> 'A -> 'State) (state: 'State) (tree: GeneralTree<_>): 'State =
-    match tree with
-    | Node (v, kids) -> (fold folder state kids)
 
-let trueToList tree = treeFold treeFoldSub Empty tree
+    let rec treeFoldSub (acc: 'State) (tree: GeneralTree<_>) =
+        match tree with
+        | Node (v, kids) -> concat (Cons(v, acc)) (fold treeFoldSub Empty kids)
+
+    match tree with
+    | Node (v, kids) ->
+        fold folder state kids
+
+// let trueToList tree = treeFold treeFoldSub Empty tree
 
 
 let toList tree =
