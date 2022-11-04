@@ -15,6 +15,11 @@ let treeFold (join: 'State -> 'State -> 'State) (singleton: 'A -> 'State) (state
     | Node (v, kids) -> join (singleton v) (fold treeFolder state kids)
 
 
+let treeFold (folder: 'State -> 'A -> 'State) (state: 'State) (tree: GeneralTree<'A>): 'State =
+
+
+
+
 let toList tree =
     treeFold concat (fun v -> Cons(v, Empty)) Empty tree
 
