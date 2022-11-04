@@ -95,3 +95,11 @@ let length (list: MyList<'A>) : int =
         | Cons (_, tail) -> lengthSub tail (n + 1)
 
     lengthSub list 0
+
+let fold (folder: 'State -> 'A -> 'State) (state: 'State) (list: MyList<'A>): 'State =
+    let rec foldSub acc list =
+        match list with
+        | Cons (head, tail) -> foldSub (folder acc head) tail
+        | Empty -> acc
+
+    foldSub state list
