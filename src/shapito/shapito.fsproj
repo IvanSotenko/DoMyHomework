@@ -23,6 +23,7 @@
         <Compile Include="Homework1.fs" />
         <Compile Include="QTree.fs" />
         <Compile Include="Main.fs" />
+        <Content Include="Thoughts.md" />
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
