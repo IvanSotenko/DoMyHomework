@@ -41,18 +41,23 @@ type Matrix(bas: int [,]) =
             match tree with
             | Node (Leaf a, Leaf b, Leaf c, Leaf d) when (a = b) && (b = c) && (c = d) -> Leaf a
             | Node (Empty, Empty, Empty, Empty) -> Empty
+
             | Node (nw, ne, sw, se) ->
                 let collapsed = Node (collapse nw, collapse ne, collapse sw, collapse se)
                 match collapsed with
                 | Node (Leaf a, Leaf b, Leaf c, Leaf d) when (a = b) && (b = c) && (c = d) -> Leaf a
                 | Node (Empty, Empty, Empty, Empty) -> Empty
                 | _ -> collapsed
+
             | Leaf v -> Leaf v
             | Empty -> Empty
 
         collapse (construct depth (0, 0)), depth
 
     member this.element (row, column) =
+        let size = int (2.0**(float depth))
+        if (row >= size) || (column >= size) then failwith "Matrix index out of range"
+
         let rec find level tree (curRow, curCol) =
             match tree with
             | Node (nw, ne, sw, se) ->
