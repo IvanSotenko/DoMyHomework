@@ -5,8 +5,8 @@ type Matrix(bas: int [,]) =
     let QuadTree, depth =
         let rows = Array2D.length1 bas
         let columns = Array2D.length2 bas
-        let cube = max rows columns
-        let depth = int (System.Math.Ceiling (System.Math.Log(cube, 2)))
+        let size = max rows columns
+        let depth = int (System.Math.Ceiling (System.Math.Log(size, 2)))
 
         let rec construct level (x, y): QTree<int> =
             if level = 1
@@ -44,10 +44,9 @@ type Matrix(bas: int [,]) =
                 | Node (Empty, Empty, Empty, Empty) -> Empty
                 | _ -> collapsed
 
-            | Leaf v -> Leaf v
-            | Empty -> Empty
-
+            | _ -> tree
         collapse (construct depth (0, 0)), depth
+
 
     member this.element (row, column) =
         let size = int (2.0**(float depth))
