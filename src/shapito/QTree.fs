@@ -13,7 +13,7 @@ type Matrix(bas: int [,]) =
         let cube = max rows columns
         let depth = int (System.Math.Ceiling (System.Math.Log(cube, 2)))
 
-        let rec loopy level (x, y): QTree<int> =
+        let rec construct level (x, y): QTree<int> =
             if level = 1
             then
                 let quadNW =
@@ -32,12 +32,25 @@ type Matrix(bas: int [,]) =
                 Node(quadNW, quadNE, quadSW, quadSE)
 
             else
-                Node((loopy (level - 1) (x*2, y*2)),
-                     (loopy (level - 1) (x*2, y*2 + 1)),
-                     (loopy (level - 1) (x*2 + 1, y*2)),
-                     (loopy (level - 1) (x*2 + 1, y*2 + 1)))
+                Node((construct (level - 1) (x*2, y*2)),
+                     (construct (level - 1) (x*2, y*2 + 1)),
+                     (construct (level - 1) (x*2 + 1, y*2)),
+                     (construct (level - 1) (x*2 + 1, y*2 + 1)))
 
-        loopy depth (0, 0), depth
+        let rec collapse (tree: QTree<int>) =
+            match tree with
+            | Node (Leaf a, Leaf b, Leaf c, Leaf d) when (a = b) && (b = c) && (c = d) -> Leaf a
+            | Node (Empty, Empty, Empty, Empty) -> Empty
+            | Node (nw, ne, sw, se) ->
+                let collapsed = Node (collapse nw, collapse ne, collapse sw, collapse se)
+                match collapsed with
+                | Node (Leaf a, Leaf b, Leaf c, Leaf d) when (a = b) && (b = c) && (c = d) -> Leaf a
+                | Node (Empty, Empty, Empty, Empty) -> Empty
+                | _ -> collapsed
+            | Leaf v -> Leaf v
+            | Empty -> Empty
+
+        collapse (construct depth (0, 0)), depth
 
     member this.element (row, column) =
         let rec find level tree (curRow, curCol) =
@@ -53,3 +66,4 @@ type Matrix(bas: int [,]) =
             | Empty -> None
 
         find (depth - 1) QuadTree (0, 0)
+
