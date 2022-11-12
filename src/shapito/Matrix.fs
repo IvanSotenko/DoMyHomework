@@ -1,5 +1,5 @@
 ﻿module shapito.Matrix
-open Trees
+open QTree
 
 type Matrix(bas: int [,]) =
     let QuadTree, depth =
@@ -47,6 +47,8 @@ type Matrix(bas: int [,]) =
             | _ -> tree
         collapse (construct depth (0, 0)), depth
 
+    member this.actualRows = Array2D.length1 bas
+    member this.actualColumns = Array2D.length2 bas
 
     member this.element (row, column) =
         let size = int (2.0**(float depth))

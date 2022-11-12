@@ -37,6 +37,8 @@ type Vector(bas: int []) =
 
         collapse (construct depth 0), depth
 
+    member this.actualLength = Array.length bas
+
     member this.element i =
         let size = int (2.0**(float depth))
         if i >= size then failwith "Vector index out of range"

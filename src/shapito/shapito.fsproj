@@ -25,6 +25,7 @@
         <Compile Include="BinTree.fs" />
         <Compile Include="Matrix.fs" />
         <Compile Include="Vector.fs" />
+        <Compile Include="Multiply.fs" />
         <Compile Include="Main.fs" />
         <Content Include="Thoughts.md" />
     </ItemGroup>
