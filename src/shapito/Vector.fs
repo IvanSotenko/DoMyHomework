@@ -2,9 +2,9 @@
 open BinTree
 
 type Vector(bas: int []) =
-    let BinaryTree, depth =
-        let length = Array.length bas
-        let depth = int (System.Math.Ceiling (System.Math.Log(length, 2)))
+    let length = Array.length bas
+    let depth = int (System.Math.Ceiling (System.Math.Log(length, 2)))
+    member this.BinaryTree =
 
         let rec construct level i: BinTree<int> =
             if level = 1
@@ -35,7 +35,7 @@ type Vector(bas: int []) =
 
             | _ -> tree
 
-        collapse (construct depth 0), depth
+        collapse (construct depth 0)
 
     member this.actualLength = Array.length bas
 
@@ -56,4 +56,4 @@ type Vector(bas: int []) =
             | Leaf v -> Some v
             | Empty -> None
 
-        find (depth - 1) BinaryTree 0
+        find (depth - 1) this.BinaryTree 0
