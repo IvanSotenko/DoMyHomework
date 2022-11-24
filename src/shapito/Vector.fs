@@ -1,12 +1,13 @@
 ﻿module shapito.Vector
 open BinTree
 
-type Vector(bas: int []) =
+type Vector<'A when 'A: equality>(bas: array<'A> when 'A: equality) =
+
     let length = Array.length bas
     let depth = int (System.Math.Ceiling (System.Math.Log(length, 2)))
     member this.BinaryTree =
 
-        let rec construct level i: BinTree<int> =
+        let rec construct level i =
             if level = 1
             then
                 let left =
@@ -21,7 +22,7 @@ type Vector(bas: int []) =
                 Node(construct (level - 1) (i*2),
                      construct (level - 1) (i*2 + 1))
 
-        let rec collapse (tree: BinTree<int>) =
+        let rec collapse tree =
             match tree with
             | Node (Leaf a, Leaf b) when (a = b) -> Leaf a
             | Node (Empty, Empty) -> Empty
@@ -39,7 +40,7 @@ type Vector(bas: int []) =
 
     member this.actualLength = Array.length bas
 
-    member this.element i =
+    member this.getItem i =
         let size = int (2.0**(float depth))
         if i >= size then failwith "Vector index out of range"
         else

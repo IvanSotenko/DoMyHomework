@@ -1,14 +1,15 @@
 ﻿module shapito.Matrix
 open QTree
 
-type Matrix(bas: int [,]) =
-    let QuadTree, depth =
-        let rows = Array2D.length1 bas
-        let columns = Array2D.length2 bas
-        let size = max rows columns
-        let depth = int (System.Math.Ceiling (System.Math.Log(size, 2)))
+type Matrix<'A when 'A: equality>(bas: 'A [,] when 'A: equality) =
 
-        let rec construct level (x, y): QTree<int> =
+    let rows = Array2D.length1 bas
+    let columns = Array2D.length2 bas
+    let size = max rows columns
+    let depth = int (System.Math.Ceiling (System.Math.Log(size, 2)))
+
+    member this.QuadTree =
+        let rec construct level (x, y) =
             if level = 1
             then
                 let quadNW =
@@ -32,26 +33,22 @@ type Matrix(bas: int [,]) =
                      (construct (level - 1) (x*2 + 1, y*2)),
                      (construct (level - 1) (x*2 + 1, y*2 + 1)))
 
-        let rec collapse (tree: QTree<int>) =
+        let rec collapse tree =
             match tree with
-            | Node (Leaf a, Leaf b, Leaf c, Leaf d) when (a = b) && (b = c) && (c = d) -> Leaf a
-            | Node (Empty, Empty, Empty, Empty) -> Empty
-
             | Node (nw, ne, sw, se) ->
                 let collapsed = Node (collapse nw, collapse ne, collapse sw, collapse se)
                 match collapsed with
                 | Node (Leaf a, Leaf b, Leaf c, Leaf d) when (a = b) && (b = c) && (c = d) -> Leaf a
                 | Node (Empty, Empty, Empty, Empty) -> Empty
                 | _ -> collapsed
-
             | _ -> tree
-        collapse (construct depth (0, 0)), depth
 
-    member this.actualRows = Array2D.length1 bas
-    member this.actualColumns = Array2D.length2 bas
+        collapse (construct depth (0, 0))
 
-    member this.element (row, column) =
-        let size = int (2.0**(float depth))
+    member this.actualLen1 = Array2D.length1 bas
+    member this.actualLen2 = Array2D.length2 bas
+
+    member this.getItem (row, column) =
         if (row >= size) || (column >= size) then failwith "Matrix index out of range"
 
         let rec find level tree (curRow, curCol) =
@@ -66,4 +63,4 @@ type Matrix(bas: int [,]) =
             | Leaf v -> Some v
             | Empty -> None
 
-        find (depth - 1) QuadTree (0, 0)
+        find (depth - 1) this.QuadTree (0, 0)
