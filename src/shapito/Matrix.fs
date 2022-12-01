@@ -8,6 +8,9 @@ type Matrix<'A when 'A: equality>(bas: 'A [,] when 'A: equality) =
     let size = max rows columns
     let depth = int (System.Math.Ceiling (System.Math.Log(size, 2)))
 
+    member this.actualLen1 = Array2D.length1 bas
+    member this.actualLen2 = Array2D.length2 bas
+
     member this.QuadTree =
         let rec construct level (x, y) =
             if level = 1
@@ -44,9 +47,6 @@ type Matrix<'A when 'A: equality>(bas: 'A [,] when 'A: equality) =
             | _ -> tree
 
         collapse (construct depth (0, 0))
-
-    member this.actualLen1 = Array2D.length1 bas
-    member this.actualLen2 = Array2D.length2 bas
 
     member this.getItem (row, column) =
         if (row >= size) || (column >= size) then failwith "Matrix index out of range"
