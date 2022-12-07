@@ -43,19 +43,20 @@ type Vector<'A when 'A: equality> =
     new(arr) = { Data = collapseBinTree (constructBinTree arr); Length = arr.Length }
     new(tree, length) = { Data = tree; Length = length }
 
-    member this.getItem i =
-        if i >= this.Length then failwith "Vector index out of range"
-        else
+    member this.Item
+        with get i =
+            if i >= this.Length then failwith "Vector index out of range"
+            else
 
-            let rec find tree i curIndex =
-                match tree with
-                | Node (right, left) ->
-                    if i < curIndex then
-                        find right i (curIndex / 2)
-                    else
-                        find left i curIndex
-                | Leaf a -> Some a
-                | Empty -> None
+                let rec find tree i curIndex =
+                    match tree with
+                    | Node (right, left) ->
+                        if i < curIndex then
+                            find right i (curIndex / 2)
+                        else
+                            find left i curIndex
+                    | Leaf a -> Some a
+                    | Empty -> None
 
-            find this.Data i this.Length
+                find this.Data i this.Length
 

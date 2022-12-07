@@ -4,7 +4,7 @@ open Vector
 open BinTree
 open QTree
 
-let naiveMultiply (vec: Vector<'A>) (mat: Matrix<'A>) (add: 'A -> 'A -> 'A) (multiply: 'A -> 'A -> 'A) =
+let naiveMultiply (vec: Vector<'A>) (mat: Matrix<'B>) (add: 'C -> 'C -> 'C) (multiply: 'A -> 'B -> 'C) =
 
     let plus a b =
         match a, b with
@@ -15,7 +15,7 @@ let naiveMultiply (vec: Vector<'A>) (mat: Matrix<'A>) (add: 'A -> 'A -> 'A) (mul
 
     let multy a b =
         match a, b with
-        | Some x, Some y -> Some (add x y)
+        | Some x, Some y -> Some (multiply x y)
         | _ -> None
 
     if vec.Length <> mat.Length1 then failwith $"The dimensions of the matrix are incompatible
@@ -27,15 +27,15 @@ let naiveMultiply (vec: Vector<'A>) (mat: Matrix<'A>) (add: 'A -> 'A -> 'A) (mul
 
         let mutable newVector = [||]
         for i in 0 .. (columns - 1) do
-            let mutable el = multy (vec.getItem 0) (mat.getItem (0, i))
+            let mutable el = multy (vec[0]) (mat[0, i])
             for j in 1 .. (len - 1) do
-                el <- plus el (multy (vec.getItem j) (mat.getItem (j, i)))
+                el <- plus el (multy (vec[j]) (mat[j, i]))
             newVector <- Array.append newVector [|el|]
 
         Vector(newVector)
 
 
-let addTree tree1 tree2 addFunc =
+let addTree (tree1: BinTree<'A>) (tree2: BinTree<'A>) (addFunc: 'A -> 'A -> 'A): BinTree<'A> =
 
     let rec treePlusSub tree1 tree2 =
         match tree1, tree2 with
@@ -48,7 +48,7 @@ let addTree tree1 tree2 addFunc =
 
     treePlusSub tree1 tree2
 
-let multiply (vec: Vector<'A>) (mat: Matrix<'A>) (add: 'A -> 'A -> 'A) (mult: 'A -> 'A -> 'A) =
+let multiply (vec: Vector<'A>) (mat: Matrix<'B>) (add: 'C -> 'C -> 'C) (mult: 'A -> 'B -> 'C) =
 
     if vec.Length <> mat.Length1 then failwith $"The dimensions of the matrix are incompatible
                                                  for multiplication with the dimensions of the vector:
@@ -63,11 +63,11 @@ let multiply (vec: Vector<'A>) (mat: Matrix<'A>) (add: 'A -> 'A -> 'A) (mult: 'A
         | BinTree.Node (l, r), Node(nw, ne, sw, se) ->
             BinTree.Node(addTree (core l nw) (core r sw) add, addTree (core l ne) (core r se) add)
 
-        | BinTree.Node (l, r), qTree ->
-            BinTree.Node(addTree (core l qTree) (core r qTree) add, addTree (core l qTree) (core r qTree) add)
+        | BinTree.Node (l, r), leafOrEmpty ->
+            BinTree.Node(addTree (core l leafOrEmpty) (core r leafOrEmpty) add, addTree (core l leafOrEmpty) (core r leafOrEmpty) add)
 
-        | btree, Node(nw, ne, sw, se) ->
-            BinTree.Node(addTree (core btree nw) (core btree sw) add, addTree (core btree ne) (core btree se) add)
+        | leafOrEmpty, Node(nw, ne, sw, se) ->
+            BinTree.Node(addTree (core leafOrEmpty nw) (core leafOrEmpty sw) add, addTree (core leafOrEmpty ne) (core leafOrEmpty se) add)
 
         | BinTree.Leaf a, Leaf b -> BinTree.Leaf (mult a b)
 
