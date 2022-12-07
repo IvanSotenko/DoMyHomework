@@ -1,5 +1,7 @@
 ﻿module DoMyHomework.MyList
 
+open System.Globalization
+
 type MyList<'Value> =
     | Cons of head: 'Value * tail: MyList<'Value>
     | Empty
@@ -78,3 +80,36 @@ let rec quickSort (list: MyList<'A>) : MyList<'A> =
         // Sort less and more, then concatenate everything together
         match parts with
         | less, equal, more -> concat (concat (quickSort less) equal) (quickSort more)
+
+let toSet (list: MyList<'A>) : Set<'A> =
+    let rec toSetSub list st =
+        match list with
+        | Empty -> Set.empty
+        | Cons (head, tail) -> st + Set.empty.Add(head) + toSetSub tail st
+
+    toSetSub list Set.empty
+
+
+let length (list: MyList<'A>) : int =
+    let rec lengthSub list n =
+        match list with
+        | Empty -> n
+        | Cons (_, tail) -> lengthSub tail (n + 1)
+
+    lengthSub list 0
+
+let fold (folder: 'State -> 'A -> 'State) (state: 'State) (list: MyList<'A>) : 'State =
+    let rec foldSub acc list =
+        match list with
+        | Cons (head, tail) -> foldSub (folder acc head) tail
+        | Empty -> acc
+
+    foldSub state list
+
+let foldRev (folder: 'State -> 'A -> 'State) (state: 'State) (list: MyList<'A>) : 'State =
+    let rec foldSub acc list =
+        match list with
+        | Cons (head, tail) -> folder (foldSub acc tail) head
+        | Empty -> acc
+
+    foldSub state list
