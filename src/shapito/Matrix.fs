@@ -1,66 +1,75 @@
 ﻿module shapito.Matrix
 open QTree
 
-type Matrix<'A when 'A: equality>(bas: 'A [,] when 'A: equality) =
+let rec collapse tree =
+    match tree with
+    | Node (nw, ne, sw, se) ->
+        let collapsed = Node (collapse nw, collapse ne, collapse sw, collapse se)
+        match collapsed with
+        | Node (Leaf a, Leaf b, Leaf c, Leaf d) when (a = b) && (b = c) && (c = d) -> Leaf a
+        | Node (Empty, Empty, Empty, Empty) -> Empty
+        | _ -> collapsed
+    | _ -> tree
+
+let construct (bas: Option<'A> [,]) =
 
     let rows = Array2D.length1 bas
     let columns = Array2D.length2 bas
     let size = max rows columns
     let depth = int (System.Math.Ceiling (System.Math.Log(size, 2)))
 
-    member this.actualLen1 = Array2D.length1 bas
-    member this.actualLen2 = Array2D.length2 bas
+    let rec constructSub level (x, y) =
 
-    member this.QuadTree =
-        let rec construct level (x, y) =
-            if level = 1
-            then
-                let quadNW =
-                    if x*2 < rows && y*2 < columns then Leaf(bas[x*2, y*2])
-                    else Empty
-                let quadNE =
-                    if x*2 < rows && y*2 + 1 < columns then Leaf(bas[x*2, y*2 + 1])
-                    else Empty
-                let quadSW =
-                    if x*2 + 1 < rows && y*2 < columns then Leaf(bas[x*2 + 1, y*2])
-                    else Empty
-                let quadSE =
-                    if x*2 + 1 < rows && y*2 + 1 < columns then Leaf(bas[x*2 + 1, y*2 + 1])
-                    else Empty
+        let extract (x, y) =
+            if x < rows && y < columns then
+                let element = bas[x, y]
+                match element with
+                | Some a -> Leaf a
+                | None -> Empty
+            else Empty
 
-                Node(quadNW, quadNE, quadSW, quadSE)
+        if level = 1
+        then
+            let quadNW = extract (x*2, y*2)
+            let quadNE = extract (x*2, y*2 + 1)
+            let quadSW = extract (x*2 + 1, y*2)
+            let quadSE = extract (x*2 + 1, y*2 + 1)
+            Node(quadNW, quadNE, quadSW, quadSE)
 
-            else
-                Node((construct (level - 1) (x*2, y*2)),
-                     (construct (level - 1) (x*2, y*2 + 1)),
-                     (construct (level - 1) (x*2 + 1, y*2)),
-                     (construct (level - 1) (x*2 + 1, y*2 + 1)))
+        else
+            Node((constructSub (level - 1) (x*2, y*2)),
+                 (constructSub (level - 1) (x*2, y*2 + 1)),
+                 (constructSub (level - 1) (x*2 + 1, y*2)),
+                 (constructSub (level - 1) (x*2 + 1, y*2 + 1)))
 
-        let rec collapse tree =
-            match tree with
-            | Node (nw, ne, sw, se) ->
-                let collapsed = Node (collapse nw, collapse ne, collapse sw, collapse se)
-                match collapsed with
-                | Node (Leaf a, Leaf b, Leaf c, Leaf d) when (a = b) && (b = c) && (c = d) -> Leaf a
-                | Node (Empty, Empty, Empty, Empty) -> Empty
-                | _ -> collapsed
-            | _ -> tree
+    collapse (constructSub depth (0, 0))
 
-        collapse (construct depth (0, 0))
+type Matrix<'A when 'A: equality> =
+    val Data: QTree<'A>
+    val Length1: int
+    val Length2: int
+    new(arr) = { Data = collapse (construct arr); Length1 = Array2D.length1 arr; Length2 = Array2D.length2 arr }
+    new(tree, length1, length2) = { Data = tree; Length1 = length1; Length2 = length2 }
 
     member this.getItem (row, column) =
-        if (row >= size) || (column >= size) then failwith "Matrix index out of range"
 
-        let rec find level tree (curRow, curCol) =
-            match tree with
-            | Node (nw, ne, sw, se) ->
-                match (curRow + int (2.**(float level)) > row), (curCol + int (2.**(float level)) > column) with
-                | true, true -> find (level - 1) nw (curRow, curCol)
-                | true, false -> find (level - 1) ne (curRow, curCol + int (2.**(float level)))
-                | false, true -> find (level - 1) sw (curRow + int(2.**(float level)), curCol)
-                | false, false -> find (level - 1) se (curRow + int (2.**(float level)), curCol + int (2.**(float level)))
+        let size = int (2.**(System.Math.Ceiling (System.Math.Log(max this.Length1 this.Length2, 2))))
 
-            | Leaf v -> Some v
-            | Empty -> None
+        if (row >= this.Length1) || (column >= this.Length2) then failwith "Matrix index out of range"
+        else
+            let rec find tree (y, x) =
+                match tree with
+                | Node (nw, ne, sw, se) ->
+                    if row < y && column < x then
+                        find nw (y/2, x/2)
+                    elif row < y  && column >= x then
+                        find ne (y/2, x)
+                    elif row >= x && column < y then
+                        find sw (y, x/2)
+                    else
+                        find se (y, x)
 
-        find (depth - 1) this.QuadTree (0, 0)
+                | Leaf a -> Some a
+                | Empty -> None
+
+            find this.Data (size - 1, size - 1)
