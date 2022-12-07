@@ -10,6 +10,7 @@
         <Compile Include="LinkedListsTests.fs" />
         <Compile Include="Homework1Tests.fs" />
         <Compile Include="Main.fs" />
+        <Compile Include="MatrixOperationsTests.fs" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="../../src/shapito/shapito.fsproj" />
