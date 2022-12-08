@@ -1,4 +1,4 @@
-module shapito.BinTree
+module DoMyHomework.BinTree
 
 type BinTree<'Value> =
     | Node of leftKid: BinTree<'Value> * rightKid: BinTree<'Value>

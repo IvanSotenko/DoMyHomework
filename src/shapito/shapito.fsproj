@@ -27,6 +27,7 @@
         <Compile Include="Multiply.fs" />
         <Compile Include="GeneralTree.fs" />
         <Compile Include="Main.fs" />
+        <Content Include="plan.md" />
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
