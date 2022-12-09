@@ -31,48 +31,6 @@ let constructBinTree (bas: array<Option<'A>>) =
 
         constructSub depth 0
 
-
-let rec collapseBinTree tree =
-    match tree with
-    | Node (left, right) ->
-        let parts = collapseBinTree left, collapseBinTree right
-        match parts with
-        | Leaf a, Leaf b when (a = b) -> Leaf a
-        | Empty, Empty -> Empty
-        | _ -> Node(parts)
-
-    | _ -> tree
-
-
-let cutBinTree tree len actualLen =
-
-    let depth = int (System.Math.Ceiling (System.Math.Log(actualLen, 2)))
-    let targetDepth = int (System.Math.Ceiling (System.Math.Log(len, 2)))
-
-    // printfn $"depth = {depth}, targetDepth = {targetDepth}"
-
-    let rec cut tree currentDepth =
-        match tree with
-        | Node (left, right) when currentDepth = targetDepth -> Node (left, right)
-        | Node (left, _) -> cut left (currentDepth - 1)
-        | Leaf a -> Leaf a
-        | Empty -> Empty
-
-    cut tree depth
-
-
-let expandBinTree tree (actualLen: int) (reqLen: int) =
-
-    let depth = int (System.Math.Ceiling (System.Math.Log(actualLen, 2)))
-    let targetDepth = int (System.Math.Ceiling (System.Math.Log(reqLen, 2)))
-
-    let rec expand tree curDepth =
-        if curDepth < targetDepth then expand (Node(tree, Empty)) (curDepth + 1)
-        else tree
-
-    expand tree depth
-
-
 type Vector<'A when 'A: equality> =
     val Data: BinTree<'A>
     val Length: int

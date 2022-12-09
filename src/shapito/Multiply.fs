@@ -4,6 +4,7 @@ open Vector
 open BinTree
 open QTree
 
+
 let naiveVecMatMultiply (vec: Vector<'A>) (mat: Matrix<'B>) (add: 'C -> 'C -> 'C) (multiply: 'A -> 'B -> 'C) =
 
     let plus a b =
@@ -34,19 +35,6 @@ let naiveVecMatMultiply (vec: Vector<'A>) (mat: Matrix<'B>) (add: 'C -> 'C -> 'C
         Vector(resultVector)
 
 
-let addTree (tree1: BinTree<'A>) (tree2: BinTree<'A>) (addFunc: 'A -> 'A -> 'A): BinTree<'A> =
-
-    let rec treePlusSub tree1 tree2 =
-        match tree1, tree2 with
-        | BinTree.Node (l1, r1), BinTree.Node(l2, r2) -> BinTree.Node(treePlusSub l1 l2, treePlusSub r1 r2)
-        | BinTree.Node (l, r), leafOrEmpty -> BinTree.Node(treePlusSub l leafOrEmpty, treePlusSub r leafOrEmpty)
-        | leafOrEmpty, BinTree.Node (l, r) -> BinTree.Node(treePlusSub l leafOrEmpty, treePlusSub r leafOrEmpty)
-        | BinTree.Leaf a, BinTree.Leaf b -> BinTree.Leaf (addFunc a b)
-        | leafOrEmpty, BinTree.Empty -> leafOrEmpty
-        | BinTree.Empty, leafOrEmpty -> leafOrEmpty
-
-    treePlusSub tree1 tree2
-
 let vecMatMultiply (vec: Vector<'A>) (mat: Matrix<'B>) (add: 'C -> 'C -> 'C) (mult: 'A -> 'B -> 'C) =
 
     if vec.Length <> mat.Length1 then failwith $"The dimensions of the matrix are incompatible
@@ -61,29 +49,20 @@ let vecMatMultiply (vec: Vector<'A>) (mat: Matrix<'B>) (add: 'C -> 'C -> 'C) (mu
         match bTree, qTree with
 
         | BinTree.Node (l, r), Node(nw, ne, sw, se) ->
-            BinTree.Node(addTree (multiplyCore l nw) (multiplyCore r sw) add, addTree (multiplyCore l ne) (multiplyCore r se) add)
+            BinTree.Node(addBinTree (multiplyCore l nw) (multiplyCore r sw) add, addBinTree (multiplyCore l ne) (multiplyCore r se) add)
 
         | BinTree.Node (l, r), leafOrEmpty ->
-            BinTree.Node(addTree (multiplyCore l leafOrEmpty) (multiplyCore r leafOrEmpty) add, addTree (multiplyCore l leafOrEmpty) (multiplyCore r leafOrEmpty) add)
+            BinTree.Node(addBinTree (multiplyCore l leafOrEmpty) (multiplyCore r leafOrEmpty) add, addBinTree (multiplyCore l leafOrEmpty) (multiplyCore r leafOrEmpty) add)
 
         | leafOrEmpty, Node(nw, ne, sw, se) ->
-            BinTree.Node(addTree (multiplyCore leafOrEmpty nw) (multiplyCore leafOrEmpty sw) add, addTree (multiplyCore leafOrEmpty ne) (multiplyCore leafOrEmpty se) add)
+            BinTree.Node(addBinTree (multiplyCore leafOrEmpty nw) (multiplyCore leafOrEmpty sw) add, addBinTree (multiplyCore leafOrEmpty ne) (multiplyCore leafOrEmpty se) add)
 
         | BinTree.Leaf a, Leaf b -> BinTree.Leaf (mult a b)
 
         | _ -> BinTree.Empty
 
     let rawRes = multiplyCore bTree qTree
-
-    // printfn "%A" rawRes
-
     let collapsedRes = collapseBinTree rawRes
-
-    // printfn "\n%A" collapsedRes
-
     let res = cutBinTree collapsedRes mat.Length2 size
-
-    // printfn "\n%A" res
-    // printfn "\n%A" mat.Length2
 
     Vector(res, mat.Length2)

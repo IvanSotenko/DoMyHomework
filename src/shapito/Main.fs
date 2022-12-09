@@ -4,6 +4,7 @@ open System
 open Vector
 open Matrix
 open Multiply
+open BinTree
 
 module Main =
 
@@ -52,34 +53,34 @@ module Main =
         // printfn "%A" (naiveMultiply treeFrontN treeAdjMN (||) (&&)).Data
 
         let rnd = Random()
-        let getRandomVector n = Array.init n (fun _ -> Some (rnd.Next(1, 5)))
-        let getRandomNoneVector n =
+        let genRandomVector n = Array.init n (fun _ -> Some (rnd.Next(1, 5)))
+        let genRandomNoneVector n =
             Array.init n (fun _ ->
-                if rnd.Next(1, 5) = 5
+                if rnd.Next(1, 3) = 2
                 then None
                 else Some (rnd.Next(-25, 25)))
 
-        let getRandomMatrix x y = Array2D.init x y (fun _ _ -> Some (rnd.Next(1, 5)))
-        let getRandomNoneMatrix x y =
+        let genRandomMatrix x y = Array2D.init x y (fun _ _ -> Some (rnd.Next(1, 5)))
+        let genRandomNoneMatrix x y =
             Array2D.init x y (fun _ _ ->
-                if rnd.Next(1, 5) = 5
+                if rnd.Next(1, 3) = 2
                 then None
                 else Some (rnd.Next(-25, 25)))
 
 
-        let len1 = rnd.Next(1, 5)
-        let len2 = rnd.Next(1, 5)
-
-        let rv = getRandomVector len1
-        let rm = getRandomMatrix len1 len2
-
-        let tv = Vector(rv)
-        let tm = Matrix(rm)
+        // let len1 = rnd.Next(1, 11)
+        // let len2 = rnd.Next(1, 11)
         //
-        printfn "vector: %A\nmatrix: \n%A" rv rm
+        // let rv = genRandomNoneVector len1
+        // let rm = genRandomNoneMatrix len1 len2
         //
-        printfn "recursive: \n%A\nnaive: \n%A \nlen: %A"
-            (vecMatMultiply tv tm (+) (*)).Data (naiveVecMatMultiply tv tm (+) (*)).Data (vecMatMultiply tv tm (+) (*)).Length
+        // let tv = Vector(rv)
+        // let tm = Matrix(rm)
+        //
+        // printfn "vector: %A\nmatrix: \n%A" rv rm
+        //
+        // printfn "recursive: \n%A\nnaive: \n%A \nlen: %A"
+        //     (vecMatMultiply tv tm (+) (*)).Data (naiveVecMatMultiply tv tm (+) (*)).Data (vecMatMultiply tv tm (+) (*)).Length
 
         // let arr = [|Some 4; Some 3|]
         // let arr2d = array2D [[Some 2; Some 2; Some 4]
@@ -94,4 +95,11 @@ module Main =
         // printfn "%A\n \n%A" vec.Data mat.Data
 
         // vecMatMultiply vec mat (+) (*) |> ignore
+
+        let a = [|Some 4; Some 1; Some -1|]
+        let tree = Vector(a).Data
+        let b = expandBinTree tree a.Length (a.Length + 10)
+        let c = cutBinTree b a.Length (a.Length + 10)
+
+        printfn "%A" c
         0
