@@ -82,7 +82,7 @@ let multiplyTests =
               Expect.equal actualResult.Data expectedResult.Data "the results were different"
 
 
-          testCase "Empty vector multiplied by empty matrix is empty vec"
+          testCase "Empty vector multiplied by empty matrix is empty vector"
           <| fun _ ->
               let mat = Matrix(Empty, 0, 0)
               let vec = Vector(BinTree.Empty, 0)
@@ -108,8 +108,8 @@ let multiplyTests =
               Expect.throws
                   (fun _ -> vecMatMultiply vec mat (+) (*) |> ignore)
                   $"The dimensions of the matrix are incompatible
-                                                                                    for multiplication with the dimensions of the vector:
-                                                                                    vector length is {vec.Length} but matrix size is {mat.Length1}x{mat.Length2}" ]
+                    for multiplication with the dimensions of the vector:
+                    vector length is {vec.Length} but matrix size is {mat.Length1}x{mat.Length2}" ]
 
 
 [<Tests>]

@@ -44,8 +44,8 @@ let vecMatMultiply (vec: Vector<'A>) (mat: Matrix<'B>) (add: 'C -> 'C -> 'C) (mu
     if vec.Length <> mat.Length1 then
         failwith
             $"The dimensions of the matrix are incompatible
-                                                 for multiplication with the dimensions of the vector:
-                                                 vector length is {vec.Length} but matrix size is {mat.Length1}x{mat.Length2}"
+              for multiplication with the dimensions of the vector:
+              vector length is {vec.Length} but matrix size is {mat.Length1}x{mat.Length2}"
 
     let size = max mat.Length1 mat.Length2
     let bTree = expandBinTree vec.Data vec.Length size
