@@ -184,6 +184,7 @@ let matrixTypeTests =
 
         ]
 
+
 [<Tests>]
 let BinTreeTests =
     testList

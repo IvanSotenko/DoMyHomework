@@ -5,7 +5,7 @@ type BinTree<'Value> =
     | Leaf of value: 'Value
     | Empty
 
-
+/// Piecemeal application of the function to the corresponding elements of both trees
 let addBinTree (tree1: BinTree<'A>) (tree2: BinTree<'A>) (addFunc: 'A -> 'A -> 'A): BinTree<'A> =
 
     let rec treePlusSub tree1 tree2 =
@@ -32,6 +32,7 @@ let rec collapseBinTree tree =
     | _ -> tree
 
 
+/// Reduce the depth of the tree by throwing out the right kids
 let cutBinTree tree (reqLen: int) (actualLen: int) =
 
     if reqLen >= actualLen then tree
@@ -49,7 +50,7 @@ let cutBinTree tree (reqLen: int) (actualLen: int) =
 
         cut tree depth
 
-
+/// Increases the depth of the tree by attaching Empty to the right
 let expandBinTree tree (actualLen: int) (reqLen: int) =
 
     if reqLen <= actualLen then tree
