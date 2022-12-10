@@ -3,15 +3,15 @@
 open QTree
 
 
-let constructQTree (bas: Option<'A> [,]) =
+let constructQTree (basis: Option<'A> [,]) =
 
-    let rows = Array2D.length1 bas
-    let columns = Array2D.length2 bas
+    let rows = Array2D.length1 basis
+    let columns = Array2D.length2 basis
     let size = max rows columns
 
     let extract (x, y) =
         if x < rows && y < columns then
-            let element = bas[x, y]
+            let element = basis[x, y]
 
             match element with
             | Some a -> Leaf a

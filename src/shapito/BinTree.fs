@@ -1,23 +1,23 @@
 module DoMyHomework.BinTree
 
 type BinTree<'Value> =
-    | Node of leftKid: BinTree<'Value> * rightKid: BinTree<'Value>
+    | Node of leftChild: BinTree<'Value> * rightChild: BinTree<'Value>
     | Leaf of value: 'Value
     | Empty
 
 /// Piecemeal application of the function to the corresponding elements of both trees
 let addBinTree (tree1: BinTree<'A>) (tree2: BinTree<'A>) (addFunc: 'A -> 'A -> 'A) : BinTree<'A> =
 
-    let rec treePlusSub tree1 tree2 =
+    let rec addBinTreeSub tree1 tree2 =
         match tree1, tree2 with
-        | Node (l1, r1), Node (l2, r2) -> Node(treePlusSub l1 l2, treePlusSub r1 r2)
-        | Node (l, r), leafOrEmpty -> Node(treePlusSub l leafOrEmpty, treePlusSub r leafOrEmpty)
-        | leafOrEmpty, Node (l, r) -> Node(treePlusSub l leafOrEmpty, treePlusSub r leafOrEmpty)
+        | Node (l1, r1), Node (l2, r2) -> Node(addBinTreeSub l1 l2, addBinTreeSub r1 r2)
+        | Node (l, r), leafOrEmpty -> Node(addBinTreeSub l leafOrEmpty, addBinTreeSub r leafOrEmpty)
+        | leafOrEmpty, Node (l, r) -> Node(addBinTreeSub l leafOrEmpty, addBinTreeSub r leafOrEmpty)
         | Leaf a, Leaf b -> Leaf(addFunc a b)
         | leafOrEmpty, Empty -> leafOrEmpty
         | Empty, leafOrEmpty -> leafOrEmpty
 
-    treePlusSub tree1 tree2
+    addBinTreeSub tree1 tree2
 
 
 let rec collapseBinTree tree =

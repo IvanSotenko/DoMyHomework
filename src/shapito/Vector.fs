@@ -2,21 +2,21 @@
 
 open BinTree
 
-let constructBinTree (bas: array<Option<'A>>) =
+let constructBinTree (basis: array<Option<'A>>) =
 
-    let length = Array.length bas
+    let length = Array.length basis
 
     let extract ind =
         if ind < length then
-            match bas[ind] with
+            match basis[ind] with
             | Some a -> Leaf a
             | None -> Empty
         else
             Empty
 
-    if Array.isEmpty bas then
+    if Array.isEmpty basis then
         Empty
-    elif Array.length bas = 1 then
+    elif Array.length basis = 1 then
         extract 0
     else
 
