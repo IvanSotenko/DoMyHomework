@@ -5,17 +5,26 @@ type BinTree<'Value> =
     | Leaf of value: 'Value
     | Empty
 
+let BinTreeToOprion (tree: BinTree<'A>): Option<'A> =
+    match tree with
+    | Leaf v -> Some v
+    | Empty -> None
+    | _ -> failwith "Unable to convert BinTree.Node to Option type"
+
+let OptionToBinTree (a: Option<'A>): BinTree<'A> =
+    match a with
+    | Some v -> Leaf v
+    | None -> Empty
+
 /// Piecemeal application of the function to the corresponding elements of both trees
-let addBinTree (tree1: BinTree<'A>) (tree2: BinTree<'A>) (addFunc: 'A -> 'A -> 'A) : BinTree<'A> =
+let addBinTree (tree1: BinTree<'A>) (tree2: BinTree<'A>) (func: Option<'A> -> Option<'A> -> Option<'A>) : BinTree<'A> =
 
     let rec addBinTreeSub tree1 tree2 =
         match tree1, tree2 with
         | Node (l1, r1), Node (l2, r2) -> Node(addBinTreeSub l1 l2, addBinTreeSub r1 r2)
-        | Node (l, r), leafOrEmpty -> Node(addBinTreeSub l leafOrEmpty, addBinTreeSub r leafOrEmpty)
-        | leafOrEmpty, Node (l, r) -> Node(addBinTreeSub l leafOrEmpty, addBinTreeSub r leafOrEmpty)
-        | Leaf a, Leaf b -> Leaf(addFunc a b)
-        | leafOrEmpty, Empty -> leafOrEmpty
-        | Empty, leafOrEmpty -> leafOrEmpty
+        | Node (l, r), leafOrEmpty -> Node (addBinTreeSub l leafOrEmpty, addBinTreeSub r leafOrEmpty)
+        | leafOrEmpty, Node(l, r) -> Node (addBinTreeSub leafOrEmpty l, addBinTreeSub leafOrEmpty r)
+        | leafOrEmpty1, leafOrEmpty2 -> (func (BinTreeToOprion leafOrEmpty1) (BinTreeToOprion leafOrEmpty2)) |> OptionToBinTree
 
     addBinTreeSub tree1 tree2
 

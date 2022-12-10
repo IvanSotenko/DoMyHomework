@@ -5,20 +5,11 @@ open Vector
 open BinTree
 open QTree
 
-
-let naiveVecMatMultiply (vec: Vector<'A>) (mat: Matrix<'B>) (add: 'C -> 'C -> 'C) (multiply: 'A -> 'B -> 'C) =
-
-    let plus a b =
-        match a, b with
-        | Some x, Some y -> Some(add x y)
-        | Some x, None -> Some x
-        | None, Some x -> Some x
-        | None, None -> None
-
-    let mult a b =
-        match a, b with
-        | Some x, Some y -> Some(multiply x y)
-        | _ -> None
+let naiveVecMatMultiply
+    (vec: Vector<'A>)
+    (mat: Matrix<'B>)
+    (add: Option<'C> -> Option<'C> -> Option<'C>)
+    (mult: Option<'A> -> Option<'B> -> Option<'C>) =
 
     if vec.Length <> mat.Length1 then
         failwith
@@ -34,12 +25,16 @@ let naiveVecMatMultiply (vec: Vector<'A>) (mat: Matrix<'B>) (add: 'C -> 'C -> 'C
 
         for i in 0 .. (len2 - 1) do
             for j in 0 .. (len1 - 1) do
-                resultVector[i] <- plus resultVector[i] (mult vec[j] mat[j, i])
+                resultVector[i] <- add resultVector[i] (mult vec[j] mat[j, i])
 
         Vector(resultVector)
 
 
-let vecMatMultiply (vec: Vector<'A>) (mat: Matrix<'B>) (add: 'C -> 'C -> 'C) (mult: 'A -> 'B -> 'C) =
+let vecMatMultiply
+    (vec: Vector<'A>)
+    (mat: Matrix<'B>)
+    (add: Option<'C> -> Option<'C> -> Option<'C>)
+    (mult: Option<'A> -> Option<'B> -> Option<'C>) =
 
     if vec.Length <> mat.Length1 then
         failwith
@@ -72,9 +67,7 @@ let vecMatMultiply (vec: Vector<'A>) (mat: Matrix<'B>) (add: 'C -> 'C -> 'C) (mu
                 addBinTree (multiplyCore leafOrEmpty ne) (multiplyCore leafOrEmpty se) add
             )
 
-        | BinTree.Leaf a, Leaf b -> BinTree.Leaf(mult a b)
-
-        | _ -> BinTree.Empty
+        | leafOrEmpty1, leafOrEmpty2 -> (mult (BinTreeToOprion leafOrEmpty1) (QTreeToOption leafOrEmpty2)) |> OptionToBinTree
 
     let rawRes = multiplyCore bTree qTree
     let collapsedRes = collapseBinTree rawRes

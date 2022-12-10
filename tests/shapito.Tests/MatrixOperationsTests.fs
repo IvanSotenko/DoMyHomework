@@ -50,6 +50,18 @@ let restoreArray2D (mat: Matrix<_>) =
     Array2D.init mat.Length1 mat.Length2 (fun i j -> mat[i, j])
 
 
+let addInt (a: Option<int>) (b: Option<int>) =
+    match a, b with
+    | Some x, Some y -> Some (x + y)
+    | Some x, None -> Some x
+    | None, Some x -> Some x
+    | None, None -> None
+
+let multInt (a: Option<int>) (b: Option<int>) =
+    match a, b with
+    | Some x, Some y -> Some (x * y)
+    | _ -> None
+
 open randomGenerations
 
 [<Tests>]
@@ -63,8 +75,8 @@ let multiplyTests =
               let mat = genRandomMatrix len1 len2
               let vec = genRandomVector len1
 
-              let actualResult = vecMatMultiply vec mat (+) (*)
-              let expectedResult = naiveVecMatMultiply vec mat (+) (*)
+              let actualResult = vecMatMultiply vec mat addInt multInt
+              let expectedResult = naiveVecMatMultiply vec mat addInt multInt
 
               Expect.equal actualResult.Data expectedResult.Data "the results were different"
 
@@ -76,8 +88,8 @@ let multiplyTests =
               let mat = genRandomNoneMatrix len1 len2
               let vec = genRandomNoneVector len1
 
-              let actualResult = vecMatMultiply vec mat (+) (*)
-              let expectedResult = naiveVecMatMultiply vec mat (+) (*)
+              let actualResult = vecMatMultiply vec mat addInt multInt
+              let expectedResult = naiveVecMatMultiply vec mat addInt multInt
 
               Expect.equal actualResult.Data expectedResult.Data "the results were different"
 
@@ -87,7 +99,7 @@ let multiplyTests =
               let mat = Matrix(Empty, 0, 0)
               let vec = Vector(BinTree.Empty, 0)
 
-              let res = (vecMatMultiply vec mat (+) (*)).Data
+              let res = (vecMatMultiply vec mat addInt multInt).Data
               Expect.equal res BinTree.Empty "the results were different"
 
 
@@ -106,7 +118,7 @@ let multiplyTests =
               let vec = genRandomNoneVector vecLen
 
               Expect.throws
-                  (fun _ -> vecMatMultiply vec mat (+) (*) |> ignore)
+                  (fun _ -> vecMatMultiply vec mat addInt multInt |> ignore)
                   $"The dimensions of the matrix are incompatible
                     for multiplication with the dimensions of the vector:
                     vector length is {vec.Length} but matrix size is {mat.Length1}x{mat.Length2}" ]
@@ -210,8 +222,8 @@ let BinTreeTests =
               let tree1 = (genRandomNoneVector len).Data
               let tree2 = (genRandomNoneVector len).Data
 
-              let res1 = addBinTree tree1 tree2 (+)
-              let res2 = addBinTree tree2 tree1 (+)
+              let res1 = addBinTree tree1 tree2 addInt
+              let res2 = addBinTree tree2 tree1 addInt
 
               Expect.equal res1 res2 "the results were different"
 
@@ -223,8 +235,8 @@ let BinTreeTests =
               let tree2 = (genRandomNoneVector len).Data
               let tree3 = (genRandomNoneVector len).Data
 
-              let res1 = addBinTree (addBinTree tree1 tree2 (+)) tree3 (+)
-              let res2 = addBinTree tree1 (addBinTree tree2 tree3 (+)) (+)
+              let res1 = addBinTree (addBinTree tree1 tree2 addInt) tree3 addInt
+              let res2 = addBinTree tree1 (addBinTree tree2 tree3 addInt) addInt
 
               Expect.equal res1 res2 "the results were different"
 
@@ -235,7 +247,7 @@ let BinTreeTests =
               let tree = (genRandomNoneVector len).Data
               let emptyTree = BinTree.Empty
 
-              let res = addBinTree tree emptyTree (+)
+              let res = addBinTree tree emptyTree addInt
 
               Expect.equal res tree "the results were different"
 
@@ -246,7 +258,7 @@ let BinTreeTests =
               let tree = (genRandomVector len).Data
               let zeroTree = Vector(Array.init len (fun _ -> Some 0)).Data
 
-              let res = addBinTree tree zeroTree (+)
+              let res = addBinTree tree zeroTree addInt
 
               Expect.equal res tree "the results were different"
 
