@@ -16,13 +16,14 @@ let OptionToQTree (a: Option<'A>): QTree<'A> =
     | Some v -> Leaf v
     | None -> Empty
 
+let qCollapse tree =
+    match tree with
+    | Node (Leaf a, Leaf b, Leaf c, Leaf d) when (a = b) && (b = c) && (c = d) -> Leaf a
+    | Node (Empty, Empty, Empty, Empty) -> Empty
+    | _ -> tree
+
 let rec collapseQTree tree =
     match tree with
     | Node (nw, ne, sw, se) ->
-        let parts = collapseQTree nw, collapseQTree ne, collapseQTree sw, collapseQTree se
-
-        match parts with
-        | Leaf a, Leaf b, Leaf c, Leaf d when (a = b) && (b = c) && (c = d) -> Leaf a
-        | Empty, Empty, Empty, Empty -> Empty
-        | _ -> Node parts
+        (Node (collapseQTree nw, collapseQTree ne, collapseQTree sw, collapseQTree se)) |> qCollapse
     | _ -> tree

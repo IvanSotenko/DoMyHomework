@@ -5,7 +5,7 @@ type BinTree<'Value> =
     | Leaf of value: 'Value
     | Empty
 
-let BinTreeToOprion (tree: BinTree<'A>): Option<'A> =
+let BinTreeToOption (tree: BinTree<'A>): Option<'A> =
     match tree with
     | Leaf v -> Some v
     | Empty -> None
@@ -24,21 +24,22 @@ let addBinTree (tree1: BinTree<'A>) (tree2: BinTree<'A>) (func: Option<'A> -> Op
         | Node (l1, r1), Node (l2, r2) -> Node(addBinTreeSub l1 l2, addBinTreeSub r1 r2)
         | Node (l, r), leafOrEmpty -> Node (addBinTreeSub l leafOrEmpty, addBinTreeSub r leafOrEmpty)
         | leafOrEmpty, Node(l, r) -> Node (addBinTreeSub leafOrEmpty l, addBinTreeSub leafOrEmpty r)
-        | leafOrEmpty1, leafOrEmpty2 -> (func (BinTreeToOprion leafOrEmpty1) (BinTreeToOprion leafOrEmpty2)) |> OptionToBinTree
+        | leafOrEmpty1, leafOrEmpty2 -> (func (BinTreeToOption leafOrEmpty1) (BinTreeToOption leafOrEmpty2)) |> OptionToBinTree
 
     addBinTreeSub tree1 tree2
+
+
+let binCollapse tree =
+    match tree with
+    | Node (Leaf a, Leaf b) when (a = b) -> Leaf a
+    | Node (Empty, Empty) -> Empty
+    | _ -> tree
 
 
 let rec collapseBinTree tree =
     match tree with
     | Node (left, right) ->
-        let parts = collapseBinTree left, collapseBinTree right
-
-        match parts with
-        | Leaf a, Leaf b when (a = b) -> Leaf a
-        | Empty, Empty -> Empty
-        | _ -> Node(parts)
-
+        (Node (collapseBinTree left, collapseBinTree right)) |> binCollapse
     | _ -> tree
 
 

@@ -17,51 +17,54 @@ module randomGenerations =
     let rnd = Random()
 
     let genRandomArray n =
-        Array.init n (fun _ -> Some(rnd.Next(-25, 25)))
+        Array.init n (fun _ -> Some(rnd.Next(-10, 10)))
 
     let genRandomNoneArray n =
         Array.init n (fun _ ->
             if rnd.Next(1, 5) = 4 then
                 None
             else
-                Some(rnd.Next(-25, 25)))
+                Some(rnd.Next(-10, 10)))
 
     let genRandomVector n = Vector(genRandomArray n)
     let genRandomNoneVector n = Vector(genRandomNoneArray n)
 
 
     let genRandomArray2D x y =
-        Array2D.init x y (fun _ _ -> Some(rnd.Next(-25, 25)))
+        Array2D.init x y (fun _ _ -> Some(rnd.Next(-10, 10)))
 
     let genRandomNoneArray2D x y =
         Array2D.init x y (fun _ _ ->
             if rnd.Next(1, 5) = 4 then
                 None
             else
-                Some(rnd.Next(-25, 25)))
+                Some(rnd.Next(-10, 10)))
 
     let genRandomMatrix x y = Matrix(genRandomArray2D x y)
     let genRandomNoneMatrix x y = Matrix(genRandomNoneArray2D x y)
 
+module Restoring =
+    let restoreArray (vec: Vector<_>) = Array.init vec.Length (fun i -> vec[i])
 
-let restoreArray (vec: Vector<_>) = Array.init vec.Length (fun i -> vec[i])
-
-let restoreArray2D (mat: Matrix<_>) =
-    Array2D.init mat.Length1 mat.Length2 (fun i j -> mat[i, j])
+    let restoreArray2D (mat: Matrix<_>) =
+        Array2D.init mat.Length1 mat.Length2 (fun i j -> mat[i, j])
 
 
-let addInt (a: Option<int>) (b: Option<int>) =
-    match a, b with
-    | Some x, Some y -> Some (x + y)
-    | Some x, None -> Some x
-    | None, Some x -> Some x
-    | None, None -> None
+module OptionIntOperations =
+    let addInt (a: Option<int>) (b: Option<int>) =
+        match a, b with
+        | Some x, Some y -> Some (x + y)
+        | Some x, None -> Some x
+        | None, Some x -> Some x
+        | None, None -> None
 
-let multInt (a: Option<int>) (b: Option<int>) =
-    match a, b with
-    | Some x, Some y -> Some (x * y)
-    | _ -> None
+    let multInt (a: Option<int>) (b: Option<int>) =
+        match a, b with
+        | Some x, Some y -> Some (x * y)
+        | _ -> None
 
+open OptionIntOperations
+open Restoring
 open randomGenerations
 
 [<Tests>]
@@ -70,7 +73,9 @@ let multiplyTests =
         "Tests for Multiply.vecMatMultiply function"
         [ testProperty "vecMatMultiply is naiveVecMatMultiply (without None)"
           <| fun _ ->
-              let len1, len2 = rnd.Next(1, 100), rnd.Next(1, 100)
+              let len1, len2 = rnd.Next(1, 20), rnd.Next(1, 20)
+
+              // let len1, len2 = 20, 20
 
               let mat = genRandomMatrix len1 len2
               let vec = genRandomVector len1
@@ -103,7 +108,7 @@ let multiplyTests =
               Expect.equal res BinTree.Empty "the results were different"
 
 
-          testCase "If length of vector dont match with length1 of matrix an exception is thrown"
+          testProperty "If length of vector dont match with length1 of matrix an exception is thrown"
           <| fun _ ->
               let matLen1, len2 = rnd.Next(2, 100), 1
 
@@ -124,7 +129,7 @@ let multiplyTests =
                     vector length is {vec.Length} but matrix size is {mat.Length1}x{mat.Length2}" ]
 
 
-[<Tests>]
+// [<Tests>]
 let vectorTypeTests =
     testList
         "Tests for Vector type"
@@ -141,7 +146,7 @@ let vectorTypeTests =
               Expect.equal vec[index] arr[index] "the results were different"
 
 
-          // Array-based vector constructor
+          // Vector constructor
           testProperty "Constructor test (arr1 -> vec -> arr2) ==> (arr1 = arr2)"
           <| fun _ ->
               let len = rnd.Next(1, 100)
@@ -154,19 +159,20 @@ let vectorTypeTests =
 
 
           // constructBinTree
-          testProperty "Constructor test (arr1 -> tree -> vec -> arr2) ==> (arr = arr2) (non-collapsed tree)"
-          <| fun _ ->
-              let len = rnd.Next(1, 100)
+          // testProperty "Constructor test (arr1 -> tree -> vec -> arr2) ==> (arr = arr2) (non-collapsed tree)"
+          // <| fun _ ->
+          //     let len = rnd.Next(1, 100)
+          //
+          //     let arr1 = genRandomNoneArray len
+          //     let tree = constructBinTree arr1
+          //     let vec = Vector(tree, len)
+          //     let arr2 = restoreArray vec
+          //
+          //     Expect.equal arr1 arr2 "the results were different"
+        ]
 
-              let arr1 = genRandomNoneArray len
-              let tree = constructBinTree arr1
-              let vec = Vector(tree, len)
-              let arr2 = restoreArray vec
 
-              Expect.equal arr1 arr2 "the results were different" ]
-
-
-[<Tests>]
+// [<Tests>]
 let matrixTypeTests =
     testList
         "Tests for Matrix type"
@@ -183,7 +189,7 @@ let matrixTypeTests =
               Expect.equal mat[index1, index2] arr2D[index1, index2] "the results were different"
 
 
-          // Array2D-based Matrix constructor
+          // Matrix constructor
           testProperty "Constructor tests (arr2D1 -> mat -> arr2D2) ==> (arr2D2 = arr2D2)"
           <| fun _ ->
               let len1, len2 = rnd.Next(1, 100), rnd.Next(1, 100)
@@ -196,21 +202,21 @@ let matrixTypeTests =
 
 
           // constructQTree
-          testProperty "Constructor test (arrD1 -> tree -> mat -> arrD2) ==> (arr2D1 = arr2D2) (non-collapsed tree)"
-          <| fun _ ->
-              let len1, len2 = rnd.Next(1, 100), rnd.Next(1, 100)
-
-              let arr2D1 = genRandomNoneArray2D len1 len2
-              let tree = constructQTree arr2D1
-              let mat = Matrix(tree, len1, len2)
-              let arr2D2 = restoreArray2D mat
-
-              Expect.equal arr2D1 arr2D2 "the results were different"
+          // testProperty "Constructor test (arrD1 -> tree -> mat -> arrD2) ==> (arr2D1 = arr2D2) (non-collapsed tree)"
+          // <| fun _ ->
+          //     let len1, len2 = rnd.Next(1, 100), rnd.Next(1, 100)
+          //
+          //     let arr2D1 = genRandomNoneArray2D len1 len2
+          //     let tree = constructQTree arr2D1
+          //     let mat = Matrix(tree, len1, len2)
+          //     let arr2D2 = restoreArray2D mat
+          //
+          //     Expect.equal arr2D1 arr2D2 "the results were different"
 
           ]
 
 
-[<Tests>]
+// [<Tests>]
 let BinTreeTests =
     testList
         "Tests for BinTree type"
@@ -262,23 +268,6 @@ let BinTreeTests =
 
               Expect.equal res tree "the results were different"
 
-
-          // collapseBinTree
-          testProperty "Collapsing does not change the information inside the tree"
-          <| fun _ ->
-              let len = rnd.Next(1, 100)
-              let tree = (genRandomNoneVector len).Data
-              let collapsedTree = collapseBinTree tree
-
-              let vec1 = Vector(tree, len)
-              let vec2 = Vector(collapsedTree, len)
-
-              let arr1 = restoreArray vec1
-              let arr2 = restoreArray vec2
-
-              Expect.equal arr1 arr2 "the results were different"
-
-
           // expandBinTree cutBinTree
           testProperty "tree expansion is the opposite of tree cutting"
           <| fun _ ->
@@ -292,21 +281,8 @@ let BinTreeTests =
               Expect.equal tree cut "the results were different" ]
 
 
+// [<Tests>]
 let QTreeTests =
     testList
         "Tests for QTree type"
-        [
-          // collapseQTree
-          testProperty "Collapsing does not change the information inside the tree"
-          <| fun _ ->
-              let len1, len2 = rnd.Next(1, 100), rnd.Next(1, 100)
-              let tree = (genRandomNoneMatrix len1 len2).Data
-              let collapsedTree = collapseQTree tree
-
-              let mat1 = Matrix(tree, len1, len2)
-              let mat2 = Matrix(collapsedTree, len1, len2)
-
-              let arr2D1 = restoreArray2D mat1
-              let arr2D2 = restoreArray2D mat2
-
-              Expect.equal arr2D1 arr2D2 "the results were different" ]
+        []
