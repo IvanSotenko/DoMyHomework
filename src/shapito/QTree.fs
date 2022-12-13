@@ -25,6 +25,6 @@ let qCollapse tree =
 let rec collapseQTree tree =
     match tree with
     | Node (nw, ne, sw, se) ->
-        (Node(collapseQTree nw, collapseQTree ne, collapseQTree sw, collapseQTree se))
+        Node(collapseQTree nw, collapseQTree ne, collapseQTree sw, collapseQTree se)
         |> qCollapse
     | _ -> tree

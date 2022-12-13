@@ -27,7 +27,7 @@ let binCollapse tree =
 let rec collapseBinTree tree =
     match tree with
     | Node (left, right) ->
-        (Node(collapseBinTree left, collapseBinTree right))
+        Node(collapseBinTree left, collapseBinTree right)
         |> binCollapse
     | _ -> tree
 

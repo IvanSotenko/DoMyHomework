@@ -22,7 +22,7 @@ let naiveVecMatMultiply
         let len1 = mat.Length1
         let len2 = mat.Length2
 
-        let mutable resultVector = Array.init len2 (fun _ -> None)
+        let mutable resultVector = Array.create len2 None
 
         for i in 0 .. (len2 - 1) do
             for j in 0 .. (len1 - 1) do
