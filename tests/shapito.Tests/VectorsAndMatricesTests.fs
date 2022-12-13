@@ -17,28 +17,28 @@ module randomGenerations =
     let rnd = Random()
 
     let genRandomArray n =
-        Array.init n (fun _ -> Some(rnd.Next(-10, 10)))
+        Array.init n (fun _ -> Some(rnd.Next(-5, 5)))
 
     let genRandomNoneArray n =
         Array.init n (fun _ ->
             if rnd.Next(1, 5) = 4 then
                 None
             else
-                Some(rnd.Next(-10, 10)))
+                Some(rnd.Next(-5, 5)))
 
     let genRandomVector n = Vector(genRandomArray n)
     let genRandomNoneVector n = Vector(genRandomNoneArray n)
 
 
     let genRandomArray2D x y =
-        Array2D.init x y (fun _ _ -> Some(rnd.Next(-10, 10)))
+        Array2D.init x y (fun _ _ -> Some(rnd.Next(-5, 5)))
 
     let genRandomNoneArray2D x y =
         Array2D.init x y (fun _ _ ->
             if rnd.Next(1, 5) = 4 then
                 None
             else
-                Some(rnd.Next(-10, 10)))
+                Some(rnd.Next(-5, 5)))
 
     let genRandomMatrix x y = Matrix(genRandomArray2D x y)
     let genRandomNoneMatrix x y = Matrix(genRandomNoneArray2D x y)
@@ -53,14 +53,14 @@ module Restoring =
 module OptionIntOperations =
     let addInt (a: Option<int>) (b: Option<int>) =
         match a, b with
-        | Some x, Some y -> Some (x + y)
+        | Some x, Some y -> Some(x + y)
         | Some x, None -> Some x
         | None, Some x -> Some x
         | None, None -> None
 
     let multInt (a: Option<int>) (b: Option<int>) =
         match a, b with
-        | Some x, Some y -> Some (x * y)
+        | Some x, Some y -> Some(x * y)
         | _ -> None
 
 open OptionIntOperations
@@ -73,25 +73,20 @@ let multiplyTests =
         "Tests for Multiply.vecMatMultiply function"
         [ testProperty "vecMatMultiply is naiveVecMatMultiply (without None)"
           <| fun _ ->
-              let len1, len2 = rnd.Next(1, 20), rnd.Next(1, 20)
+              let len1, len2 = rnd.Next(1, 25), rnd.Next(1, 25)
 
-              let a = genRandomArray len1
-              let b = genRandomArray2D len1 len2
-              let vec = Vector(a)
-              let mat = Matrix(b)
-
-              // let mat = genRandomMatrix len1 len2
-              // let vec = genRandomVector len1
+              let mat = genRandomMatrix len1 len2
+              let vec = genRandomVector len1
 
               let actualResult = vecMatMultiply vec mat addInt multInt
               let expectedResult = naiveVecMatMultiply vec mat addInt multInt
 
-              Expect.equal actualResult.Data expectedResult.Data (sprintf "the results were different data: %A \n %A" a b)
+              Expect.equal actualResult.Data expectedResult.Data "the results were different"
 
 
           testProperty "vecMatMultiply is naiveVecMatMultiply (with None)"
           <| fun _ ->
-              let len1, len2 = rnd.Next(1, 100), rnd.Next(1, 100)
+              let len1, len2 = rnd.Next(1, 25), rnd.Next(1, 25)
 
               let mat = genRandomNoneMatrix len1 len2
               let vec = genRandomNoneVector len1
@@ -107,8 +102,8 @@ let multiplyTests =
               let mat = Matrix(Empty, 0, 0)
               let vec = Vector(BinTree.Empty, 0)
 
-              let res = (vecMatMultiply vec mat addInt multInt).Data
-              Expect.equal res BinTree.Empty "the results were different"
+              let actualResult = (vecMatMultiply vec mat addInt multInt).Data
+              Expect.equal actualResult BinTree.Empty "the results were different"
 
 
           testProperty "If length of vector dont match with length1 of matrix an exception is thrown"
@@ -129,7 +124,20 @@ let multiplyTests =
                   (fun _ -> vecMatMultiply vec mat addInt multInt |> ignore)
                   $"The dimensions of the matrix are incompatible
                     for multiplication with the dimensions of the vector:
-                    vector length is {vec.Length} but matrix size is {mat.Length1}x{mat.Length2}" ]
+                    vector length is {vec.Length} but matrix size is {mat.Length1}x{mat.Length2}"
+
+
+          testProperty "Multiply function returns fully collapsed tree"
+          <| fun _ ->
+              let len1, len2 = rnd.Next(1, 100), rnd.Next(1, 100)
+
+              let mat = genRandomNoneMatrix len1 len2
+              let vec = genRandomNoneVector len1
+
+              let actualResult = (vecMatMultiply vec mat addInt multInt).Data
+              let expectedResult = collapseBinTree actualResult
+
+              Expect.equal actualResult expectedResult "the results were different" ]
 
 
 [<Tests>]
@@ -154,25 +162,21 @@ let vectorTypeTests =
           <| fun _ ->
               let len = rnd.Next(1, 100)
 
-              let arr1 = genRandomNoneArray len
-              let vec = Vector(arr1)
-              let arr2 = restoreArray vec
+              let expectedResult = genRandomNoneArray len
+              let vec = Vector(expectedResult)
+              let actualResult = restoreArray vec
 
-              Expect.equal arr1 arr2 "the results were different"
+              Expect.equal actualResult expectedResult "the results were different"
 
 
-          // constructBinTree
-          // testProperty "Constructor test (arr1 -> tree -> vec -> arr2) ==> (arr = arr2) (non-collapsed tree)"
-          // <| fun _ ->
-          //     let len = rnd.Next(1, 100)
-          //
-          //     let arr1 = genRandomNoneArray len
-          //     let tree = constructBinTree arr1
-          //     let vec = Vector(tree, len)
-          //     let arr2 = restoreArray vec
-          //
-          //     Expect.equal arr1 arr2 "the results were different"
-        ]
+          testProperty "The Vector constructor returns a fully collapsed tree"
+          <| fun _ ->
+              let len1 = rnd.Next(1, 100)
+
+              let actualResult = (genRandomNoneVector len1).Data
+              let expectedResult = collapseBinTree actualResult
+
+              Expect.equal actualResult expectedResult "the results were different" ]
 
 
 [<Tests>]
@@ -197,26 +201,21 @@ let matrixTypeTests =
           <| fun _ ->
               let len1, len2 = rnd.Next(1, 100), rnd.Next(1, 100)
 
-              let arr2D1 = genRandomNoneArray2D len1 len2
-              let mat = Matrix(arr2D1)
-              let arr2D2 = restoreArray2D mat
+              let expectedResult = genRandomNoneArray2D len1 len2
+              let mat = Matrix(expectedResult)
+              let actualResult = restoreArray2D mat
 
-              Expect.equal arr2D1 arr2D2 "the results were different"
+              Expect.equal expectedResult actualResult "the results were different"
 
 
-          // constructQTree
-          // testProperty "Constructor test (arrD1 -> tree -> mat -> arrD2) ==> (arr2D1 = arr2D2) (non-collapsed tree)"
-          // <| fun _ ->
-          //     let len1, len2 = rnd.Next(1, 100), rnd.Next(1, 100)
-          //
-          //     let arr2D1 = genRandomNoneArray2D len1 len2
-          //     let tree = constructQTree arr2D1
-          //     let mat = Matrix(tree, len1, len2)
-          //     let arr2D2 = restoreArray2D mat
-          //
-          //     Expect.equal arr2D1 arr2D2 "the results were different"
+          testProperty "The Matrix constructor returns a fully collapsed tree"
+          <| fun _ ->
+              let len1, len2 = rnd.Next(1, 100), rnd.Next(1, 100)
 
-          ]
+              let actualResult = (genRandomNoneMatrix len1 len2).Data
+              let expectedResult = collapseQTree actualResult
+
+              Expect.equal actualResult expectedResult "the results were different" ]
 
 
 [<Tests>]
@@ -227,7 +226,7 @@ let BinTreeTests =
           // AddBinTree
           testProperty "AddBinTree is commutative"
           <| fun _ ->
-              let len = rnd.Next(1, 100)
+              let len = rnd.Next(1, 50)
               let tree1 = (genRandomNoneVector len).Data
               let tree2 = (genRandomNoneVector len).Data
 
@@ -239,7 +238,7 @@ let BinTreeTests =
 
           testProperty "AddBinTree is associative"
           <| fun _ ->
-              let len = rnd.Next(1, 100)
+              let len = rnd.Next(1, 50)
               let tree1 = (genRandomNoneVector len).Data
               let tree2 = (genRandomNoneVector len).Data
               let tree3 = (genRandomNoneVector len).Data
@@ -252,40 +251,33 @@ let BinTreeTests =
 
           testProperty "(AddBinTree tree emptyTree) is tree"
           <| fun _ ->
-              let len = rnd.Next(1, 100)
+              let len = rnd.Next(1, 50)
               let tree = (genRandomNoneVector len).Data
               let emptyTree = BinTree.Empty
 
-              let res = addBinTree tree emptyTree addInt
+              let actualResult = addBinTree tree emptyTree addInt
 
-              Expect.equal res tree "the results were different"
+              Expect.equal actualResult tree "the results were different"
 
 
           testProperty "(AddBinTree tree zeroTree) is tree"
           <| fun _ ->
-              let len = rnd.Next(1, 100)
+              let len = rnd.Next(1, 50)
               let tree = (genRandomVector len).Data
               let zeroTree = Vector(Array.init len (fun _ -> Some 0)).Data
 
-              let res = addBinTree tree zeroTree addInt
+              let actualResult = addBinTree tree zeroTree addInt
 
-              Expect.equal res tree "the results were different"
+              Expect.equal actualResult tree "the results were different"
 
           // expandBinTree cutBinTree
           testProperty "tree expansion is the opposite of tree cutting"
           <| fun _ ->
-              let len = rnd.Next(1, 100)
-              let tree = (genRandomNoneVector len).Data
+              let len = rnd.Next(1, 50)
+              let expectedResult = (genRandomNoneVector len).Data
 
               let additionalLen = rnd.Next(1, 10)
-              let expanded = expandBinTree tree len (len + additionalLen)
-              let cut = cutBinTree expanded len (len + additionalLen)
+              let expanded = expandBinTree expectedResult len (len + additionalLen)
+              let actualResult = cutBinTree expanded len (len + additionalLen)
 
-              Expect.equal tree cut "the results were different" ]
-
-
-[<Tests>]
-let QTreeTests =
-    testList
-        "Tests for QTree type"
-        []
+              Expect.equal actualResult expectedResult "the results were different" ]

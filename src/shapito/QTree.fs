@@ -5,13 +5,13 @@ type QTree<'Value> =
     | Leaf of value: 'Value
     | Empty
 
-let QTreeToOption (tree: QTree<'A>): Option<'A> =
+let QTreeToOption (tree: QTree<'A>) : Option<'A> =
     match tree with
     | Leaf v -> Some v
     | Empty -> None
     | _ -> failwith "Unable to convert QTree.Node to Option type"
 
-let OptionToQTree (a: Option<'A>): QTree<'A> =
+let OptionToQTree (a: Option<'A>) : QTree<'A> =
     match a with
     | Some v -> Leaf v
     | None -> Empty
@@ -25,5 +25,6 @@ let qCollapse tree =
 let rec collapseQTree tree =
     match tree with
     | Node (nw, ne, sw, se) ->
-        (Node (collapseQTree nw, collapseQTree ne, collapseQTree sw, collapseQTree se)) |> qCollapse
+        (Node(collapseQTree nw, collapseQTree ne, collapseQTree sw, collapseQTree se))
+        |> qCollapse
     | _ -> tree

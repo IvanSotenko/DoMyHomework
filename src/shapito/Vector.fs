@@ -28,12 +28,15 @@ let constructBinTree (basis: array<Option<'A>>) =
                 let left = extract (i * 2)
                 let right = extract (i * 2 + 1)
 
-                (Node (left, right)) |> binCollapse
+                (Node(left, right)) |> binCollapse
             else
                 let left = (constructSub (level - 1) (i * 2)) |> binCollapse
-                let right = (constructSub (level - 1) (i * 2 + 1)) |> binCollapse
 
-                (Node (left, right)) |> binCollapse
+                let right =
+                    (constructSub (level - 1) (i * 2 + 1))
+                    |> binCollapse
+
+                (Node(left, right)) |> binCollapse
 
         constructSub depth 0
 

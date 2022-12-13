@@ -7,10 +7,10 @@
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="AssemblyInfo.fs" />
-<!--        <Compile Include="Homework1Tests.fs" />-->
-<!--        <Compile Include="LinkedListsTests.fs" />-->
-<!--        <Compile Include="GeneralTreeTests.fs" />-->
-        <Compile Include="MatrixOperationsTests.fs" />
+        <Compile Include="Homework1Tests.fs" />
+        <Compile Include="LinkedListsTests.fs" />
+        <Compile Include="GeneralTreeTests.fs" />
+        <Compile Include="VectorsAndMatricesTests.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
     <ItemGroup>

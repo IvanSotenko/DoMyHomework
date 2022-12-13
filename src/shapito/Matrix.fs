@@ -30,20 +30,22 @@ let constructQTree (basis: Option<'A> [,]) =
         let rec constructSub level (x, y) =
 
             if level = 1 then
-                Node (
+                Node(
                     extract (x * 2, y * 2),
                     extract (x * 2, y * 2 + 1),
                     extract (x * 2 + 1, y * 2),
                     extract (x * 2 + 1, y * 2 + 1)
-                ) |> qCollapse
+                )
+                |> qCollapse
 
             else
-                Node (
+                Node(
                     (constructSub (level - 1) (x * 2, y * 2)),
                     (constructSub (level - 1) (x * 2, y * 2 + 1)),
                     (constructSub (level - 1) (x * 2 + 1, y * 2)),
                     (constructSub (level - 1) (x * 2 + 1, y * 2 + 1))
-                ) |> qCollapse
+                )
+                |> qCollapse
 
         collapseQTree (constructSub depth (0, 0))
 
