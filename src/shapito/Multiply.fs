@@ -98,33 +98,46 @@ let vecMatMultiply
               vector length is {vec.Length} but matrix size is {mat.Length1}x{mat.Length2}"
 
     let size = max mat.Length1 mat.Length2
-    let bTree = expandBinTree vec.Data vec.Length size
+    let depth = if size = 1 || size = 0 then 0 else int (System.Math.Ceiling(System.Math.Log(size, 2)))
     let qTree = mat.Data
 
-    let rec multiplyCore bTree qTree =
-        match bTree, qTree with
+    let binTree = expandBinTree vec.Data vec.Length size
 
-        | BinTree.Node (l, r), Node (nw, ne, sw, se) ->
-            BinTree.Node(
-                addBinTree (multiplyCore l nw) (multiplyCore r sw) add,
-                addBinTree (multiplyCore l ne) (multiplyCore r se) add
-            )
+    // printfn "depth = %A\n \nqTree\n%A\n \nbinTree\n%A" depth qTree binTree
 
-        | BinTree.Node (l, r), leafOrEmpty ->
-            BinTree.Node(
-                addBinTree (multiplyCore l leafOrEmpty) (multiplyCore r leafOrEmpty) add,
-                addBinTree (multiplyCore l leafOrEmpty) (multiplyCore r leafOrEmpty) add
-            )
+    let rec multiplyCore bTree qTree level =
+        if level = 0 then
 
-        | leafOrEmpty, Node (nw, ne, sw, se) ->
-            BinTree.Node(
-                addBinTree (multiplyCore leafOrEmpty nw) (multiplyCore leafOrEmpty sw) add,
-                addBinTree (multiplyCore leafOrEmpty ne) (multiplyCore leafOrEmpty se) add
-            )
+            match bTree, qTree with
+            | leafOrEmpty1, leafOrEmpty2 -> (mult (BinTreeToOption leafOrEmpty1) (QTreeToOption leafOrEmpty2)) |> OptionToBinTree
 
-        | leafOrEmpty1, leafOrEmpty2 -> (mult (BinTreeToOption leafOrEmpty1) (QTreeToOption leafOrEmpty2)) |> OptionToBinTree
+        else
+            match bTree, qTree with
 
-    let rawRes = multiplyCore bTree qTree
+            | BinTree.Node (l, r), Node (nw, ne, sw, se) ->
+                BinTree.Node(
+                    addBinTree (multiplyCore l nw (level - 1)) (multiplyCore r sw (level - 1)) add,
+                    addBinTree (multiplyCore l ne (level - 1)) (multiplyCore r se (level - 1)) add
+                )
+
+            | BinTree.Node (l, r), leafOrEmpty ->
+                BinTree.Node(
+                    addBinTree (multiplyCore l leafOrEmpty (level - 1)) (multiplyCore r leafOrEmpty (level - 1)) add,
+                    addBinTree (multiplyCore l leafOrEmpty (level - 1)) (multiplyCore r leafOrEmpty (level - 1)) add
+                )
+
+            | leafOrEmpty, Node (nw, ne, sw, se) ->
+                BinTree.Node(
+                    addBinTree (multiplyCore leafOrEmpty nw (level - 1)) (multiplyCore leafOrEmpty sw (level - 1)) add,
+                    addBinTree (multiplyCore leafOrEmpty ne (level - 1)) (multiplyCore leafOrEmpty se (level - 1)) add
+                )
+
+            | leafOrEmptyBin, leafOrEmptyQ ->
+                let summand = (multiplyCore leafOrEmptyBin leafOrEmptyQ (level - 1))
+                let tree = addBinTree summand summand add
+                BinTree.Node(tree, tree)
+
+    let rawRes = multiplyCore binTree qTree depth
     let collapsedRes = collapseBinTree rawRes
     let res = cutBinTree collapsedRes mat.Length2 size
 

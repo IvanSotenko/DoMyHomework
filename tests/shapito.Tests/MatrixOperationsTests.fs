@@ -75,15 +75,18 @@ let multiplyTests =
           <| fun _ ->
               let len1, len2 = rnd.Next(1, 20), rnd.Next(1, 20)
 
-              // let len1, len2 = 20, 20
+              let a = genRandomArray len1
+              let b = genRandomArray2D len1 len2
+              let vec = Vector(a)
+              let mat = Matrix(b)
 
-              let mat = genRandomMatrix len1 len2
-              let vec = genRandomVector len1
+              // let mat = genRandomMatrix len1 len2
+              // let vec = genRandomVector len1
 
               let actualResult = vecMatMultiply vec mat addInt multInt
               let expectedResult = naiveVecMatMultiply vec mat addInt multInt
 
-              Expect.equal actualResult.Data expectedResult.Data "the results were different"
+              Expect.equal actualResult.Data expectedResult.Data (sprintf "the results were different data: %A \n %A" a b)
 
 
           testProperty "vecMatMultiply is naiveVecMatMultiply (with None)"
@@ -129,7 +132,7 @@ let multiplyTests =
                     vector length is {vec.Length} but matrix size is {mat.Length1}x{mat.Length2}" ]
 
 
-// [<Tests>]
+[<Tests>]
 let vectorTypeTests =
     testList
         "Tests for Vector type"
@@ -172,7 +175,7 @@ let vectorTypeTests =
         ]
 
 
-// [<Tests>]
+[<Tests>]
 let matrixTypeTests =
     testList
         "Tests for Matrix type"
@@ -216,7 +219,7 @@ let matrixTypeTests =
           ]
 
 
-// [<Tests>]
+[<Tests>]
 let BinTreeTests =
     testList
         "Tests for BinTree type"
@@ -281,7 +284,7 @@ let BinTreeTests =
               Expect.equal tree cut "the results were different" ]
 
 
-// [<Tests>]
+[<Tests>]
 let QTreeTests =
     testList
         "Tests for QTree type"
