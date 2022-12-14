@@ -2,7 +2,64 @@
 
 open QTree
 
-let constructQTree (basis: Option<'A> [,]) =
+let mtxToMatrix (verts: list<int * int * 'a>) (rows: int) (columns: int) =
+
+    let value (_, _, a) = a
+    let size = max rows columns
+
+    let sizePow2 =
+        int (
+            2.
+            ** System.Math.Ceiling(System.Math.Log(size, 2))
+        )
+
+    let divideIntoQuads (verts: list<int * int * 'a>) (curX: int) (curY: int) =
+
+        let rec divideSub verts (nw, ne, sw, se) =
+            match verts with
+            | (x, y, a) :: tail ->
+
+                if x > rows || y > columns then
+                    failwith
+                        $"An element outside the bounds of the matrix. The dimensions of the matrix are {rows}x{columns} but there is an element ({x}, {y}, {a})."
+
+                if x <= curX && y <= curY then
+                    divideSub tail ((x, y, a) :: nw, ne, sw, se)
+                elif x <= curX && y > curY then
+                    divideSub tail (nw, (x, y, a) :: ne, sw, se)
+                elif x > curX && y <= curY then
+                    divideSub tail (nw, ne, (x, y, a) :: sw, se)
+                else
+                    divideSub tail (nw, ne, sw, (x, y, a) :: se)
+
+            | [] -> nw, ne, sw, se
+
+        divideSub verts ([], [], [], [])
+
+    let rec constructSub (verts: list<int * int * 'a>) (curX, curY) barrier =
+        if verts.IsEmpty then
+            Empty
+        elif barrier = 0 then
+            if verts.Length = 1 then
+                Leaf(value verts[0])
+            else
+                failwith $"Several elements claim one place in the tree: {verts}"
+        else
+            let vertsNW, vertsNE, vertsSW, vertsSE =
+                divideIntoQuads verts (curX - barrier) (curY - barrier)
+
+            Node(
+                constructSub vertsNW (curX - barrier, curY - barrier) (barrier / 2),
+                constructSub vertsNE (curX - barrier, curY) (barrier / 2),
+                constructSub vertsSW (curX, curY - barrier) (barrier / 2),
+                constructSub vertsSE (curX, curY) (barrier / 2)
+            )
+            |> qCollapse
+
+    constructSub verts (sizePow2, sizePow2) (sizePow2 / 2)
+
+
+let array2DToQTree (basis: Option<'A> [,]) =
 
     let rows = Array2D.length1 basis
     let columns = Array2D.length2 basis
@@ -54,13 +111,18 @@ type Matrix<'A when 'A: equality> =
     val Length1: int
     val Length2: int
 
-    new(arr) =
-        { Data = constructQTree arr
+    new(arr: Option<'A> [,]) =
+        { Data = array2DToQTree arr
           Length1 = Array2D.length1 arr
           Length2 = Array2D.length2 arr }
 
-    new(tree, length1, length2) =
+    new(tree: QTree<'A>, length1, length2) =
         { Data = tree
+          Length1 = length1
+          Length2 = length2 }
+
+    new(verts: list<int * int * 'A>, length1, length2) =
+        { Data = mtxToMatrix verts length1 length2
           Length1 = length1
           Length2 = length2 }
 

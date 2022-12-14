@@ -71,3 +71,10 @@ let expandBinTree tree (actualLen: int) (reqLen: int) =
                 tree
 
         expand tree depth
+
+
+let rec foldBinTree (folder: 'State -> 'A -> 'State) (state: 'State) (tree: BinTree<'A>) =
+    match tree with
+    | Node (left, right) -> foldBinTree folder (foldBinTree folder state left) right
+    | Leaf a -> folder state a
+    | Empty -> state
