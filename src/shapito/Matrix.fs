@@ -2,7 +2,6 @@
 
 open QTree
 
-
 let constructQTree (basis: Option<'A> [,]) =
 
     let rows = Array2D.length1 basis
@@ -71,7 +70,7 @@ type Matrix<'A when 'A: equality> =
             let size =
                 int (
                     2.
-                    ** (System.Math.Ceiling(System.Math.Log(max this.Length1 this.Length2, 2)))
+                    ** System.Math.Ceiling(System.Math.Log(max this.Length1 this.Length2, 2))
                 )
 
             if (x >= this.Length1) || (y >= this.Length2) then

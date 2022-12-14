@@ -5,11 +5,13 @@ type BinTree<'Value> =
     | Leaf of value: 'Value
     | Empty
 
+
 let BinTreeToOption (tree: BinTree<'A>) : Option<'A> =
     match tree with
     | Leaf v -> Some v
     | Empty -> None
     | _ -> failwith "Unable to convert BinTree.Node to Option type"
+
 
 let OptionToBinTree (a: Option<'A>) : BinTree<'A> =
     match a with
