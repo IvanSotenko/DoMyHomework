@@ -10,6 +10,7 @@
         <Compile Include="Homework1Tests.fs" />
         <Compile Include="LinkedListsTests.fs" />
         <Compile Include="GeneralTreeTests.fs" />
+        <Compile Include="VectorsAndMatricesTests.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
     <ItemGroup>
