@@ -1,4 +1,4 @@
-﻿module DoMyHomework.Multiply
+﻿module DoMyHomework.MatrixAlgebra
 
 open Matrix
 open Vector

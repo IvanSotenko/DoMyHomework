@@ -26,6 +26,7 @@
         <Compile Include="Matrix.fs" />
         <Compile Include="Vector.fs" />
         <Compile Include="MatrixAlgebra.fs" />
+        <Compile Include="BFS.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets" />
