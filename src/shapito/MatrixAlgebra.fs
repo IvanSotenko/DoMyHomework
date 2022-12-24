@@ -32,7 +32,7 @@ let naiveVecMatMultiply
 
 
 /// Piecemeal application of the function to the corresponding elements of both trees (with collapsing)
-let addBinTree (tree1: BinTree<'A>) (tree2: BinTree<'A>) (func: Option<'A> -> Option<'A> -> Option<'A>) : BinTree<'A> =
+let addBinTree (tree1: BinTree<'A>) (tree2: BinTree<'B>) (func: Option<'A> -> Option<'B> -> Option<'A>) : BinTree<'A> =
 
     let rec addBinTreeSub tree1 tree2 =
         match tree1, tree2 with

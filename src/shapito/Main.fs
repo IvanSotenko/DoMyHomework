@@ -3,7 +3,7 @@ namespace DoMyHomework
 open Vector
 open Matrix
 open BinTree
-open BFS
+open BFS.EnlightenedBFS
 open MatrixAlgebra
 
 module Restoring =
@@ -30,10 +30,16 @@ module Main =
         let testDataUSE = [(1, 2, 4); (2, 3, 6); (2, 4, 3); (2, 5, 6); (3, 5, 4); (4, 5, 2); (5, 6, 5)
                            (2, 1, 4); (3, 2, 6); (4, 2, 3); (5, 2, 6); (5, 3, 4); (5, 4, 2); (6, 5, 2)]
 
-        let st = Vector(testStart)
-        let mat = Matrix(testDataUSE, 6, 6)
+        let testData7 = [(1, 2, Mark); (2, 3, Mark); (3, 4, Mark); (4, 5, Mark); (1, 9, Mark); (9, 10, Mark)
+                         (1, 8, Mark); (8, 11, Mark); (10, 6, Mark); (6, 5, Mark); (11, 7, Mark)
+                         (11, 10, Mark); (7, 6, Mark)]
 
-        let a = BFS st mat
+        let testData8 = [(1, 2, Mark); (2, 4, Mark); (2, 3, Mark); (4, 3, Mark); (3, 1, Mark)]
+
+        let amat = Matrix(testData7, 11, 11)
+        let res = BFS [1u] amat
+
+        printfn "%A" res.Data
 
         // let res = vecMatMultiply st mat min add
 
@@ -53,11 +59,4 @@ module Main =
 
         // printfn "%A" res.Data
 
-        let testVertVector = [(1, 2); (4, 2); (10, 3)]
-        let b = [5u; 1u; 3u; 7u; 6u]
-
-        // printfn "%A" (restoreArray (Vector((vertListToVector testVertVector 10), 10)))
-        let a = Vector(b, 8, ())
-
-        printfn $"{a.Data}"
         0
