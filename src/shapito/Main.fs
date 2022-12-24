@@ -3,7 +3,7 @@ namespace DoMyHomework
 open Vector
 open Matrix
 open BinTree
-open BFS.EnlightenedBFS
+open BFS
 open System.Collections.Generic
 open MatrixAlgebra
 
