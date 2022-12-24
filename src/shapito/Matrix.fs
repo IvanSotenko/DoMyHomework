@@ -2,7 +2,7 @@
 
 open QTree
 
-let mtxToMatrix (verts: list<int * int * 'a>) (rows: int) (columns: int) =
+let mtxToMatrix (verts: list<int * int * 'A>) (rows: int) (columns: int) =
 
     let value (_, _, a) = a
     let size = max rows columns
@@ -13,7 +13,7 @@ let mtxToMatrix (verts: list<int * int * 'a>) (rows: int) (columns: int) =
             ** System.Math.Ceiling(System.Math.Log(size, 2))
         )
 
-    let divideIntoQuads (verts: list<int * int * 'a>) (curX: int) (curY: int) =
+    let divideIntoQuads (verts: list<int * int * 'A>) (curX: int) (curY: int) =
 
         let rec divideSub verts (nw, ne, sw, se) =
             match verts with
@@ -36,7 +36,7 @@ let mtxToMatrix (verts: list<int * int * 'a>) (rows: int) (columns: int) =
 
         divideSub verts ([], [], [], [])
 
-    let rec constructSub (verts: list<int * int * 'a>) (curX, curY) barrier =
+    let rec constructSub (verts: list<int * int * 'A>) (curX, curY) barrier =
         if verts.IsEmpty then
             Empty
         elif barrier = 0 then

@@ -2,6 +2,51 @@
 
 open BinTree
 
+let vertListToVector (verts: list<int * 'A>) (length: int) =
+
+    let value (_, a) = a
+    let lengthPow2 = int (2. ** System.Math.Ceiling(System.Math.Log(length, 2)))
+
+    let divideIntoСhildren (verts: list<int * 'A>) (curI: int) =
+
+        let rec divideSub verts (left, right) =
+            match verts with
+            | (i, a) :: tail ->
+
+                if i > length then
+                    failwith
+                        $"An element outside the bounds of the vector. The length of the vector is {length} but there is an element ({i}, {a})."
+
+                if i <= curI then
+                    divideSub tail ((i, a) :: left, right)
+                else
+                    divideSub tail (left, (i, a) :: right)
+
+            | [] -> left, right
+
+        divideSub verts ([], [])
+
+    let rec constructSub (verts: list<int * 'A>) curI barrier =
+        if verts.IsEmpty then
+            Empty
+        elif barrier = 0 then
+            if verts.Length = 1 then
+                Leaf(value verts[0])
+            else
+                failwith $"Several elements claim one place in the tree: {verts}"
+        else
+            let vertsLeft, vertsRight = divideIntoСhildren verts (curI - barrier)
+            printfn "%A\n%A\n%A\n" vertsLeft vertsRight curI
+
+            Node (
+                constructSub vertsLeft (curI - barrier) (barrier/2),
+                constructSub vertsRight curI (barrier/2)
+            )
+            |> binCollapse
+
+    constructSub verts lengthPow2 (lengthPow2/2)
+
+
 let constructBinTree (basis: array<Option<'A>>) =
 
     let length = Array.length basis

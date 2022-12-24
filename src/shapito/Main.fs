@@ -38,7 +38,7 @@ module Main =
         // let res = vecMatMultiply st mat min add
 
         // printfn "%A" res.Data
-        printfn "%A" a.Data
+        // printfn "%A" a.Data
 
         // let vec = Vector([|None; Some 4; Some 2; None; None|])
         // let res = vecMatMultiply vec mat min add
@@ -52,4 +52,8 @@ module Main =
         // let res = vecMatMultiply F mat min add
 
         // printfn "%A" res.Data
+
+        let testVertVector = [(1, 2); (4, 2); (10, 3)]
+
+        printfn "%A" (restoreArray (Vector((vertListToVector testVertVector 10), 10)))
         0
