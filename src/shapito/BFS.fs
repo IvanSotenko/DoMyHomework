@@ -35,9 +35,6 @@ let updateFront (front: Vector<'A>) (result: Vector<'A>) =
 let updateResult (front: Vector<'A>) (result: Vector<'A>) =
     Vector((addBinTree front.Data result.Data f'), front.Length)
 
-
-let createFront (startVerts: List<uint>): Vector<'A> = Vector(Empty, 0)
-
 let naiveBFS (startVertices: Vector<int>) (mat: Matrix<int>) =
     let mutable result = Vector(Array.create startVertices.Length None)
     let mutable front = startVertices

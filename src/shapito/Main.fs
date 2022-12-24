@@ -54,6 +54,10 @@ module Main =
         // printfn "%A" res.Data
 
         let testVertVector = [(1, 2); (4, 2); (10, 3)]
+        let b = [5u; 1u; 3u; 7u; 6u]
 
-        printfn "%A" (restoreArray (Vector((vertListToVector testVertVector 10), 10)))
+        // printfn "%A" (restoreArray (Vector((vertListToVector testVertVector 10), 10)))
+        let a = Vector(b, 8, ())
+
+        printfn $"{a.Data}"
         0

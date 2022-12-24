@@ -36,7 +36,6 @@ let vertListToVector (verts: list<int * 'A>) (length: int) =
                 failwith $"Several elements claim one place in the tree: {verts}"
         else
             let vertsLeft, vertsRight = divideIntoСhildren verts (curI - barrier)
-            printfn "%A\n%A\n%A\n" vertsLeft vertsRight curI
 
             Node (
                 constructSub vertsLeft (curI - barrier) (barrier/2),
@@ -45,6 +44,50 @@ let vertListToVector (verts: list<int * 'A>) (length: int) =
             |> binCollapse
 
     constructSub verts lengthPow2 (lengthPow2/2)
+
+
+let uintListToVector (verts: list<uint>) (length: int) (value: 'A) =
+
+    let lengthPow2 = uint (2. ** System.Math.Ceiling(System.Math.Log(length, 2)))
+    let len = uint length
+
+    let divideIntoСhildren (verts: list<uint>) (curI: uint) =
+
+        let rec divideSub (verts: list<uint>) (left, right) =
+            match verts with
+            | i :: tail ->
+
+                if i > len then
+                    failwith
+                        $"An element outside the bounds of the vector. The length of the vector is {length} but there is an element {i}."
+
+                if i <= curI then
+                    divideSub tail (i :: left, right)
+                else
+                    divideSub tail (left, i :: right)
+
+            | [] -> left, right
+
+        divideSub verts ([], [])
+
+    let rec constructSub (verts: list<uint>) (curI: uint) (barrier: uint) =
+        if verts.IsEmpty then
+            Empty
+        elif barrier = 0u then
+            if verts.Length = 1 then
+                Leaf(value)
+            else
+                failwith $"Several elements claim one place in the tree: {verts}"
+        else
+            let vertsLeft, vertsRight = divideIntoСhildren verts (curI - barrier)
+
+            Node (
+                constructSub vertsLeft (curI - barrier) (barrier/2u),
+                constructSub vertsRight curI (barrier/2u)
+            )
+            |> binCollapse
+
+    constructSub verts lengthPow2 (lengthPow2/2u)
 
 
 let constructBinTree (basis: array<Option<'A>>) =
@@ -90,11 +133,21 @@ type Vector<'A when 'A: equality> =
     val Data: BinTree<'A>
     val Length: int
 
-    new(arr) =
+    new(arr: Option<'A> []) =
         { Data = constructBinTree arr
           Length = arr.Length }
 
-    new(tree, length) = { Data = tree; Length = length }
+    new(tree: BinTree<'A>, length) =
+        { Data = tree
+          Length = length }
+
+    new(verts: List<int * 'A>, length) =
+        { Data = vertListToVector verts length
+          Length = length }
+
+    new(verts: List<uint>, length, value) =
+        { Data = uintListToVector verts length value
+          Length = length }
 
     member this.Item
         with get i =
