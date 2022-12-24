@@ -4,6 +4,7 @@ open Vector
 open Matrix
 open BinTree
 open BFS.EnlightenedBFS
+open System.Collections.Generic
 open MatrixAlgebra
 
 module Restoring =
@@ -36,10 +37,10 @@ module Main =
 
         let testData8 = [(1, 2, Mark); (2, 4, Mark); (2, 3, Mark); (4, 3, Mark); (3, 1, Mark)]
 
-        let amat = Matrix(testData7, 11, 11)
-        let res = BFS [1u] amat
+        let amat = Matrix(testData7, 12, 12)
+        let res = naiveBFS [1u] amat
 
-        printfn "%A" res.Data
+        printfn "%A" (restoreArray res)
 
         // let res = vecMatMultiply st mat min add
 

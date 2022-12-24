@@ -149,6 +149,8 @@ type Vector<'A when 'A: equality> =
         { Data = uintListToVector verts length value
           Length = length }
 
+    member this.isEmpty = this.Data = Empty
+
     member this.Item
         with get i =
 

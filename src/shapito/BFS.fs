@@ -1,4 +1,5 @@
 ﻿module DoMyHomework.BFS
+open System.Collections.Generic
 open MatrixAlgebra
 open Vector
 open Matrix
@@ -99,7 +100,7 @@ module EnlightenedBFS =
     let updateResult (front: Vector<Marker>) (result: Vector<uint>) iterNum =
         Vector((addBinTree result.Data front.Data (resultMask iterNum)), result.Length)
 
-    let BFS (startVertices: List<uint>) (adjMat: Matrix<'A>) =
+    let BFS (startVertices: uint list) (adjMat: Matrix<'A>) =
 
         let result = Vector(Empty, adjMat.Length1)
         let front = Vector(startVertices, adjMat.Length1, Mark)
@@ -107,9 +108,34 @@ module EnlightenedBFS =
         let rec subBFS front result iterNum =
             let newFront = updateFront (vecMatMultiply front adjMat add mult) result
 
-            if newFront.Data = Empty then
+            if newFront.isEmpty then
                 result
             else
                 subBFS newFront (updateResult newFront result iterNum) (iterNum + 1u)
 
         subBFS front result 1u
+
+
+    let increaseBy1 (a: Option<uint>) =
+        match a with
+        | Some x -> Some (x + 1u)
+        | None -> Some 1u
+
+    let naiveBFS (startVertices: uint list) (adjMat: Matrix<'A>) =
+
+        let mutable result = Array.create adjMat.Length1 None
+        let queue = Queue(startVertices)
+
+        while queue.Count > 0 do
+            let v = queue.Dequeue()
+
+            let indV = int (v - 1u)
+            for indW in 0 .. (adjMat.Length2 - 1) do
+                let value = adjMat[indV, indW]
+                if value <> None then
+
+                    if result[indW] = None then
+                        result[indW] <- increaseBy1 result[indV]
+                        queue.Enqueue(uint (indW + 1))
+
+        Vector(result)
