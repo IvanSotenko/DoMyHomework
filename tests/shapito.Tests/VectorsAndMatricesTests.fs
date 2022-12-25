@@ -9,7 +9,7 @@ open BinTree
 open QTree
 open Matrix
 open Vector
-open Multiply
+open MatrixAlgebra
 
 let config = { Config.Default with MaxTest = 10000 }
 

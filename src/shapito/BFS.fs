@@ -45,7 +45,7 @@ let BFS (startVertices: uint list) (adjMat: Matrix<'A>) =
 
     let rec subBFS front result iterNum =
 
-        // we multiply the vector by the matrix and apply a "mask" to the result
+        // we multiply the vector by the matrix and apply a "mask" to it
         let newFront = updateFront (vecMatMultiply front adjMat add mult) result
 
         if newFront.isEmpty then
@@ -74,11 +74,10 @@ let naiveBFS (startVertices: uint list) (adjMat: Matrix<'A>) =
 
         // v/w - uint name values, numbered from 1u
         // indV/indW - int index values, numbered from 0
-        // Потому что скучно живётся
         let indV = int (v - 1u)
 
         // We need to go through the row of the matrix
-        // with the number indV to find all vertices adjacent to v
+        // with index indV to find all vertices adjacent to v
         for indW in 0 .. (adjMat.Length2 - 1) do
             let value = adjMat[indV, indW]
 
