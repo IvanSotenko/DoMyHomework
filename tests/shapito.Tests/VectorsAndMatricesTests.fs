@@ -246,7 +246,7 @@ let matrixTypeTests =
           // Index access
           testProperty "Index access test"
           <| fun _ ->
-              let len1, len2 = rnd.Next(1, 100), rnd.Next(1, 100)
+              let len1, len2 = rnd.Next(1, 50), rnd.Next(1, 50)
 
               let arr2D = genRandomNoneArray2D len1 len2
               let mat = Matrix(arr2D)
@@ -259,7 +259,7 @@ let matrixTypeTests =
           // Array2D constructor
           testProperty "Array2D constructor tests (arr2D1 -> mat -> arr2D2) ==> (arr2D2 = arr2D2)"
           <| fun _ ->
-              let len1, len2 = rnd.Next(1, 100), rnd.Next(1, 100)
+              let len1, len2 = rnd.Next(1, 50), rnd.Next(1, 50)
 
               let expectedResult = genRandomNoneArray2D len1 len2
               let mat = Matrix(expectedResult)
@@ -270,7 +270,7 @@ let matrixTypeTests =
 
           testProperty "Array2D Matrix constructor returns a fully collapsed tree"
           <| fun _ ->
-              let len1, len2 = rnd.Next(1, 100), rnd.Next(1, 100)
+              let len1, len2 = rnd.Next(1, 50), rnd.Next(1, 50)
 
               let actualResult = (genRandomNoneMatrix len1 len2).Data
               let expectedResult = collapseQTree actualResult
@@ -281,7 +281,7 @@ let matrixTypeTests =
           // VertList constructor
           testProperty "VertList constructor tests (arr2D1 -> vertList -> mat -> arr2D2) ==> (arr2D2 = arr2D2)"
           <| fun _ ->
-              let len1, len2 = rnd.Next(1, 100), rnd.Next(1, 100)
+              let len1, len2 = rnd.Next(1, 50), rnd.Next(1, 50)
 
               let expectedResult = genRandomNoneArray2D len1 len2
               let vertList = array2DToVertList expectedResult
@@ -293,7 +293,7 @@ let matrixTypeTests =
 
           testProperty "VertList Matrix constructor returns a fully collapsed tree"
           <| fun _ ->
-              let len1, len2 = rnd.Next(1, 100), rnd.Next(1, 100)
+              let len1, len2 = rnd.Next(1, 50), rnd.Next(1, 50)
 
               let vertList = array2DToVertList (genRandomNoneArray2D len1 len2)
               let actualResult = Matrix(vertList, len1, len2).Data
