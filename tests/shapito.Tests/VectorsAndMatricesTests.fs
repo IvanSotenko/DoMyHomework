@@ -58,6 +58,7 @@ module naiveConversions =
         | None -> failwith "Cant unpack None value"
 
     let vectorToArray (vec: Vector<_>) = Array.init vec.Length (fun i -> vec[i])
+
     let matrixToArray2D (mat: Matrix<_>) =
         Array2D.init mat.Length1 mat.Length2 (fun i j -> mat[i, j])
 
@@ -67,15 +68,19 @@ module naiveConversions =
         for i in 0 .. (Array2D.length1 arr - 1) do
             for j in 0 .. (Array2D.length2 arr - 1) do
                 let value = arr[i, j]
+
                 if value <> None then
-                    vertList <- List.append vertList [(i + 1, j + 1, unpackOption value)]
+                    vertList <- List.append vertList [ (i + 1, j + 1, unpackOption value) ]
+
         vertList
+
     let arrayToUintList (arr: Option<'A> []) =
         let mutable uintList = []
 
         for i in 0 .. arr.Length - 1 do
             if arr[i] <> None then
-                uintList <- List.append uintList [uint (i + 1)]
+                uintList <- List.append uintList [ uint (i + 1) ]
+
         uintList
 
 
@@ -230,7 +235,7 @@ let vectorTypeTests =
               let actualResult = Vector(uintList, len, Mark).Data
               let expectedResult = collapseBinTree actualResult
 
-              Expect.equal actualResult expectedResult "the results were different"]
+              Expect.equal actualResult expectedResult "the results were different" ]
 
 
 [<Tests>]
@@ -273,7 +278,7 @@ let matrixTypeTests =
               Expect.equal actualResult expectedResult "the results were different"
 
 
-          // VertList contructor
+          // VertList constructor
           testProperty "VertList constructor tests (arr2D1 -> vertList -> mat -> arr2D2) ==> (arr2D2 = arr2D2)"
           <| fun _ ->
               let len1, len2 = rnd.Next(1, 100), rnd.Next(1, 100)
@@ -294,7 +299,7 @@ let matrixTypeTests =
               let actualResult = Matrix(vertList, len1, len2).Data
               let expectedResult = collapseQTree actualResult
 
-              Expect.equal actualResult expectedResult "the results were different"]
+              Expect.equal actualResult expectedResult "the results were different" ]
 
 
 

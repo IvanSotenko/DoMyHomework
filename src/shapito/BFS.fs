@@ -1,4 +1,5 @@
 ﻿module DoMyHomework.BFS
+
 open System.Collections.Generic
 open MatrixAlgebra
 open Vector
@@ -6,8 +7,7 @@ open Matrix
 open BinTree
 
 // Non-naive recursive BFS using MatrixAlgebra
-type Marker =
-| Mark
+type Marker = | Mark
 
 let mult a b =
     match a, b with
@@ -61,7 +61,7 @@ let BFS (startVertices: uint list) (adjMat: Matrix<'A>) =
 // Naive iterative BFS using queue
 let increaseBy1 (a: Option<uint>) =
     match a with
-    | Some x -> Some (x + 1u)
+    | Some x -> Some(x + 1u)
     | None -> Some 1u
 
 let naiveBFS (startVertices: uint list) (adjMat: Matrix<'A>) =

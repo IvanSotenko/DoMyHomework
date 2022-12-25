@@ -3,7 +3,6 @@
 open System
 open DoMyHomework
 open Expecto
-open FsCheck
 
 open testMatrix
 open Matrix
@@ -43,17 +42,17 @@ module randomGenerations =
 
     let randomVerts n =
 
-        let initList = [1u .. n]
+        let initList = [ 1u .. n ]
         let lst = []
 
         let transfer (listOut: list<uint>) (listIn: list<uint>) =
             let ind = rnd.Next(listOut.Length)
             let el = listOut[ind]
-            (List.removeAt ind listOut), (List.append listIn [el])
+            (List.removeAt ind listOut), (List.append listIn [ el ])
 
         let rec generator (listDon: uint list) (listRec: uint list) =
             // Setting the possible length of the list here
-            if rnd.Next(1,17) = 1 || listDon.IsEmpty then
+            if rnd.Next(1, 17) = 1 || listDon.IsEmpty then
                 listRec
             else
                 let newListDon, newListRec = transfer listDon listRec
@@ -72,54 +71,52 @@ open randomGenerations
 let BFSTest =
     testList
         "Tests for BFS.BFS function"
-        [
-         testProperty "Random starting vertices for a single graph (football)"
-         <| fun _ ->
+        [ testProperty "Random starting vertices for a single graph (football)"
+          <| fun _ ->
 
-             let verts = randomVerts 115u
+              let verts = randomVerts 115u
 
-             let expectedResult = (naiveBFS verts testMat1).Data
-             let actualResult = (BFS verts testMat1).Data
+              let expectedResult = (naiveBFS verts testMat1).Data
+              let actualResult = (BFS verts testMat1).Data
 
-             Expect.equal actualResult expectedResult $"the results were different, startVerts = {verts}"
+              Expect.equal actualResult expectedResult $"the results were different, startVerts = {verts}"
 
-         testProperty "Random starting vertices for a single graph (lnsp_131)"
-         <| fun _ ->
+          testProperty "Random starting vertices for a single graph (lnsp_131)"
+          <| fun _ ->
 
-             let verts = randomVerts 132u
+              let verts = randomVerts 132u
 
-             let expectedResult = (naiveBFS verts testMat2).Data
-             let actualResult = (BFS verts testMat2).Data
+              let expectedResult = (naiveBFS verts testMat2).Data
+              let actualResult = (BFS verts testMat2).Data
 
-             Expect.equal actualResult expectedResult $"the results were different, startVerts = {verts}"
+              Expect.equal actualResult expectedResult $"the results were different, startVerts = {verts}"
 
-         testProperty "Random starting vertices for a single graph (tub100)"
-         <| fun _ ->
+          testProperty "Random starting vertices for a single graph (tub100)"
+          <| fun _ ->
 
-             let verts = randomVerts 100u
+              let verts = randomVerts 100u
 
-             let expectedResult = (naiveBFS verts testMat3).Data
-             let actualResult = (BFS verts testMat3).Data
+              let expectedResult = (naiveBFS verts testMat3).Data
+              let actualResult = (BFS verts testMat3).Data
 
-             Expect.equal actualResult expectedResult $"the results were different, startVerts = {verts}"
+              Expect.equal actualResult expectedResult $"the results were different, startVerts = {verts}"
 
-         testCase "With an empty list of starting vertices the result should be all None"
-         <| fun _ ->
+          testCase "With an empty list of starting vertices the result should be all None"
+          <| fun _ ->
 
-             let verts = []
-             let expectedResult = BinTree.Empty
-             let actualResult = (BFS verts testMat3).Data
+              let verts = []
+              let expectedResult = BinTree.Empty
+              let actualResult = (BFS verts testMat3).Data
 
-             Expect.equal actualResult expectedResult "the results were different"
+              Expect.equal actualResult expectedResult "the results were different"
 
-         testProperty "With an empty graph the result should be all None"
-         <| fun _ ->
+          testProperty "With an empty graph the result should be all None"
+          <| fun _ ->
 
-             let verts = randomVerts 100u
-             let mat = Matrix(QTree.Empty, 100, 100)
+              let verts = randomVerts 100u
+              let mat = Matrix(QTree.Empty, 100, 100)
 
-             let expectedResult = BinTree.Empty
-             let actualResult = (BFS verts mat).Data
+              let expectedResult = BinTree.Empty
+              let actualResult = (BFS verts mat).Data
 
-             Expect.equal actualResult expectedResult "the results were different"
-             ]
+              Expect.equal actualResult expectedResult "the results were different" ]

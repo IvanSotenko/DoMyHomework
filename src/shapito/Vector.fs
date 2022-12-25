@@ -5,7 +5,12 @@ open BinTree
 let vertListToVector (verts: list<int * 'A>) (length: int) =
 
     let value (_, a) = a
-    let lengthPow2 = int (2. ** System.Math.Ceiling(System.Math.Log(length, 2)))
+
+    let lengthPow2 =
+        int (
+            2.
+            ** System.Math.Ceiling(System.Math.Log(length, 2))
+        )
 
     let divideIntoСhildren (verts: list<int * 'A>) (curI: int) =
 
@@ -37,18 +42,20 @@ let vertListToVector (verts: list<int * 'A>) (length: int) =
         else
             let vertsLeft, vertsRight = divideIntoСhildren verts (curI - barrier)
 
-            Node (
-                constructSub vertsLeft (curI - barrier) (barrier/2),
-                constructSub vertsRight curI (barrier/2)
-            )
+            Node(constructSub vertsLeft (curI - barrier) (barrier / 2), constructSub vertsRight curI (barrier / 2))
             |> binCollapse
 
-    constructSub verts lengthPow2 (lengthPow2/2)
+    constructSub verts lengthPow2 (lengthPow2 / 2)
 
 
 let uintListToVector (verts: list<uint>) (length: int) (value: 'A) =
 
-    let lengthPow2 = uint (2. ** System.Math.Ceiling(System.Math.Log(length, 2)))
+    let lengthPow2 =
+        uint (
+            2.
+            ** System.Math.Ceiling(System.Math.Log(length, 2))
+        )
+
     let len = uint length
 
     let divideIntoСhildren (verts: list<uint>) (curI: uint) =
@@ -81,13 +88,10 @@ let uintListToVector (verts: list<uint>) (length: int) (value: 'A) =
         else
             let vertsLeft, vertsRight = divideIntoСhildren verts (curI - barrier)
 
-            Node (
-                constructSub vertsLeft (curI - barrier) (barrier/2u),
-                constructSub vertsRight curI (barrier/2u)
-            )
+            Node(constructSub vertsLeft (curI - barrier) (barrier / 2u), constructSub vertsRight curI (barrier / 2u))
             |> binCollapse
 
-    constructSub verts lengthPow2 (lengthPow2/2u)
+    constructSub verts lengthPow2 (lengthPow2 / 2u)
 
 
 let constructBinTree (basis: array<Option<'A>>) =
@@ -137,9 +141,7 @@ type Vector<'A when 'A: equality> =
         { Data = constructBinTree arr
           Length = arr.Length }
 
-    new(tree: BinTree<'A>, length) =
-        { Data = tree
-          Length = length }
+    new(tree: BinTree<'A>, length) = { Data = tree; Length = length }
 
     new(verts: List<int * 'A>, length) =
         { Data = vertListToVector verts length
