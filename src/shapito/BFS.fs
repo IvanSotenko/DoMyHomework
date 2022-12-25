@@ -69,6 +69,8 @@ let naiveBFS (startVertices: uint list) (adjMat: Matrix<'A>) =
     let mutable result = Array.create adjMat.Length1 None
     let queue = Queue(startVertices)
 
+    // printfn "%A" (queue.ToArray())
+
     while queue.Count > 0 do
         let v = queue.Dequeue()
 
@@ -84,10 +86,14 @@ let naiveBFS (startVertices: uint list) (adjMat: Matrix<'A>) =
             // if expression (value <> None) is true, we found a vertex adjacent to v
             if value <> None then
 
-                // checking if we have visited this vertex
                 if result[indW] = None then
 
-                    result[indW] <- increaseBy1 result[indV]
+                    if List.contains v startVertices then
+                        result[indW] <- Some 1u
+                    else
+                        result[indW] <- increaseBy1 result[indV]
+
                     queue.Enqueue(uint (indW + 1))
 
+    // result <- Array.map (fun x -> if x = Some 0u then Some 1u else x) result
     Vector(result)
