@@ -2,7 +2,7 @@
 
 open QTree
 
-let mtxToMatrix (verts: list<int * int * 'A>) (rows: int) (columns: int) =
+let vertListToMatrix (verts: list<int * int * 'A>) (rows: int) (columns: int) =
 
     let value (_, _, a) = a
     let size = max rows columns
@@ -122,7 +122,7 @@ type Matrix<'A when 'A: equality> =
           Length2 = length2 }
 
     new(verts: list<int * int * 'A>, length1, length2) =
-        { Data = mtxToMatrix verts length1 length2
+        { Data = vertListToMatrix verts length1 length2
           Length1 = length1
           Length2 = length2 }
 

@@ -81,7 +81,7 @@ let BFSTest =
              let expectedResult = (naiveBFS verts testMat1).Data
              let actualResult = (BFS verts testMat1).Data
 
-             Expect.equal actualResult expectedResult $"The results were different, startVerts = {verts}"
+             Expect.equal actualResult expectedResult $"the results were different, startVerts = {verts}"
 
          testProperty "Random starting vertices for a single graph (lnsp_131)"
          <| fun _ ->
@@ -91,7 +91,7 @@ let BFSTest =
              let expectedResult = (naiveBFS verts testMat2).Data
              let actualResult = (BFS verts testMat2).Data
 
-             Expect.equal actualResult expectedResult $"The results were different, startVerts = {verts}"
+             Expect.equal actualResult expectedResult $"the results were different, startVerts = {verts}"
 
          testProperty "Random starting vertices for a single graph (tub100)"
          <| fun _ ->
@@ -101,7 +101,7 @@ let BFSTest =
              let expectedResult = (naiveBFS verts testMat3).Data
              let actualResult = (BFS verts testMat3).Data
 
-             Expect.equal actualResult expectedResult $"The results were different, startVerts = {verts}"
+             Expect.equal actualResult expectedResult $"the results were different, startVerts = {verts}"
 
          testCase "With an empty list of starting vertices the result should be all None"
          <| fun _ ->
@@ -110,7 +110,7 @@ let BFSTest =
              let expectedResult = BinTree.Empty
              let actualResult = (BFS verts testMat3).Data
 
-             Expect.equal actualResult expectedResult "The results were different"
+             Expect.equal actualResult expectedResult "the results were different"
 
          testProperty "With an empty graph the result should be all None"
          <| fun _ ->
@@ -121,5 +121,5 @@ let BFSTest =
              let expectedResult = BinTree.Empty
              let actualResult = (BFS verts mat).Data
 
-             Expect.equal actualResult expectedResult "The results were different"
+             Expect.equal actualResult expectedResult "the results were different"
              ]

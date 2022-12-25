@@ -10,6 +10,7 @@ open QTree
 open Matrix
 open Vector
 open MatrixAlgebra
+open BFS
 
 let config = { Config.Default with MaxTest = 10000 }
 
@@ -29,6 +30,12 @@ module randomGenerations =
     let genRandomVector n = Vector(genRandomArray n)
     let genRandomNoneVector n = Vector(genRandomNoneArray n)
 
+    let genRandomOptionMarkerArray n =
+        Array.init n (fun _ ->
+            if rnd.Next(1, 5) = 4 then
+                None
+            else
+                Some Mark)
 
     let genRandomArray2D x y =
         Array2D.init x y (fun _ _ -> Some(rnd.Next(-5, 5)))
@@ -44,11 +51,32 @@ module randomGenerations =
     let genRandomNoneMatrix x y = Matrix(genRandomNoneArray2D x y)
 
 
-module Restoring =
-    let restoreArray (vec: Vector<_>) = Array.init vec.Length (fun i -> vec[i])
+module naiveConversions =
+    let unpackOption x =
+        match x with
+        | Some a -> a
+        | None -> failwith "Cant unpack None value"
 
-    let restoreArray2D (mat: Matrix<_>) =
+    let vectorToArray (vec: Vector<_>) = Array.init vec.Length (fun i -> vec[i])
+    let matrixToArray2D (mat: Matrix<_>) =
         Array2D.init mat.Length1 mat.Length2 (fun i j -> mat[i, j])
+
+    let array2DToVertList (arr: Option<'A> [,]) =
+        let mutable vertList = []
+
+        for i in 0 .. (Array2D.length1 arr - 1) do
+            for j in 0 .. (Array2D.length2 arr - 1) do
+                let value = arr[i, j]
+                if value <> None then
+                    vertList <- List.append vertList [(i + 1, j + 1, unpackOption value)]
+        vertList
+    let arrayToUintList (arr: Option<'A> []) =
+        let mutable uintList = []
+
+        for i in 0 .. arr.Length - 1 do
+            if arr[i] <> None then
+                uintList <- List.append uintList [uint (i + 1)]
+        uintList
 
 
 module OptionIntOperations =
@@ -65,7 +93,7 @@ module OptionIntOperations =
         | _ -> None
 
 open OptionIntOperations
-open Restoring
+open naiveConversions
 open randomGenerations
 
 [<Tests>]
@@ -158,26 +186,51 @@ let vectorTypeTests =
               Expect.equal vec[index] arr[index] "the results were different"
 
 
-          // Vector constructor
-          testProperty "Constructor test (arr1 -> vec -> arr2) ==> (arr1 = arr2)"
+          // Vector constructors
+          // Array vector constructor
+          testProperty "Array constructor test (arr1 -> vec -> arr2) ==> (arr1 = arr2)"
           <| fun _ ->
               let len = rnd.Next(1, 100)
 
               let expectedResult = genRandomNoneArray len
               let vec = Vector(expectedResult)
-              let actualResult = restoreArray vec
+              let actualResult = vectorToArray vec
 
               Expect.equal actualResult expectedResult "the results were different"
 
 
-          testProperty "The Vector constructor returns a fully collapsed tree"
+          testProperty "The array Vector constructor returns a fully collapsed tree"
           <| fun _ ->
-              let len1 = rnd.Next(1, 100)
+              let len = rnd.Next(1, 100)
 
-              let actualResult = (genRandomNoneVector len1).Data
+              let actualResult = (genRandomNoneVector len).Data
               let expectedResult = collapseBinTree actualResult
 
-              Expect.equal actualResult expectedResult "the results were different" ]
+              Expect.equal actualResult expectedResult "the results were different"
+
+
+          // UintList vector constructor
+          testProperty "UintList constructor test (arr1 -> uintList -> vec -> arr2) ==> (arr1 = arr2)"
+          <| fun _ ->
+              let len = rnd.Next(1, 100)
+
+              let expectedResult = genRandomOptionMarkerArray len
+              let uintList = arrayToUintList expectedResult
+              let vec = Vector(uintList, len, Mark)
+              let actualResult = vectorToArray vec
+
+              Expect.equal actualResult expectedResult "the results were different"
+
+
+          testProperty "UintList Vector constructor returns a fully collapsed tree"
+          <| fun _ ->
+              let len = rnd.Next(1, 100)
+
+              let uintList = arrayToUintList (genRandomOptionMarkerArray len)
+              let actualResult = Vector(uintList, len, Mark).Data
+              let expectedResult = collapseBinTree actualResult
+
+              Expect.equal actualResult expectedResult "the results were different"]
 
 
 [<Tests>]
@@ -197,26 +250,52 @@ let matrixTypeTests =
               Expect.equal mat[index1, index2] arr2D[index1, index2] "the results were different"
 
 
-          // Matrix constructor
-          testProperty "Constructor tests (arr2D1 -> mat -> arr2D2) ==> (arr2D2 = arr2D2)"
+          // Matrix constructors
+          // Array2D constructor
+          testProperty "Array2D constructor tests (arr2D1 -> mat -> arr2D2) ==> (arr2D2 = arr2D2)"
           <| fun _ ->
               let len1, len2 = rnd.Next(1, 100), rnd.Next(1, 100)
 
               let expectedResult = genRandomNoneArray2D len1 len2
               let mat = Matrix(expectedResult)
-              let actualResult = restoreArray2D mat
+              let actualResult = matrixToArray2D mat
 
               Expect.equal expectedResult actualResult "the results were different"
 
 
-          testProperty "The Matrix constructor returns a fully collapsed tree"
+          testProperty "Array2D Matrix constructor returns a fully collapsed tree"
           <| fun _ ->
               let len1, len2 = rnd.Next(1, 100), rnd.Next(1, 100)
 
               let actualResult = (genRandomNoneMatrix len1 len2).Data
               let expectedResult = collapseQTree actualResult
 
-              Expect.equal actualResult expectedResult "the results were different" ]
+              Expect.equal actualResult expectedResult "the results were different"
+
+
+          // VertList contructor
+          testProperty "VertList constructor tests (arr2D1 -> vertList -> mat -> arr2D2) ==> (arr2D2 = arr2D2)"
+          <| fun _ ->
+              let len1, len2 = rnd.Next(1, 100), rnd.Next(1, 100)
+
+              let expectedResult = genRandomNoneArray2D len1 len2
+              let vertList = array2DToVertList expectedResult
+              let mat = Matrix(vertList, len1, len2)
+              let actualResult = matrixToArray2D mat
+
+              Expect.equal expectedResult actualResult "the results were different"
+
+
+          testProperty "VertList Matrix constructor returns a fully collapsed tree"
+          <| fun _ ->
+              let len1, len2 = rnd.Next(1, 100), rnd.Next(1, 100)
+
+              let vertList = array2DToVertList (genRandomNoneArray2D len1 len2)
+              let actualResult = Matrix(vertList, len1, len2).Data
+              let expectedResult = collapseQTree actualResult
+
+              Expect.equal actualResult expectedResult "the results were different"]
+
 
 
 [<Tests>]
