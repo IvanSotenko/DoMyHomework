@@ -31,10 +31,10 @@ let resultMask iterNum a b =
     | None, None -> None
 
 let updateFront (front: Vector<Marker>) (result: Vector<uint>) =
-    Vector((addBinTree front.Data result.Data frontMask), front.Length)
+    vectorize frontMask front result
 
 let updateResult (front: Vector<Marker>) (result: Vector<uint>) iterNum =
-    Vector((addBinTree result.Data front.Data (resultMask iterNum)), result.Length)
+    vectorize (resultMask iterNum) result front
 
 let BFS (startVertices: uint list) (adjMat: Matrix<'A>) =
 

@@ -94,7 +94,7 @@ let uintListToVector (verts: list<uint>) (length: int) (value: 'A) =
     constructSub verts lengthPow2 (lengthPow2 / 2u)
 
 
-let constructBinTree (basis: array<Option<'A>>) =
+let arrayToBinTree (basis: array<Option<'A>>) =
 
     let length = Array.length basis
 
@@ -138,7 +138,7 @@ type Vector<'A when 'A: equality> =
     val Length: int
 
     new(arr: Option<'A> []) =
-        { Data = constructBinTree arr
+        { Data = arrayToBinTree arr
           Length = arr.Length }
 
     new(tree: BinTree<'A>, length) = { Data = tree; Length = length }
@@ -177,3 +177,7 @@ type Vector<'A when 'A: equality> =
                     | Empty -> None
 
                 find this.Data i (len - 1) (len / 2)
+
+
+let vectorize (func: Option<'A> -> Option<'B> -> Option<'C>) (vector1: Vector<'A>) (vector2: Vector<'B>): Vector<'C> =
+    Vector(addBinTree vector1.Data vector2.Data func, max vector1.Length vector2.Length)

@@ -78,3 +78,24 @@ let rec foldBinTree (folder: 'State -> 'A -> 'State) (state: 'State) (tree: BinT
     | Node (left, right) -> foldBinTree folder (foldBinTree folder state left) right
     | Leaf a -> folder state a
     | Empty -> state
+
+
+/// Elementwise application of the function to the corresponding elements of both trees (with collapsing)
+let addBinTree (tree1: BinTree<'A>) (tree2: BinTree<'B>) (func: Option<'A> -> Option<'B> -> Option<'C>) : BinTree<'C> =
+
+    let rec addBinTreeSub tree1 tree2 =
+        match tree1, tree2 with
+        | Node (l1, r1), Node (l2, r2) ->
+            Node(addBinTreeSub l1 l2, addBinTreeSub r1 r2)
+            |> binCollapse
+        | Node (l, r), leafOrEmpty ->
+            Node(addBinTreeSub l leafOrEmpty, addBinTreeSub r leafOrEmpty)
+            |> binCollapse
+        | leafOrEmpty, Node (l, r) ->
+            Node(addBinTreeSub leafOrEmpty l, addBinTreeSub leafOrEmpty r)
+            |> binCollapse
+        | leafOrEmpty1, leafOrEmpty2 ->
+            (func (BinTreeToOption leafOrEmpty1) (BinTreeToOption leafOrEmpty2))
+            |> OptionToBinTree
+
+    addBinTreeSub tree1 tree2
