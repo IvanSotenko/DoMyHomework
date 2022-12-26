@@ -62,7 +62,7 @@ module randomGenerations =
         generator newInit newLst
 
 let testMat1 = Matrix(testMatrix1, 115, 115)
-let testMat2 = Matrix(testMatrix2, 132, 132)
+let testMat2 = Matrix(testMatrix2, 131, 131)
 let testMat3 = Matrix(testMatrix3, 100, 100)
 
 open randomGenerations
@@ -81,15 +81,17 @@ let BFSTest =
 
               Expect.equal actualResult expectedResult $"the results were different, startVerts = {verts}"
 
+
           testProperty "Random starting vertices for a single graph (lnsp_131)"
           <| fun _ ->
 
-              let verts = randomVerts 132u
+              let verts = randomVerts 131u
 
               let expectedResult = (naiveBFS verts testMat2).Data
               let actualResult = (BFS verts testMat2).Data
 
               Expect.equal actualResult expectedResult $"the results were different, startVerts = {verts}"
+
 
           testProperty "Random starting vertices for a single graph (tub100)"
           <| fun _ ->
@@ -101,6 +103,7 @@ let BFSTest =
 
               Expect.equal actualResult expectedResult $"the results were different, startVerts = {verts}"
 
+
           testCase "With an empty list of starting vertices the result should be all None"
           <| fun _ ->
 
@@ -109,6 +112,7 @@ let BFSTest =
               let actualResult = (BFS verts testMat3).Data
 
               Expect.equal actualResult expectedResult "the results were different"
+
 
           testProperty "With an empty graph the result should be all None"
           <| fun _ ->

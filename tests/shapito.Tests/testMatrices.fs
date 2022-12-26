@@ -623,7 +623,7 @@ let testMatrix1Arr =
 // Matrix from SuiteSparse Matrix Collection
 // link: https://sparse.tamu.edu/HB/lnsp_131
 // name: lnsp_131
-// size: 131x132
+// size: 131x131
 let testMatrix2Arr =
     [| (1, 1, 1)
        (9, 1, 1)
