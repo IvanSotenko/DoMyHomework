@@ -221,9 +221,9 @@ module dotnet =
 module FSharpAnalyzers =
     type Arguments =
     | Project of string
-    | Analyzers_Path of string
-    | Fail_On_Warnings of string list
-    | Ignore_Files of string list
+    | AnalyzersPath of string
+    | FailOnWarnings of string list
+    | IgnoreFiles of string list
     | Verbose
     with
         interface IArgParserTemplate with
