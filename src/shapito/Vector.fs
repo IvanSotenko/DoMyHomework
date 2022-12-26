@@ -179,5 +179,5 @@ type Vector<'A when 'A: equality> =
                 find this.Data i (len - 1) (len / 2)
 
 
-let vectorize (func: Option<'A> -> Option<'B> -> Option<'C>) (vector1: Vector<'A>) (vector2: Vector<'B>): Vector<'C> =
+let vectorize (func: Option<'A> -> Option<'B> -> Option<'C>) (vector1: Vector<'A>) (vector2: Vector<'B>) : Vector<'C> =
     Vector(addBinTree vector1.Data vector2.Data func, max vector1.Length vector2.Length)

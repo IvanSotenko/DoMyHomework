@@ -16,7 +16,8 @@ let mult a b =
 
 let add a b =
     match a, b with
-    | Some x, _ | _, Some x -> Some x
+    | Some x, _
+    | _, Some x -> Some x
     | None, None -> None
 
 let frontMask a b =
@@ -26,12 +27,12 @@ let frontMask a b =
 
 let resultMask iterNum a b =
     match a, b with
-    | Some x, Some _ | Some x, None -> Some x
+    | Some x, Some _
+    | Some x, None -> Some x
     | None, Some _ -> Some iterNum
     | None, None -> None
 
-let updateFront (front: Vector<Marker>) (result: Vector<uint>) =
-    vectorize frontMask front result
+let updateFront (front: Vector<Marker>) (result: Vector<uint>) = vectorize frontMask front result
 
 let updateResult (front: Vector<Marker>) (result: Vector<uint>) iterNum =
     vectorize (resultMask iterNum) result front
