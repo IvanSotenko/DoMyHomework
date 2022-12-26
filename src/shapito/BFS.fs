@@ -27,8 +27,7 @@ let frontMask a b =
 
 let resultMask iterNum a b =
     match a, b with
-    | Some x, Some _
-    | Some x, None -> Some x
+    | Some x, _ -> Some x
     | None, Some _ -> Some iterNum
     | None, None -> None
 
