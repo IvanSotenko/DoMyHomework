@@ -45,12 +45,12 @@ let BFS (startVertices: uint list) (adjMat: Matrix<'A>) =
 
     let rec subBFS front result iterNum =
 
-        let newFront = vectorize frontMask (vecMatMultiply front adjMat add mult) result
+        let newFront = map2 frontMask (vecMatMultiply front adjMat add mult) result
 
         if newFront.isEmpty then
             result
         else
-            subBFS newFront (vectorize (resultMask iterNum) result newFront) (iterNum + 1u)
+            subBFS newFront (map2 (resultMask iterNum) result newFront) (iterNum + 1u)
 
     subBFS front result 1u
 
