@@ -1,4 +1,5 @@
 module DoMyHomework.BinTree
+
 open System.Collections.Generic
 
 type BinTree<'Value> =
@@ -102,11 +103,13 @@ let addBinTree (tree1: BinTree<'A>) (tree2: BinTree<'B>) (func: Option<'A> -> Op
     addBinTreeSub tree1 tree2
 
 
-let init (count: int) (initializer: int -> Option<'A>): BinTree<'A> =
+let init (count: int) (initializer: int -> Option<'A>) : BinTree<'A> =
 
     let extract ind =
-        if ind < count then optionToBinTree (initializer ind)
-        else Empty
+        if ind < count then
+            optionToBinTree (initializer ind)
+        else
+            Empty
 
     if count = 0 then
         Empty
@@ -116,7 +119,7 @@ let init (count: int) (initializer: int -> Option<'A>): BinTree<'A> =
 
         let depth = int (System.Math.Ceiling(System.Math.Log(count, 2)))
 
-        let rec constructSub level i =
+        let rec subInit level i =
 
             if level = 1 then
                 let left = extract (i * 2)
@@ -124,25 +127,26 @@ let init (count: int) (initializer: int -> Option<'A>): BinTree<'A> =
 
                 Node(left, right) |> binCollapse
             else
-                let left = (constructSub (level - 1) (i * 2)) |> binCollapse
+                let left = (subInit (level - 1) (i * 2)) |> binCollapse
 
                 let right =
-                    (constructSub (level - 1) (i * 2 + 1))
+                    (subInit (level - 1) (i * 2 + 1))
                     |> binCollapse
 
                 Node(left, right) |> binCollapse
 
-        constructSub depth 0
+        subInit depth 0
 
 
 let ofVertList (verts: list<int * 'A>) (length: int) =
     let dict = new Dictionary<int, 'A>()
+
     for i in 0 .. verts.Length - 1 do
         dict.Add(verts[i])
 
     let initializer (index: int) =
         if dict.ContainsKey(index + 1) then
-            Some (dict[index + 1])
+            Some(dict[index + 1])
         else
             None
 
