@@ -44,4 +44,4 @@ let map2 (mapping: Option<'A> -> Option<'B> -> Option<'C>) (vector1: Vector<'A>)
     if vector1.Length <> vector2.Length then
         failwith "Map2 cannot be executed: vector lengths do not match"
     else
-        Vector(addBinTree vector1.Data vector2.Data mapping, max vector1.Length vector2.Length)
+        Vector(addBinTree vector1.Data vector2.Data mapping, vector1.Length)
