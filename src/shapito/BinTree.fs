@@ -128,10 +128,7 @@ let init (count: int) (initializer: int -> Option<'A>) : BinTree<'A> =
                 Node(left, right) |> binCollapse
             else
                 let left = (subInit (level - 1) (i * 2)) |> binCollapse
-
-                let right =
-                    (subInit (level - 1) (i * 2 + 1))
-                    |> binCollapse
+                let right = (subInit (level - 1) (i * 2 + 1)) |> binCollapse
 
                 Node(left, right) |> binCollapse
 
