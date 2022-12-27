@@ -31,11 +31,6 @@ let resultMask iterNum a b =
     | None, Some _ -> Some iterNum
     | None, None -> None
 
-let updateFront (front: Vector<Marker>) (result: Vector<uint>) = vectorize frontMask front result
-
-let updateResult (front: Vector<Marker>) (result: Vector<uint>) iterNum =
-    vectorize (resultMask iterNum) result front
-
 let BFS (startVertices: uint list) (adjMat: Matrix<'A>) =
 
     let result = Vector(Empty, adjMat.Length1)
@@ -43,14 +38,12 @@ let BFS (startVertices: uint list) (adjMat: Matrix<'A>) =
 
     let rec subBFS front result iterNum =
 
-        // we multiply the vector by the matrix and apply a "mask" to it
-        let newFront = updateFront (vecMatMultiply front adjMat add mult) result
+        let newFront = vectorize frontMask (vecMatMultiply front adjMat add mult) result
 
         if newFront.isEmpty then
             result
         else
-            // update the result and go to the next iteration
-            subBFS newFront (updateResult newFront result iterNum) (iterNum + 1u)
+            subBFS newFront (vectorize (resultMask iterNum) result newFront) (iterNum + 1u)
 
     subBFS front result 1u
 
