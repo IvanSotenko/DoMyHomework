@@ -1,7 +1,5 @@
 module DoMyHomework.BinTree
 
-open System.Collections.Generic
-
 type BinTree<'Value> =
     | Node of leftChild: BinTree<'Value> * rightChild: BinTree<'Value>
     | Leaf of value: 'Value
@@ -133,33 +131,3 @@ let init (count: int) (initializer: int -> Option<'A>) : BinTree<'A> =
                 Node(left, right) |> binCollapse
 
         subInit depth 0
-
-
-let ofVertList (verts: list<int * 'A>) (length: int) =
-    let dict = new Dictionary<int, 'A>()
-
-    for i in 0 .. verts.Length - 1 do
-        dict.Add(verts[i])
-
-    let initializer (index: int) =
-        if dict.ContainsKey(index + 1) then
-            Some(dict[index + 1])
-        else
-            None
-
-    init length initializer
-
-
-let ofArray (arr: Option<'A> []) = init arr.Length (fun i -> arr[i])
-
-
-let ofUintList (verts: list<uint>) (length: int) (value: 'A) : BinTree<'A> =
-    let set = Set.ofList verts
-
-    let initializer (index: int) =
-        if Set.contains (uint (index + 1)) set then
-            Some value
-        else
-            None
-
-    init length initializer

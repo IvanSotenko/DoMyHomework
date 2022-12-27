@@ -211,30 +211,6 @@ let vectorTypeTests =
               let actualResult = (genRandomNoneVector len).Data
               let expectedResult = collapseBinTree actualResult
 
-              Expect.equal actualResult expectedResult "the results were different"
-
-
-          // UintList vector constructor
-          testProperty "UintList constructor test (arr1 -> uintList -> vec -> arr2) ==> (arr1 = arr2)"
-          <| fun _ ->
-              let len = rnd.Next(1, 100)
-
-              let expectedResult = genRandomOptionMarkerArray len
-              let uintList = arrayToUintList expectedResult
-              let vec = Vector(uintList, len, Mark)
-              let actualResult = vectorToArray vec
-
-              Expect.equal actualResult expectedResult "the results were different"
-
-
-          testProperty "UintList Vector constructor returns a fully collapsed tree"
-          <| fun _ ->
-              let len = rnd.Next(1, 100)
-
-              let uintList = arrayToUintList (genRandomOptionMarkerArray len)
-              let actualResult = Vector(uintList, len, Mark).Data
-              let expectedResult = collapseBinTree actualResult
-
               Expect.equal actualResult expectedResult "the results were different" ]
 
 
@@ -273,30 +249,6 @@ let matrixTypeTests =
               let len1, len2 = rnd.Next(1, 50), rnd.Next(1, 50)
 
               let actualResult = (genRandomNoneMatrix len1 len2).Data
-              let expectedResult = collapseQTree actualResult
-
-              Expect.equal actualResult expectedResult "the results were different"
-
-
-          // VertList constructor
-          testProperty "VertList constructor tests (arr2D1 -> vertList -> mat -> arr2D2) ==> (arr2D2 = arr2D2)"
-          <| fun _ ->
-              let len1, len2 = rnd.Next(1, 50), rnd.Next(1, 50)
-
-              let expectedResult = genRandomNoneArray2D len1 len2
-              let vertList = array2DToVertList expectedResult
-              let mat = Matrix(vertList, len1, len2)
-              let actualResult = matrixToArray2D mat
-
-              Expect.equal expectedResult actualResult "the results were different"
-
-
-          testProperty "VertList Matrix constructor returns a fully collapsed tree"
-          <| fun _ ->
-              let len1, len2 = rnd.Next(1, 50), rnd.Next(1, 50)
-
-              let vertList = array2DToVertList (genRandomNoneArray2D len1 len2)
-              let actualResult = Matrix(vertList, len1, len2).Data
               let expectedResult = collapseQTree actualResult
 
               Expect.equal actualResult expectedResult "the results were different" ]

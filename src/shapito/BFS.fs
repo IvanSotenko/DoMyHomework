@@ -33,8 +33,15 @@ let resultMask iterNum a b =
 
 let BFS (startVertices: uint list) (adjMat: Matrix<'A>) =
 
+    let set = Set.ofList startVertices
+    let initMarkFront (index: int) =
+        if Set.contains (uint (index + 1)) set then
+            Some Mark
+        else
+            None
+
+    let front = Vector(init adjMat.Length1 initMarkFront, adjMat.Length1)
     let result = Vector(Empty, adjMat.Length1)
-    let front = Vector(startVertices, adjMat.Length1, Mark)
 
     let rec subBFS front result iterNum =
 

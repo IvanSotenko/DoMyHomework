@@ -1,7 +1,5 @@
 ﻿module DoMyHomework.QTree
 
-open System.Collections.Generic
-
 type QTree<'Value> =
     | Node of quadNW: QTree<'Value> * quadNE: QTree<'Value> * quadSW: QTree<'Value> * quadSE: QTree<'Value>
     | Leaf of value: 'Value
@@ -75,24 +73,3 @@ let init length1 length2 (initializer: int -> int -> Option<'A>) : QTree<'A> =
                 |> qCollapse
 
         subInit depth (0, 0)
-
-
-let ofArray2D (arr: Option<'A> [,]) =
-    init (Array2D.length1 arr) (Array2D.length2 arr) (fun x y -> arr[x, y])
-
-
-let ofVertList (verts: list<int * int * 'A>) (length1: int) (length2: int) =
-    let toTuple (a, b, c) = ((a, b), c)
-
-    let dict = new Dictionary<int * int, 'A>()
-
-    for i in 0 .. verts.Length - 1 do
-        dict.Add(toTuple verts[i])
-
-    let initializer (x: int) (y: int) =
-        if dict.ContainsKey((x + 1, y + 1)) then
-            Some(dict[(x + 1, y + 1)])
-        else
-            None
-
-    init length1 length2 initializer

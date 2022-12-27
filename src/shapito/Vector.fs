@@ -7,18 +7,10 @@ type Vector<'A when 'A: equality> =
     val Length: int
 
     new(arr: Option<'A> []) =
-        { Data = ofArray arr
+        { Data = init arr.Length (fun i -> arr[i])
           Length = arr.Length }
 
     new(tree: BinTree<'A>, length) = { Data = tree; Length = length }
-
-    new(verts: List<int * 'A>, length) =
-        { Data = ofVertList verts length
-          Length = length }
-
-    new(verts: List<uint>, length, value) =
-        { Data = ofUintList verts length value
-          Length = length }
 
     member this.isEmpty = this.Data = Empty
 

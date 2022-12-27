@@ -3,6 +3,7 @@
 open System
 open DoMyHomework
 open Expecto
+open System.Collections.Generic
 
 open testMatrix
 open Matrix
@@ -61,9 +62,26 @@ module randomGenerations =
         let newInit, newLst = transfer initList lst
         generator newInit newLst
 
-let testMat1 = Matrix(testMatrix1, 115, 115)
-let testMat2 = Matrix(testMatrix2, 131, 131)
-let testMat3 = Matrix(testMatrix3, 100, 100)
+
+let vertListToMatrix (verts: list<int * int * 'A>) (length1: int) (length2: int) =
+    let toTuple (a, b, c) = ((a, b), c)
+
+    let dict = new Dictionary<int * int, 'A>()
+
+    for i in 0 .. verts.Length - 1 do
+        dict.Add(toTuple verts[i])
+
+    let initializer (x: int) (y: int) =
+        if dict.ContainsKey((x + 1, y + 1)) then
+            Some(dict[(x + 1, y + 1)])
+        else
+            None
+
+    Matrix(QTree.init length1 length2 initializer, length1, length2)
+
+let testMat1 = vertListToMatrix testMatrix1 115 115
+let testMat2 = vertListToMatrix testMatrix2 131 131
+let testMat3 = vertListToMatrix testMatrix3 100 100
 
 open randomGenerations
 

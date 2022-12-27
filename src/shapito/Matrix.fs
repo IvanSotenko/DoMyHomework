@@ -8,17 +8,12 @@ type Matrix<'A when 'A: equality> =
     val Length2: int
 
     new(arr: Option<'A> [,]) =
-        { Data = ofArray2D arr
+        { Data = init (Array2D.length1 arr) (Array2D.length2 arr) (fun x y -> arr[x, y])
           Length1 = Array2D.length1 arr
           Length2 = Array2D.length2 arr }
 
     new(tree: QTree<'A>, length1, length2) =
         { Data = tree
-          Length1 = length1
-          Length2 = length2 }
-
-    new(verts: list<int * int * 'A>, length1, length2) =
-        { Data = ofVertList verts length1 length2
           Length1 = length1
           Length2 = length2 }
 
