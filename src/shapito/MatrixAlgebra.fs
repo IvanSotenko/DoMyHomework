@@ -62,7 +62,7 @@ let vecMatMultiply
             match bTree, qTree with
             | leafOrEmpty1, leafOrEmpty2 ->
                 (mult (BinTreeToOption leafOrEmpty1) (QTreeToOption leafOrEmpty2))
-                |> OptionToBinTree
+                |> optionToBinTree
 
         else
             match bTree, qTree with
