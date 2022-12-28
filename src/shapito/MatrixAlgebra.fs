@@ -1,4 +1,4 @@
-﻿module DoMyHomework.Multiply
+﻿module DoMyHomework.MatrixAlgebra
 
 open Matrix
 open Vector
@@ -31,27 +31,6 @@ let naiveVecMatMultiply
         Vector(resultVector)
 
 
-/// Piecemeal application of the function to the corresponding elements of both trees (with collapsing)
-let addBinTree (tree1: BinTree<'A>) (tree2: BinTree<'A>) (func: Option<'A> -> Option<'A> -> Option<'A>) : BinTree<'A> =
-
-    let rec addBinTreeSub tree1 tree2 =
-        match tree1, tree2 with
-        | BinTree.Node (l1, r1), BinTree.Node (l2, r2) ->
-            BinTree.Node(addBinTreeSub l1 l2, addBinTreeSub r1 r2)
-            |> binCollapse
-        | BinTree.Node (l, r), leafOrEmpty ->
-            BinTree.Node(addBinTreeSub l leafOrEmpty, addBinTreeSub r leafOrEmpty)
-            |> binCollapse
-        | leafOrEmpty, BinTree.Node (l, r) ->
-            BinTree.Node(addBinTreeSub leafOrEmpty l, addBinTreeSub leafOrEmpty r)
-            |> binCollapse
-        | leafOrEmpty1, leafOrEmpty2 ->
-            (func (BinTreeToOption leafOrEmpty1) (BinTreeToOption leafOrEmpty2))
-            |> OptionToBinTree
-
-    addBinTreeSub tree1 tree2
-
-
 let vecMatMultiply
     (vec: Vector<'A>)
     (mat: Matrix<'B>)
@@ -74,7 +53,6 @@ let vecMatMultiply
             int (System.Math.Ceiling(System.Math.Log(size, 2)))
 
     let qTree = mat.Data
-
     let binTree = expandBinTree vec.Data vec.Length size
 
     let rec multiplyCore bTree qTree level =
@@ -84,7 +62,7 @@ let vecMatMultiply
             match bTree, qTree with
             | leafOrEmpty1, leafOrEmpty2 ->
                 (mult (BinTreeToOption leafOrEmpty1) (QTreeToOption leafOrEmpty2))
-                |> OptionToBinTree
+                |> optionToBinTree
 
         else
             match bTree, qTree with

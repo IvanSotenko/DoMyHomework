@@ -2,54 +2,17 @@
 
 open BinTree
 
-let constructBinTree (basis: array<Option<'A>>) =
-
-    let length = Array.length basis
-
-    let extract ind =
-        if ind < length then
-            match basis[ind] with
-            | Some a -> Leaf a
-            | None -> Empty
-        else
-            Empty
-
-    if length = 0 then
-        Empty
-    elif length = 1 then
-        extract 0
-    else
-
-        let depth = int (System.Math.Ceiling(System.Math.Log(length, 2)))
-
-        let rec constructSub level i =
-
-            if level = 1 then
-                let left = extract (i * 2)
-                let right = extract (i * 2 + 1)
-
-                Node(left, right) |> binCollapse
-            else
-                let left = (constructSub (level - 1) (i * 2)) |> binCollapse
-
-                let right =
-                    (constructSub (level - 1) (i * 2 + 1))
-                    |> binCollapse
-
-                Node(left, right) |> binCollapse
-
-        constructSub depth 0
-
-
 type Vector<'A when 'A: equality> =
     val Data: BinTree<'A>
     val Length: int
 
-    new(arr) =
-        { Data = constructBinTree arr
+    new(arr: Option<'A> []) =
+        { Data = init arr.Length (fun i -> arr[i])
           Length = arr.Length }
 
-    new(tree, length) = { Data = tree; Length = length }
+    new(tree: BinTree<'A>, length) = { Data = tree; Length = length }
+
+    member this.isEmpty = this.Data = Empty
 
     member this.Item
         with get i =
@@ -75,3 +38,10 @@ type Vector<'A when 'A: equality> =
                     | Empty -> None
 
                 find this.Data i (len - 1) (len / 2)
+
+
+let map2 (mapping: Option<'A> -> Option<'B> -> Option<'C>) (vector1: Vector<'A>) (vector2: Vector<'B>) : Vector<'C> =
+    if vector1.Length <> vector2.Length then
+        failwith "Map2 cannot be executed: vector lengths do not match"
+    else
+        Vector(addBinTree vector1.Data vector2.Data mapping, vector1.Length)

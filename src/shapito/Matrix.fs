@@ -2,64 +2,17 @@
 
 open QTree
 
-let constructQTree (basis: Option<'A> [,]) =
-
-    let rows = Array2D.length1 basis
-    let columns = Array2D.length2 basis
-    let size = max rows columns
-
-    let extract (x, y) =
-        if x < rows && y < columns then
-            let element = basis[x, y]
-
-            match element with
-            | Some a -> Leaf a
-            | None -> Empty
-        else
-            Empty
-
-    if size = 0 then
-        Empty
-    elif size = 1 then
-        extract (0, 0)
-    else
-
-        let depth = int (System.Math.Ceiling(System.Math.Log(size, 2)))
-
-        let rec constructSub level (x, y) =
-
-            if level = 1 then
-                Node(
-                    extract (x * 2, y * 2),
-                    extract (x * 2, y * 2 + 1),
-                    extract (x * 2 + 1, y * 2),
-                    extract (x * 2 + 1, y * 2 + 1)
-                )
-                |> qCollapse
-
-            else
-                Node(
-                    (constructSub (level - 1) (x * 2, y * 2)),
-                    (constructSub (level - 1) (x * 2, y * 2 + 1)),
-                    (constructSub (level - 1) (x * 2 + 1, y * 2)),
-                    (constructSub (level - 1) (x * 2 + 1, y * 2 + 1))
-                )
-                |> qCollapse
-
-        constructSub depth (0, 0)
-
-
 type Matrix<'A when 'A: equality> =
     val Data: QTree<'A>
     val Length1: int
     val Length2: int
 
-    new(arr) =
-        { Data = constructQTree arr
+    new(arr: Option<'A> [,]) =
+        { Data = init (Array2D.length1 arr) (Array2D.length2 arr) (fun x y -> arr[x, y])
           Length1 = Array2D.length1 arr
           Length2 = Array2D.length2 arr }
 
-    new(tree, length1, length2) =
+    new(tree: QTree<'A>, length1, length2) =
         { Data = tree
           Length1 = length1
           Length2 = length2 }

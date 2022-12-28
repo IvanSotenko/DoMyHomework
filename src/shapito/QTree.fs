@@ -32,3 +32,44 @@ let rec collapseQTree tree =
         Node(collapseQTree nw, collapseQTree ne, collapseQTree sw, collapseQTree se)
         |> qCollapse
     | _ -> tree
+
+
+let init length1 length2 (initializer: int -> int -> Option<'A>) : QTree<'A> =
+
+    let extract (x, y) =
+        if x < length1 && y < length2 then
+            OptionToQTree(initializer x y)
+        else
+            Empty
+
+    let size = max length1 length2
+
+    if size = 0 then
+        Empty
+    elif size = 1 then
+        extract (0, 0)
+    else
+
+        let depth = int (System.Math.Ceiling(System.Math.Log(size, 2)))
+
+        let rec subInit level (x, y) =
+
+            if level = 1 then
+                Node(
+                    extract (x * 2, y * 2),
+                    extract (x * 2, y * 2 + 1),
+                    extract (x * 2 + 1, y * 2),
+                    extract (x * 2 + 1, y * 2 + 1)
+                )
+                |> qCollapse
+
+            else
+                Node(
+                    (subInit (level - 1) (x * 2, y * 2)),
+                    (subInit (level - 1) (x * 2, y * 2 + 1)),
+                    (subInit (level - 1) (x * 2 + 1, y * 2)),
+                    (subInit (level - 1) (x * 2 + 1, y * 2 + 1))
+                )
+                |> qCollapse
+
+        subInit depth (0, 0)

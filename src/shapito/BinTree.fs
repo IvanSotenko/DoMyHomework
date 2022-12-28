@@ -13,7 +13,7 @@ let BinTreeToOption (tree: BinTree<'A>) : Option<'A> =
     | _ -> failwith "Unable to convert BinTree.Node to Option type"
 
 
-let OptionToBinTree (a: Option<'A>) : BinTree<'A> =
+let optionToBinTree (a: Option<'A>) : BinTree<'A> =
     match a with
     | Some v -> Leaf v
     | None -> Empty
@@ -71,3 +71,63 @@ let expandBinTree tree (actualLen: int) (reqLen: int) =
                 tree
 
         expand tree depth
+
+
+let rec foldBinTree (folder: 'State -> 'A -> 'State) (state: 'State) (tree: BinTree<'A>) =
+    match tree with
+    | Node (left, right) -> foldBinTree folder (foldBinTree folder state left) right
+    | Leaf a -> folder state a
+    | Empty -> state
+
+
+/// Elementwise application of the function to the corresponding elements of both trees (with collapsing)
+let addBinTree (tree1: BinTree<'A>) (tree2: BinTree<'B>) (func: Option<'A> -> Option<'B> -> Option<'C>) : BinTree<'C> =
+
+    let rec addBinTreeSub tree1 tree2 =
+        match tree1, tree2 with
+        | Node (l1, r1), Node (l2, r2) ->
+            Node(addBinTreeSub l1 l2, addBinTreeSub r1 r2)
+            |> binCollapse
+        | Node (l, r), leafOrEmpty ->
+            Node(addBinTreeSub l leafOrEmpty, addBinTreeSub r leafOrEmpty)
+            |> binCollapse
+        | leafOrEmpty, Node (l, r) ->
+            Node(addBinTreeSub leafOrEmpty l, addBinTreeSub leafOrEmpty r)
+            |> binCollapse
+        | leafOrEmpty1, leafOrEmpty2 ->
+            (func (BinTreeToOption leafOrEmpty1) (BinTreeToOption leafOrEmpty2))
+            |> optionToBinTree
+
+    addBinTreeSub tree1 tree2
+
+
+let init (count: int) (initializer: int -> Option<'A>) : BinTree<'A> =
+
+    let extract ind =
+        if ind < count then
+            optionToBinTree (initializer ind)
+        else
+            Empty
+
+    if count = 0 then
+        Empty
+    elif count = 1 then
+        extract 0
+    else
+
+        let depth = int (System.Math.Ceiling(System.Math.Log(count, 2)))
+
+        let rec subInit level i =
+
+            if level = 1 then
+                let left = extract (i * 2)
+                let right = extract (i * 2 + 1)
+
+                Node(left, right) |> binCollapse
+            else
+                let left = (subInit (level - 1) (i * 2)) |> binCollapse
+                let right = (subInit (level - 1) (i * 2 + 1)) |> binCollapse
+
+                Node(left, right) |> binCollapse
+
+        subInit depth 0
