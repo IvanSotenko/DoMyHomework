@@ -1,7 +1,6 @@
 
 open Argu
 open System
-open Fake.SystemHelper
 open Fake.Core
 open Fake.DotNet
 open Fake.Tools
@@ -74,7 +73,7 @@ let releaseBranch = "main"
 let tagFromVersionNumber versionNumber = sprintf "v%s" versionNumber
 
 let changelogFilename = __SOURCE_DIRECTORY__ </> ".." </> "CHANGELOG.md"
-let changelog = Fake.Core.Changelog.load changelogFilename
+let changelog = Changelog.load changelogFilename
 let mutable latestEntry =
     if Seq.isEmpty changelog.Entries
     then Changelog.ChangelogEntry.New("0.0.1", "0.0.1-alpha.1", Some DateTime.Today, None, [], false)
@@ -183,10 +182,10 @@ module Changelog =
             |> List.tryHead
             |> Option.defaultWith (fun () -> Environment.environVarOrDefault envVarName "")
         if SemVer.isValid verArg then verArg
-        elif verArg.StartsWith("v") && SemVer.isValid verArg.[1..] then
+        elif verArg.StartsWith("v") && SemVer.isValid verArg[1..] then
             let target = ctx.Context.FinalTarget
-            Trace.traceImportantfn "Please specify a version number without leading 'v' next time, e.g. \"./build.sh %s %s\" rather than \"./build.sh %s %s\"" target verArg.[1..] target verArg
-            verArg.[1..]
+            Trace.traceImportantfn "Please specify a version number without leading 'v' next time, e.g. \"./build.sh %s %s\" rather than \"./build.sh %s %s\"" target verArg[1..] target verArg
+            verArg[1..]
         elif String.isNullOrEmpty verArg then
             let target = ctx.Context.FinalTarget
             Trace.traceErrorfn "Please specify a version number, either at the command line (\"./build.sh %s 1.0.0\") or in the %s environment variable" target envVarName
@@ -216,12 +215,15 @@ module dotnet =
     let fantomas args =
         DotNet.exec id "fantomas" args
 
+    let fsharpLint args =
+        DotNet.exec id "fsharplint" args
+
 module FSharpAnalyzers =
     type Arguments =
     | Project of string
-    | Analyzers_Path of string
-    | Fail_On_Warnings of string list
-    | Ignore_Files of string list
+    | AnalyzersPath of string
+    | FailOnWarnings of string list
+    | IgnoreFiles of string list
     | Verbose
     with
         interface IArgParserTemplate with
@@ -287,7 +289,7 @@ let updateChangelog ctx =
     let prereleaseChanges = prereleaseEntries |> List.collect (fun entry -> entry.Changes |> List.filter (not << Changelog.isEmptyChange))
     let assemblyVersion, nugetVersion = Changelog.parseVersions newVersion.AsString
     linkReferenceForLatestEntry <- Changelog.mkLinkReference newVersion changelog
-    let newEntry = Changelog.ChangelogEntry.New(assemblyVersion.Value, nugetVersion.Value, Some System.DateTime.Today, description, unreleasedChanges @ prereleaseChanges, false)
+    let newEntry = Changelog.ChangelogEntry.New(assemblyVersion.Value, nugetVersion.Value, Some DateTime.Today, description, unreleasedChanges @ prereleaseChanges, false)
     let newChangelog = Changelog.Changelog.New(changelog.Header, changelog.Description, None, newEntry :: changelog.Entries)
     latestEntry <- newEntry
 
@@ -345,7 +347,7 @@ let dotnetBuild ctx =
         ]
     DotNet.build(fun c ->
         { c with
-            Configuration = configuration (ctx.Context.AllExecutingTargets)
+            Configuration = configuration ctx.Context.AllExecutingTargets
             Common =
                 c.Common
                 |> DotNet.Options.withAdditionalArgs args
@@ -357,9 +359,9 @@ let fsharpAnalyzers _ =
     |> Seq.iter(fun proj ->
         let args  =
             [
-                FSharpAnalyzers.Analyzers_Path (__SOURCE_DIRECTORY__ </> ".." </> "packages/analyzers")
+                FSharpAnalyzers.AnalyzersPath (__SOURCE_DIRECTORY__ </> ".." </> "packages/analyzers")
                 FSharpAnalyzers.Arguments.Project proj
-                FSharpAnalyzers.Arguments.Fail_On_Warnings [
+                FSharpAnalyzers.Arguments.FailOnWarnings [
                     "BDH0002"
                 ]
                 FSharpAnalyzers.Verbose
@@ -383,7 +385,7 @@ let dotnetTest ctx =
                 "/p:AltCoverLocalSource=true"
             ]
         { c with
-            Configuration = configuration (ctx.Context.AllExecutingTargets)
+            Configuration = configuration ctx.Context.AllExecutingTargets
             Common =
                 c.Common
                 |> DotNet.Options.withAdditionalArgs args
@@ -420,7 +422,7 @@ let watchApp _ =
         ]
         |> String.concat " "
     dotnet.watch
-        (fun opt -> opt |> DotNet.Options.withWorkingDirectory (mainApp))
+        (fun opt -> opt |> DotNet.Options.withWorkingDirectory mainApp)
         "run"
         appArgs
     |> ignore
@@ -455,7 +457,7 @@ let generateAssemblyInfo _ =
         | Some pr -> pr.Name
         | _ -> "release"
     let getAssemblyInfoAttributes projectName =
-        [ AssemblyInfo.Title (projectName)
+        [ AssemblyInfo.Title projectName
           AssemblyInfo.Product productName
           AssemblyInfo.Version latestEntry.AssemblyVersion
           AssemblyInfo.Metadata("ReleaseDate", latestEntry.Date.Value.ToString("o"))
@@ -577,6 +579,11 @@ let checkFormatCode _ =
     else
         Trace.logf "Errors while formatting: %A" result.Errors
 
+let linterCode _ =
+    let result = dotnet.fsharpLint (sprintf "lint %s" sln)
+    if not result.OK then
+        failwith "Some files need linter, check output for more info"
+
 let initTargets () =
     BuildServer.install [
         GitHubActions.Installer
@@ -611,6 +618,7 @@ let initTargets () =
     Target.create "GitHubRelease" githubRelease
     Target.create "FormatCode" formatCode
     Target.create "CheckFormatCode" checkFormatCode
+    Target.create "FSharpLint" linterCode
     Target.create "Release" ignore
 
     //-----------------------------------------------------------------------------
@@ -636,6 +644,7 @@ let initTargets () =
 
     "DotnetRestore"
         ==> "CheckFormatCode"
+        ==> "FSharpLint"
         ==> "DotnetBuild"
         // ==> "FSharpAnalyzers"
         ==> "DotnetTest"
@@ -663,5 +672,3 @@ let main argv =
     Target.runOrDefaultWithArguments "CreatePackages"
 
     0
-
-

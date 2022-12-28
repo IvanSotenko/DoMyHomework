@@ -86,7 +86,7 @@ let tests =
           // Difference between max and min element of array
           testProperty "(delta arr) should work the same as ((Array.max arr) - (Array.min arr))"
           <| fun arr ->
-              if arr = [||] then
+              if Array.isEmpty arr then
                   let expectedError =
                       "Error in Homework1.delta: empty array was given. Doesn't make sense"
 
