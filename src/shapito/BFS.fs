@@ -47,7 +47,7 @@ let BFS (startVertices: uint list) (adjMat: Matrix<'A>) =
 
         let newFront = map2 frontMask (vecMatMultiply front adjMat add mult) result
 
-        if newFront.isEmpty then
+        if newFront.IsEmpty then
             result
         else
             subBFS newFront (map2 (resultMask iterNum) result newFront) (iterNum + 1u)

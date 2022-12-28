@@ -1,4 +1,4 @@
-﻿module DoMyHomework.Tests.testMatrix
+﻿module DoMyHomework.Tests.TestMatrix
 
 // Matrix from SuiteSparse Matrix Collection
 // link: https://sparse.tamu.edu/Newman/football

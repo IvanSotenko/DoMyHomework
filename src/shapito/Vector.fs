@@ -12,7 +12,7 @@ type Vector<'A when 'A: equality> =
 
     new(tree: BinTree<'A>, length) = { Data = tree; Length = length }
 
-    member this.isEmpty = this.Data = Empty
+    member this.IsEmpty = this.Data = Empty
 
     member this.Item
         with get i =

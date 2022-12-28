@@ -5,7 +5,7 @@ open DoMyHomework
 open Expecto
 open System.Collections.Generic
 
-open testMatrix
+open TestMatrix
 open Matrix
 open BFS
 open Vector
@@ -66,7 +66,7 @@ module randomGenerations =
 let vertListToMatrix (verts: list<int * int * 'A>) (length1: int) (length2: int) =
     let toTuple (a, b, c) = ((a, b), c)
 
-    let dict = new Dictionary<int * int, 'A>()
+    let dict = Dictionary<int * int, 'A>()
 
     for i in 0 .. verts.Length - 1 do
         dict.Add(toTuple verts[i])
