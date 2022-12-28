@@ -65,15 +65,16 @@ let increaseBy1 (a: Option<uint>) =
 let naiveBFS (startVertices: uint list) (adjMat: Matrix<'A>) =
 
     let mutable result = Array.create adjMat.Length1 None
-    let queue = Queue(startVertices)
     let mutable flag = false
+    let queue = Queue(startVertices)
+    let startVertsSet = Set.ofList startVertices
 
     while queue.Count > 0 do
         let v = queue.Dequeue()
 
         // if there are no more starting vertices in the queue we set flag to true
         if not flag then
-            if not (List.contains v startVertices) then
+            if not (Set.contains v startVertsSet) then
                 flag <- true
 
         // v/w - uint name values, numbered from 1u
