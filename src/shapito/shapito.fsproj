@@ -28,6 +28,7 @@
         <Compile Include="MatrixAlgebra.fs" />
         <Compile Include="BFS.fs" />
         <Compile Include="Main.fs" />
+        <Content Include="task.md" />
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
