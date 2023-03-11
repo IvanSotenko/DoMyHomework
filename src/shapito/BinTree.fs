@@ -135,6 +135,51 @@ let init (count: int) (initializer: int -> Option<'A>) : BinTree<'A> =
         subInit depth 0
 
 
+
+let rec assembleBinTree level (listOfTrees: BinTree<'A>[]) =
+
+    let rec assemble level i =
+        if level = 1 then
+            let left = listOfTrees[i * 2]
+            let right = listOfTrees[i * 2 + 1]
+
+            Node(left, right) |> binCollapse
+
+        else
+            let left = (assemble (level - 1) (i * 2)) |> binCollapse
+            let right = (assemble (level - 1) (i * 2 + 1)) |> binCollapse
+
+            Node(left, right) |> binCollapse
+
+    assemble level 0
+
+
+let parallelAddBinTree (tree1: BinTree<'A>) (tree2: BinTree<'B>) (func: Option<'A> -> Option<'B> -> Option<'C>) (level: int) =
+
+    let rec collectTasks level tree1 tree2 =
+        if level = 0 then
+            [ async { return addBinTree tree1 tree2 func} ]
+        else
+            match tree1, tree2 with
+            | Node (l1, r1), Node (l2, r2) ->
+                (collectTasks (level - 1) l1 l2) @ (collectTasks (level - 1) r1 r2)
+
+            | Node (l, r), leafOrEmpty ->
+                (collectTasks (level - 1) l leafOrEmpty) @ (collectTasks (level - 1) r leafOrEmpty)
+
+            | leafOrEmpty, Node (l, r) ->
+                (collectTasks (level - 1) leafOrEmpty l) @ (collectTasks (level - 1) leafOrEmpty r)
+
+            | leafOrEmpty1, leafOrEmpty2 ->
+                [ async { return addBinTree leafOrEmpty1 leafOrEmpty2 func} ]
+
+    let tasks = collectTasks level tree1 tree2
+    let trees = tasks |> Async.Parallel |> Async.RunSynchronously
+
+    // assembleBinTree level trees
+    trees
+
+
 let rec minInTree2 tree =
     match tree with
     | Empty -> failwith "Bro, it seems something wrong. Empty tree is not good"
@@ -171,52 +216,3 @@ let parallelMinInTree level tree =
     let values = tasks |> Async.Parallel |> Async.RunSynchronously
 
     Array.min values
-
-
-
-
-
-
-// ############################################## EXAMPLE #################################################
-
-// type BinTree2<'value> =
-//     | FullNode of value: 'value * left: BinTree2<'value> * right: BinTree2<'value>
-//     | NodeWithLeft of value: 'value * left: BinTree2<'value>
-//     | NodeWithRight of value: 'value * right: BinTree2<'value>
-//     | Leaf of value: 'value
-//
-// let rec minInTree tree =
-//     match tree with
-//     | Leaf v -> v
-//     | NodeWithLeft (v, l) -> min v (minInTree l)
-//     | NodeWithRight (v, r) -> min v (minInTree r)
-//     | FullNode (v, l, r) -> min v (min (minInTree l) (minInTree r))
-//
-// let parallelMin2 level tree =
-//     let valuesFromTopPart = ResizeArray()
-//
-//     let rec collectTasks level tree =
-//         if level = 0 then
-//             [ async { return minInTree tree } ]
-//         else
-//             match tree with
-//             | Leaf _ -> [ async { return minInTree tree } ]
-//             | NodeWithLeft (v, l) ->
-//                 valuesFromTopPart.Add v
-//                 collectTasks level l
-//             | NodeWithRight (v, r) ->
-//                 valuesFromTopPart.Add v
-//                 collectTasks level r
-//             | FullNode (v, l, r) ->
-//                 valuesFromTopPart.Add v
-//
-//                 (collectTasks (level - 1) l)
-//                 @ (collectTasks (level - 1) r)
-//
-//     let tasks = collectTasks level tree
-//     let valuesFromBottomPart = tasks |> Async.Parallel |> Async.RunSynchronously
-//
-//     if valuesFromTopPart.Count > 0 then
-//         min (Array.min valuesFromBottomPart) (valuesFromTopPart.ToArray() |> Array.min)
-//     else
-//         Array.min valuesFromBottomPart

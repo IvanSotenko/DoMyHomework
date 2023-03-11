@@ -3,11 +3,14 @@ namespace DoMyHomework
 open System
 open System.IO
 open System.Collections.Generic
+open FSharp.Control
+open BenchmarkDotNet.Running
 
 open Matrix
 open Vector
 open QTree
 open BinTree
+open Benchmarks
 
 
 module randomGenerations =
@@ -73,162 +76,110 @@ module naiveConversions =
 
         uintList
 
+module mtxReader =
+    let vertListToMatrix (verts: list<int * int * 'A>) (length1: int) (length2: int) =
+        let toTuple (a, b, c) = ((a, b), c)
+
+        let dict = Dictionary<int * int, 'A>()
+
+        for i in 0 .. verts.Length - 1 do
+            dict.Add(toTuple verts[i])
+
+        let initializer (x: int) (y: int) =
+            if dict.ContainsKey((x + 1, y + 1)) then
+                Some(dict[(x + 1, y + 1)])
+            else
+                None
+
+        Matrix(QTree.init length1 length2 initializer, length1, length2)
+
+
+
+
+    let readMtxMatrix (path: string) (toType: string -> 'A): Matrix<'A> =
+
+        if FileInfo(path).Extension <> ".mtx" then
+            failwith $"Incorrect matrix path: file has wrong extension ({FileInfo(path).Extension})"
+
+        if not (File.Exists(path)) then
+            failwith $"Incorrect matrix path: file does not exist ({path})"
+
+        let lines = File.ReadAllLines(path)
+        let dict = Dictionary<int * int, 'A>()
+        let mutable descriptionOver = false
+        let mutable length1, length2 = 0, 0
+
+        for str in lines do
+            if str[0] <> '%' then
+                let splittedStr = str.Split(' ')
+
+                if descriptionOver then
+                    dict.Add(((int splittedStr[0], int splittedStr[1]), toType splittedStr[2]))
+
+                else
+                    length1 <- int splittedStr[0]
+                    length2 <- int splittedStr[1]
+                    descriptionOver <- true
+
+        let initializer (x: int) (y: int) =
+            if dict.ContainsKey((x + 1, y + 1)) then
+                Some(dict[(x + 1, y + 1)])
+            else
+                None
+
+        Matrix(QTree.init length1 length2 initializer, length1, length2)
+
+
+
+
+    let readMtxMatrixRec (path: string) (toType: string -> 'A): Matrix<'A> =
+
+        if FileInfo(path).Extension <> ".mtx" then
+            failwith $"Incorrect matrix path: file has wrong extension ({FileInfo(path).Extension})"
+
+        if not (File.Exists(path)) then
+            failwith $"Incorrect matrix path: file does not exist ({path})"
+
+        let lines = File.ReadAllLines(path)
+        let len = lines.Length
+        let dict = Dictionary<int * int, 'A>()
+
+        let rec dictConstructor length1 length2 descriptionOver i =
+            if i + 1 > len then
+                length1, length2
+            else
+                let str = lines[i]
+
+                match str[0] with
+                | '%' -> dictConstructor length1 length2 false (i + 1)
+
+                | _ when descriptionOver ->
+                    let splittedStr = str.Split(' ')
+                    dict.Add(((int splittedStr[0], int splittedStr[1]), toType splittedStr[2]))
+                    dictConstructor length1 length2 true (i + 1)
+
+                | _ ->
+                    let splittedStr = str.Split(' ')
+                    let newLength1, newLength2 = int splittedStr[0], int splittedStr[1]
+                    dictConstructor newLength1 newLength2 true (i + 1)
+
+
+        let initializer (x: int) (y: int) =
+            if dict.ContainsKey((x + 1, y + 1)) then
+                Some(dict[(x + 1, y + 1)])
+            else
+                None
+
+        let length1, length2 = dictConstructor 0 0 false 0
+        Matrix(QTree.init length1 length2 initializer, length1, length2)
+
 open naiveConversions
 open randomGenerations
 
 module Main =
     [<EntryPoint>]
     let main _ =
-        // let path = "../../matrices/lnsp_131.mtx"
-        // let path2 = "C:/Users/ivans/Documents/spbsu/DoMyHomework2/matrices/lnsp_131.mtx"
-        //
-        // printfn $"{path}\n{File.Exists(path)}"
-
-        // let file = File.Create("test.txt")
-        // file.Close()
-
-        // let a = AppContext.BaseDirectory
-        //
-        // printfn $"{a}"
-
-        // let path = "../../../../../matrices/lnsp_131.mtx"
-        // printfn $"{FileInfo(path).Extension}"
-
-        // let strs = File.ReadAllLines(path)
-
-        // for i in 0 .. strs.Length - 1 do
-        //     printfn $"{strs[i]}"
-
-
-        let vertListToMatrix (verts: list<int * int * 'A>) (length1: int) (length2: int) =
-            let toTuple (a, b, c) = ((a, b), c)
-
-            let dict = Dictionary<int * int, 'A>()
-
-            for i in 0 .. verts.Length - 1 do
-                dict.Add(toTuple verts[i])
-
-            let initializer (x: int) (y: int) =
-                if dict.ContainsKey((x + 1, y + 1)) then
-                    Some(dict[(x + 1, y + 1)])
-                else
-                    None
-
-            Matrix(QTree.init length1 length2 initializer, length1, length2)
-
-
-
-
-        let readMtxMatrix (path: string) (toType: string -> 'A): Matrix<'A> =
-
-            if FileInfo(path).Extension <> ".mtx" then
-                failwith $"Incorrect matrix path: file has wrong extension ({FileInfo(path).Extension})"
-
-            if not (File.Exists(path)) then
-                failwith $"Incorrect matrix path: file does not exist ({path})"
-
-            let lines = File.ReadAllLines(path)
-            let dict = Dictionary<int * int, 'A>()
-            let mutable descriptionOver = false
-            let mutable length1, length2 = 0, 0
-
-            for str in lines do
-                if str[0] <> '%' then
-                    let splittedStr = str.Split(' ')
-
-                    if descriptionOver then
-                        dict.Add(((int splittedStr[0], int splittedStr[1]), toType splittedStr[2]))
-
-                    else
-                        length1 <- int splittedStr[0]
-                        length2 <- int splittedStr[1]
-                        descriptionOver <- true
-
-            let initializer (x: int) (y: int) =
-                if dict.ContainsKey((x + 1, y + 1)) then
-                    Some(dict[(x + 1, y + 1)])
-                else
-                    None
-
-            Matrix(QTree.init length1 length2 initializer, length1, length2)
-
-
-
-
-        let readMtxMatrixRec (path: string) (toType: string -> 'A): Matrix<'A> =
-
-            if FileInfo(path).Extension <> ".mtx" then
-                failwith $"Incorrect matrix path: file has wrong extension ({FileInfo(path).Extension})"
-
-            if not (File.Exists(path)) then
-                failwith $"Incorrect matrix path: file does not exist ({path})"
-
-            let lines = File.ReadAllLines(path)
-            let len = lines.Length
-            let dict = Dictionary<int * int, 'A>()
-
-            let rec dictConstructor length1 length2 descriptionOver i =
-                if i + 1 > len then
-                    length1, length2
-                else
-                    let str = lines[i]
-
-                    match str[0] with
-                    | '%' -> dictConstructor length1 length2 false (i + 1)
-
-                    | _ when descriptionOver ->
-                        let splittedStr = str.Split(' ')
-                        dict.Add(((int splittedStr[0], int splittedStr[1]), toType splittedStr[2]))
-                        dictConstructor length1 length2 true (i + 1)
-
-                    | _ ->
-                        let splittedStr = str.Split(' ')
-                        let newLength1, newLength2 = int splittedStr[0], int splittedStr[1]
-                        dictConstructor newLength1 newLength2 true (i + 1)
-
-
-            let initializer (x: int) (y: int) =
-                if dict.ContainsKey((x + 1, y + 1)) then
-                    Some(dict[(x + 1, y + 1)])
-                else
-                    None
-
-            let length1, length2 = dictConstructor 0 0 false 0
-            Matrix(QTree.init length1 length2 initializer, length1, length2)
-
-
-        // let a = readMtxMatrix "../../../../../matrices/testMatrix.mtx" float
-        // let b = readMtxMatrix2 "../../../../../matrices/testMatrix.mtx" float
-
-        // for i in 1..1000 do
-        //     readMtxMatrix "../../../../../matrices/lnsp_131.mtx" float |> ignore
-        //     readMtxMatrixRec "../../../../../matrices/lnsp_131.mtx" float |> ignore
-        //
-        // let start = DateTime.Now
-        // for i in 1..1000 do
-        //     readMtxMatrixRec "../../../../../matrices/lnsp_131.mtx" float |> ignore
-        //     readMtxMatrixRec "../../../../../matrices/football.mtx" float |> ignore
-        //     readMtxMatrixRec "../../../../../matrices/cz148.mtx" float |> ignore
-        //     readMtxMatrixRec "../../../../../matrices/tub100.mtx" float |> ignore
-        // printfn $"Recursive: {(DateTime.Now - start).Milliseconds}"
-        //
-        //
-        // let start = DateTime.Now
-        // for i in 1..1000 do
-        //     readMtxMatrix "../../../../../matrices/lnsp_131.mtx" float |> ignore
-        //     readMtxMatrix "../../../../../matrices/football.mtx" float |> ignore
-        //     readMtxMatrix "../../../../../matrices/cz148.mtx" float |> ignore
-        //     readMtxMatrix "../../../../../matrices/tub100.mtx" float |> ignore
-        // printfn $"Iterative: {(DateTime.Now - start).Milliseconds}"
-
-        let rnd = Random()
-
-
-
-        let a = genRandomNoneArray 256
-        let vec = Vector(a)
-        let tree = vec.Data
-
-        printfn $"{myMinInTree tree}"
-        printfn $"{parallelMinInTree 2 tree}"
+        // BenchmarkRunner.Run typeof<minComparisonPirate> |> ignore
+        // BenchmarkRunner.Run typeof<minComparison> |> ignore
+        // BenchmarkRunner.Run typeof<addBinTreeBench> |> ignore
         0
