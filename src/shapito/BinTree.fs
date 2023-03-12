@@ -154,7 +154,7 @@ let rec assembleBinTree level (listOfTrees: BinTree<'A>[]) =
     assemble level 0
 
 
-let parallelAddBinTree (tree1: BinTree<'A>) (tree2: BinTree<'B>) (func: Option<'A> -> Option<'B> -> Option<'C>) (level: int) =
+let parallelAddBinTree1 (tree1: BinTree<'A>) (tree2: BinTree<'B>) (func: Option<'A> -> Option<'B> -> Option<'C>) (level: int) =
 
     let rec collectTasks level tree1 tree2 =
         if level = 0 then
@@ -176,18 +176,33 @@ let parallelAddBinTree (tree1: BinTree<'A>) (tree2: BinTree<'B>) (func: Option<'
     let tasks = collectTasks level tree1 tree2
     let trees = tasks |> Async.Parallel |> Async.RunSynchronously
 
-    // assembleBinTree level trees
-    trees
+    assembleBinTree level trees
 
 
-let rec minInTree2 tree =
-    match tree with
-    | Empty -> failwith "Bro, it seems something wrong. Empty tree is not good"
-    | Node (Empty, Empty) -> failwith "Bro, your tree didn't collapse, did it?"
-    | Node (Empty, r) -> minInTree2 r
-    | Node (l, Empty) -> minInTree2 l
-    | Node (l, r) -> min (minInTree2 l) (minInTree2 r)
-    | Leaf v -> v
+let parallelAddBinTree2 (tree1: BinTree<'A>) (tree2: BinTree<'B>) (func: Option<'A> -> Option<'B> -> Option<'C>) (pLevel: int) =
+
+    let rec core tree1 tree2 pLevel =
+
+        let parallelCompute (l1, l2) (r1, r2) pLevel =
+            let tasks = [async { return core l1 l2 pLevel }
+                         async { return core r1 r2 pLevel }]
+
+            let nodes = tasks |> Async.Parallel |> Async.RunSynchronously
+            Node(nodes[0], nodes[1]) |> binCollapse
+
+        if pLevel = 0 then
+            addBinTree tree1 tree2 func
+        else
+            match tree1, tree2 with
+            | Node (l1, r1), Node (l2, r2) -> parallelCompute (l1, l2) (r1, r2) (pLevel - 1)
+            | Node (l, r), leafOrEmpty -> parallelCompute (l, leafOrEmpty) (r, leafOrEmpty) (pLevel - 1)
+            | leafOrEmpty, Node (l, r) -> parallelCompute (leafOrEmpty, l) (leafOrEmpty, r) (pLevel - 1)
+
+            | leafOrEmpty1, leafOrEmpty2 ->
+                (func (BinTreeToOption leafOrEmpty1) (BinTreeToOption leafOrEmpty2))
+                |> optionToBinTree
+
+    core tree1 tree2 pLevel
 
 
 let rec myMinInTree (tree: BinTree<'A>): Option<'A> =

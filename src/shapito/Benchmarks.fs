@@ -76,20 +76,23 @@ let add opt1 opt2 =
 [<MemoryDiagnoser>]
 type addBinTreeBench () =
 
-   [<Params (100, 10000)>]
+   [<Params 1000000>]
    member val treeSize :int = 0 with get, set
 
    member self.testTree1 = (genvec self.treeSize).Data
    member self.testTree2 = (genvec self.treeSize).Data
 
-   [<Benchmark>]
-   member self.AddParallel1() = parallelAddBinTree self.testTree1 self.testTree2 add 1
+   // [<Benchmark>]
+   // member self.AddParallel_1_l1() = parallelAddBinTree1 self.testTree1 self.testTree2 add 1
 
    [<Benchmark>]
-   member self.AddParallel2() = parallelAddBinTree self.testTree1 self.testTree2 add 1
+   member self.AddParallel_1_l4() = parallelAddBinTree1 self.testTree1 self.testTree2 add 5
+
+   // [<Benchmark>]
+   // member self.AddParallel_2_l2() = parallelAddBinTree2 self.testTree1 self.testTree2 add 2
 
    [<Benchmark>]
-   member self.AddParallel3() = parallelAddBinTree self.testTree1 self.testTree2 add 1
+   member self.AddParallel_2_l4() = parallelAddBinTree2 self.testTree1 self.testTree2 add 5
 
-   [<Benchmark>]
-   member self.RegularAdd() = addBinTree self.testTree1 self.testTree2 add
+   // [<Benchmark>]
+   // member self.RegularAdd() = addBinTree self.testTree1 self.testTree2 add
