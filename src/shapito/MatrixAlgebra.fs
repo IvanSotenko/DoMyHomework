@@ -108,12 +108,12 @@ let vecMatMultiply
     Vector(res, mat.Length2)
 
 
-(*
 let parallelVecMatMultiply
     (vec: Vector<'A>)
     (mat: Matrix<'B>)
     (add: Option<'C> -> Option<'C> -> Option<'C>)
     (mult: Option<'A> -> Option<'B> -> Option<'C>)
+    (pLevel: int)
     =
 
     if vec.Length <> mat.Length1 then
@@ -133,9 +133,20 @@ let parallelVecMatMultiply
     let qTree = mat.Data
     let binTree = expandBinTree vec.Data vec.Length size
 
-    let rec collectTasks bTree qTree treeLevel paralLevel =
+    let rec core bTree qTree treeLevel pLevel =
 
-        if treeLevel = 0 then
+        let parallelCompute (l, r) (nw, ne, sw, se) pLevel =
+            let tasks = [async { return (addBinTree (core l nw (treeLevel - 1) (pLevel - 1)) (core r sw (treeLevel - 1) (pLevel - 1)) add) |> binCollapse }
+                         async { return (addBinTree (core l ne (treeLevel - 1) (pLevel - 1)) (core r se (treeLevel - 1) (pLevel - 1)) add) |> binCollapse }]
+
+            let nodes = tasks |> Async.Parallel |> Async.RunSynchronously
+            BinTree.Node(nodes[0], nodes[1]) |> binCollapse
+
+
+        if pLevel = 0 then
+            multiplyCore bTree qTree treeLevel add mult
+
+        elif treeLevel = 0 then
 
             match bTree, qTree with
             | leafOrEmpty1, leafOrEmpty2 ->
@@ -145,35 +156,15 @@ let parallelVecMatMultiply
         else
             match bTree, qTree with
 
-            | BinTree.Node (l, r), Node (nw, ne, sw, se) ->
-                BinTree.Node(
-                    (addBinTree (multiplyCoreSub l nw (level - 1)) (multiplyCoreSub r sw (level - 1)) add)
-                    |> binCollapse,
-                    (addBinTree (multiplyCoreSub l ne (level - 1)) (multiplyCoreSub r se (level - 1)) add)
-                    |> binCollapse
-                )
-                |> binCollapse
-
-            | BinTree.Node (l, r), leafOrEmpty ->
-                BinTree.Node(
-                    (addBinTree (multiplyCoreSub l leafOrEmpty (level - 1)) (multiplyCoreSub r leafOrEmpty (level - 1)) add)
-                    |> binCollapse,
-                    (addBinTree (multiplyCoreSub l leafOrEmpty (level - 1)) (multiplyCoreSub r leafOrEmpty (level - 1)) add)
-                    |> binCollapse
-                )
-                |> binCollapse
-
-            | leafOrEmpty, Node (nw, ne, sw, se) ->
-                BinTree.Node(
-                    (addBinTree (multiplyCoreSub leafOrEmpty nw (level - 1)) (multiplyCoreSub leafOrEmpty sw (level - 1)) add)
-                    |> binCollapse,
-                    (addBinTree (multiplyCoreSub leafOrEmpty ne (level - 1)) (multiplyCoreSub leafOrEmpty se (level - 1)) add)
-                    |> binCollapse
-                )
-                |> binCollapse
-
-            | leafOrEmptyBin, leafOrEmptyQ ->
-                let summand = (multiplyCoreSub leafOrEmptyBin leafOrEmptyQ (level - 1))
+            | BinTree.Node (l, r), Node (nw, ne, sw, se) -> parallelCompute (l, r) (nw, ne, sw, se) pLevel
+            | BinTree.Node (l, r), leafOrEmpty -> parallelCompute (l, r) (leafOrEmpty, leafOrEmpty, leafOrEmpty, leafOrEmpty) pLevel
+            | leafOrEmpty, Node (nw, ne, sw, se) -> parallelCompute (leafOrEmpty, leafOrEmpty) (nw, ne, sw, se) pLevel
+            | leafOrEmptyBin, leafOrEmptyQ  ->
+                let summand = (multiplyCore leafOrEmptyBin leafOrEmptyQ (treeLevel - 1) add mult)
                 let tree = addBinTree summand summand add |> binCollapse
                 BinTree.Node(tree, tree) |> binCollapse
-*)
+
+    let rawRes = core binTree qTree depth pLevel
+    let res = cutBinTree rawRes mat.Length2 size
+
+    Vector(res, mat.Length2)
