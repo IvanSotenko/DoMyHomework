@@ -1,55 +1,17 @@
 ﻿module DoMyHomework.Tests.MatrixOperationsTests
 
-open System
 open DoMyHomework
 open Expecto
 open FsCheck
+open DoMyHomework.RandomGeneration
 
 open BinTree
 open QTree
 open Matrix
 open Vector
 open MatrixAlgebra
-open BFS
 
 let config = { Config.Default with MaxTest = 10000 }
-
-module randomGenerations =
-    let rnd = Random()
-
-    let genRandomArray n =
-        Array.init n (fun _ -> Some(rnd.Next(-5, 5)))
-
-    let genRandomNoneArray n =
-        Array.init n (fun _ ->
-            if rnd.Next(1, 5) = 4 then
-                None
-            else
-                Some(rnd.Next(-5, 5)))
-
-    let genRandomVector n = Vector(genRandomArray n)
-    let genRandomNoneVector n = Vector(genRandomNoneArray n)
-
-    let genRandomOptionMarkerArray n =
-        Array.init n (fun _ ->
-            if rnd.Next(1, 5) = 4 then
-                None
-            else
-                Some Mark)
-
-    let genRandomArray2D x y =
-        Array2D.init x y (fun _ _ -> Some(rnd.Next(-5, 5)))
-
-    let genRandomNoneArray2D x y =
-        Array2D.init x y (fun _ _ ->
-            if rnd.Next(1, 5) = 4 then
-                None
-            else
-                Some(rnd.Next(-5, 5)))
-
-    let genRandomMatrix x y = Matrix(genRandomArray2D x y)
-    let genRandomNoneMatrix x y = Matrix(genRandomNoneArray2D x y)
-
 
 module naiveConversions =
     let unpackOption x =
@@ -99,7 +61,6 @@ module OptionIntOperations =
 
 open OptionIntOperations
 open naiveConversions
-open randomGenerations
 
 [<Tests>]
 let multiplyTests =
