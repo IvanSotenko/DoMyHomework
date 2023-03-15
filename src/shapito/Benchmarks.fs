@@ -39,6 +39,27 @@ module randomGeneration =
     let genRandomMatrix x y = Matrix(genRandomArray2D x y)
     let genRandomNoneMatrix x y = Matrix(genRandomNoneArray2D x y)
 
+    let randomVerts n =
+
+        let initList = [ 1u .. n ]
+        let lst = []
+
+        let transfer (listOut: list<uint>) (listIn: list<uint>) =
+            let ind = rnd.Next(listOut.Length)
+            let el = listOut[ind]
+            (List.removeAt ind listOut), (List.append listIn [ el ])
+
+        let rec generator (listDon: uint list) (listRec: uint list) =
+            // Setting the possible length of the list here
+            if rnd.Next(1, 17) = 1 || listDon.IsEmpty then
+                listRec
+            else
+                let newListDon, newListRec = transfer listDon listRec
+                generator newListDon newListRec
+
+        let newInit, newLst = transfer initList lst
+        generator newInit newLst
+
 
 module OptionIntOperations =
     let addInt (a: Option<int>) (b: Option<int>) =
@@ -122,3 +143,38 @@ type vecMatMultiply () =
 
    [<Benchmark>]
    member self.naiveMult() = naiveVecMatMultiply self.vector self.matrix addInt multInt
+
+
+let parametrs = ("../../../../../matrices/cz148.mtx",
+                 "../../../../../matrices/football.mtx",
+                 "../../../../../matrices/lnsp_131.mtx")
+
+// [<MemoryDiagnoser>]
+// type BFS () =
+//
+//     [<Params (10, 100, 1000)>]
+//     member val len : int = 0 with get, set
+//
+//     member self.startVerts =
+
+
+[<MemoryDiagnoser>]
+type readMtx () =
+
+   [<Benchmark>]
+   member self.iter_cz148() = readMtxMatrix "../../matrices/cz148.mtx" float
+
+   [<Benchmark>]
+   member self.rec_cz148() = readMtxMatrixRec "../../matrices/cz148.mtx" float
+
+   [<Benchmark>]
+   member self.iter_football() = readMtxMatrix "../../matrices/football.mtx" float
+
+   [<Benchmark>]
+   member self.rec_football() = readMtxMatrixRec "../../matrices/football.mtx" float
+
+   [<Benchmark>]
+   member self.iter_lnsp() = readMtxMatrix "../../matrices/lnsp_131.mtx" float
+
+   [<Benchmark>]
+   member self.rec_lnsp() = readMtxMatrixRec "../../matrices/lnsp_131.mtx" float

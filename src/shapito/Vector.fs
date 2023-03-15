@@ -45,3 +45,9 @@ let map2 (mapping: Option<'A> -> Option<'B> -> Option<'C>) (vector1: Vector<'A>)
         failwith "Map2 cannot be executed: vector lengths do not match"
     else
         Vector(addBinTree vector1.Data vector2.Data mapping, vector1.Length)
+
+let pMap2 (mapping: Option<'A> -> Option<'B> -> Option<'C>) (vector1: Vector<'A>) (vector2: Vector<'B>) (pLevel: int) : Vector<'C> =
+    if vector1.Length <> vector2.Length then
+        failwith "Map2 cannot be executed: vector lengths do not match"
+    else
+        Vector(parallelAddBinTree vector1.Data vector2.Data mapping pLevel, vector1.Length)

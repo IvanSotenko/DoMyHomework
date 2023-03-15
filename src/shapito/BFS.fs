@@ -101,3 +101,27 @@ let naiveBFS (startVertices: uint list) (adjMat: Matrix<'A>) =
                     queue.Enqueue(uint (indW + 1))
 
     Vector(result)
+
+
+let pBFS (startVertices: uint list) (adjMat: Matrix<'A>) pLevel =
+
+    let set = Set.ofList startVertices
+    let initMarkFront (index: int) =
+        if Set.contains (uint (index + 1)) set then
+            Some Mark
+        else
+            None
+
+    let front = Vector(init adjMat.Length1 initMarkFront, adjMat.Length1)
+    let result = Vector(Empty, adjMat.Length1)
+
+    let rec subBFS front result iterNum =
+
+        let newFront = map2 frontMask (parallelVecMatMultiply front adjMat add mult pLevel) result
+
+        if newFront.IsEmpty then
+            result
+        else
+            subBFS newFront (pMap2 (resultMask iterNum) result newFront pLevel) (iterNum + 1u)
+
+    subBFS front result 1u
