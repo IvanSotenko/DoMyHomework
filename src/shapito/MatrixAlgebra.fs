@@ -133,13 +133,16 @@ let parallelVecMatMultiply
     let qTree = mat.Data
     let binTree = expandBinTree vec.Data vec.Length size
 
-    let rec core bTree qTree treeLevel pLevel =
+    let rec parallelCore bTree qTree treeLevel pLevel =
 
         let parallelCompute (l, r) (nw, ne, sw, se) pLevel =
-            let tasks = [async { return (addBinTree (core l nw (treeLevel - 1) (pLevel - 1)) (core r sw (treeLevel - 1) (pLevel - 1)) add) |> binCollapse }
-                         async { return (addBinTree (core l ne (treeLevel - 1) (pLevel - 1)) (core r se (treeLevel - 1) (pLevel - 1)) add) |> binCollapse }]
+            let tasks = [async { return (addBinTree (parallelCore l nw (treeLevel - 1) (pLevel - 1)) (parallelCore r sw (treeLevel - 1) (pLevel - 1)) add) |> binCollapse }
+                         async { return (addBinTree (parallelCore l ne (treeLevel - 1) (pLevel - 1)) (parallelCore r se (treeLevel - 1) (pLevel - 1)) add) |> binCollapse }]
 
             let nodes = tasks |> Async.Parallel |> Async.RunSynchronously
+
+            if (Array.length nodes) <> 2 then printfn $"ERROR: {nodes}"
+
             BinTree.Node(nodes[0], nodes[1]) |> binCollapse
 
 
@@ -155,7 +158,6 @@ let parallelVecMatMultiply
 
         else
             match bTree, qTree with
-
             | BinTree.Node (l, r), Node (nw, ne, sw, se) -> parallelCompute (l, r) (nw, ne, sw, se) pLevel
             | BinTree.Node (l, r), leafOrEmpty -> parallelCompute (l, r) (leafOrEmpty, leafOrEmpty, leafOrEmpty, leafOrEmpty) pLevel
             | leafOrEmpty, Node (nw, ne, sw, se) -> parallelCompute (leafOrEmpty, leafOrEmpty) (nw, ne, sw, se) pLevel
@@ -164,7 +166,7 @@ let parallelVecMatMultiply
                 let tree = addBinTree summand summand add |> binCollapse
                 BinTree.Node(tree, tree) |> binCollapse
 
-    let rawRes = core binTree qTree depth pLevel
+    let rawRes = parallelCore binTree qTree depth pLevel
     let res = cutBinTree rawRes mat.Length2 size
 
     Vector(res, mat.Length2)

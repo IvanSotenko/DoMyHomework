@@ -134,52 +134,7 @@ let init (count: int) (initializer: int -> Option<'A>) : BinTree<'A> =
 
         subInit depth 0
 
-
-
-let rec assembleBinTree level (listOfTrees: BinTree<'A>[]) =
-
-    let rec assemble level i =
-        if level = 1 then
-            let left = listOfTrees[i * 2]
-            let right = listOfTrees[i * 2 + 1]
-
-            Node(left, right) |> binCollapse
-
-        else
-            let left = (assemble (level - 1) (i * 2)) |> binCollapse
-            let right = (assemble (level - 1) (i * 2 + 1)) |> binCollapse
-
-            Node(left, right) |> binCollapse
-
-    assemble level 0
-
-
-let parallelAddBinTree1 (tree1: BinTree<'A>) (tree2: BinTree<'B>) (func: Option<'A> -> Option<'B> -> Option<'C>) (level: int) =
-
-    let rec collectTasks level tree1 tree2 =
-        if level = 0 then
-            [ async { return addBinTree tree1 tree2 func} ]
-        else
-            match tree1, tree2 with
-            | Node (l1, r1), Node (l2, r2) ->
-                (collectTasks (level - 1) l1 l2) @ (collectTasks (level - 1) r1 r2)
-
-            | Node (l, r), leafOrEmpty ->
-                (collectTasks (level - 1) l leafOrEmpty) @ (collectTasks (level - 1) r leafOrEmpty)
-
-            | leafOrEmpty, Node (l, r) ->
-                (collectTasks (level - 1) leafOrEmpty l) @ (collectTasks (level - 1) leafOrEmpty r)
-
-            | leafOrEmpty1, leafOrEmpty2 ->
-                [ async { return addBinTree leafOrEmpty1 leafOrEmpty2 func} ]
-
-    let tasks = collectTasks level tree1 tree2
-    let trees = tasks |> Async.Parallel |> Async.RunSynchronously
-
-    assembleBinTree level trees
-
-
-let parallelAddBinTree2 (tree1: BinTree<'A>) (tree2: BinTree<'B>) (func: Option<'A> -> Option<'B> -> Option<'C>) (pLevel: int) =
+let parallelAddBinTree (tree1: BinTree<'A>) (tree2: BinTree<'B>) (func: Option<'A> -> Option<'B> -> Option<'C>) (pLevel: int) =
 
     let rec core tree1 tree2 pLevel =
 
@@ -188,6 +143,9 @@ let parallelAddBinTree2 (tree1: BinTree<'A>) (tree2: BinTree<'B>) (func: Option<
                          async { return core r1 r2 pLevel }]
 
             let nodes = tasks |> Async.Parallel |> Async.RunSynchronously
+
+            if (Array.length nodes) <> 2 then printfn $"ERROR: {nodes}"
+
             Node(nodes[0], nodes[1]) |> binCollapse
 
         if pLevel = 0 then

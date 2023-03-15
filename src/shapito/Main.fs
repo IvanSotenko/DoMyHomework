@@ -11,6 +11,7 @@ open Vector
 open QTree
 open BinTree
 open Benchmarks
+open MatrixAlgebra
 
 
 module randomGenerations =
@@ -173,8 +174,23 @@ module mtxReader =
         let length1, length2 = dictConstructor 0 0 false 0
         Matrix(QTree.init length1 length2 initializer, length1, length2)
 
+
+module OptionIntOperations =
+    let addInt (a: Option<int>) (b: Option<int>) =
+        match a, b with
+        | Some x, Some y -> Some(x + y)
+        | Some x, None -> Some x
+        | None, Some x -> Some x
+        | None, None -> None
+
+    let multInt (a: Option<int>) (b: Option<int>) =
+        match a, b with
+        | Some x, Some y -> Some(x * y)
+        | _ -> None
+
 open naiveConversions
 open randomGenerations
+open OptionIntOperations
 
 module Main =
     [<EntryPoint>]
@@ -182,4 +198,10 @@ module Main =
         // BenchmarkRunner.Run typeof<minComparisonPirate> |> ignore
         // BenchmarkRunner.Run typeof<minComparison> |> ignore
         // BenchmarkRunner.Run typeof<addBinTreeBench> |> ignore
+        // BenchmarkRunner.Run typeof<vecMatMultiply> |> ignore
+
+        // let t = Node (Node (Leaf 1, Leaf 2), Leaf 3)
+        // let res1 = parallelAddBinTree1 t t addInt 2
+
+        // printfn "%A" res1
         0

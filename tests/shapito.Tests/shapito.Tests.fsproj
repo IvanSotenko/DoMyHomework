@@ -8,12 +8,13 @@
     <ItemGroup>
         <Compile Include="AssemblyInfo.fs" />
         <Compile Include="RandomGeneration.fs" />
-        <Compile Include="TestMatrices.fs" />
-        <Compile Include="Homework1Tests.fs" />
-        <Compile Include="LinkedListsTests.fs" />
-        <Compile Include="GeneralTreeTests.fs" />
+<!--        <Compile Include="TestMatrices.fs" />-->
+<!--        <Compile Include="Homework1Tests.fs" />-->
+<!--        <Compile Include="LinkedListsTests.fs" />-->
+<!--        <Compile Include="GeneralTreeTests.fs" />-->
         <Compile Include="VectorsAndMatricesTests.fs" />
-        <Compile Include="BFSTests.fs" />
+<!--        <Compile Include="BFSTests.fs" />-->
+        <Compile Include="ParallelOperationsTests.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
     <ItemGroup>
