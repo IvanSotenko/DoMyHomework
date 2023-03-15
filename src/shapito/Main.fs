@@ -118,16 +118,7 @@ module Main =
         // BenchmarkRunner.Run typeof<minComparisonPirate> |> ignore
         // BenchmarkRunner.Run typeof<minComparison> |> ignore
         // BenchmarkRunner.Run typeof<addBinTreeBench> |> ignore
-        // BenchmarkRunner.Run typeof<vecMatMultiply> |> ignore
-        BenchmarkRunner.Run typeof<readMtx> |> ignore
+        BenchmarkRunner.Run typeof<vecMatMultiplyBenchmark> |> ignore
+        // BenchmarkRunner.Run typeof<testBench2> |> ignore
 
-        // let t = Node (Node (Leaf 1, Leaf 2), Leaf 3)
-        // let res1 = parallelAddBinTree1 t t addInt 2
-
-        // let pathToMtx path =
-        //     let curDir = Directory.GetCurrentDirectory()
-        //     Path.GetRelativePath(curDir, path)
-        //
-        // let a = readMtxMatrixRec "../../../../../matrices/cz148.mtx" float
-        // printfn "%A" (pathToMtx "C:\\Users\\ivans\\Documents\\spbsu\\DoMyHomework2\\matrices\\cz148.mtx")
         0
