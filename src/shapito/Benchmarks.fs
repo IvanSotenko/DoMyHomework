@@ -178,9 +178,9 @@ type vecMatMultiplyBenchmark () =
     [<Arguments(2)>]
     [<Arguments(3)>]
     [<Arguments(4)>]
-    member self.parallelMult(pLevel: int) = parallelVecMatMultiply self.vector self.matrix addInt multInt
+    member self.parallelMult(pLevel: int) = parallelVecMatMultiply self.vector self.matrix addInt multInt pLevel
 
-    [<Benchmark>]
+    [<Benchmark(Baseline=true)>]
     member self.regularMult() = vecMatMultiply self.vector self.matrix addInt multInt
 
 
