@@ -27,7 +27,6 @@
         <Compile Include="Vector.fs" />
         <Compile Include="MatrixAlgebra.fs" />
         <Compile Include="BFS.fs" />
-        <Compile Include="pirateBinTree.fs" />
         <Compile Include="Benchmarks.fs" />
         <Compile Include="Main.fs" />
         <Content Include="task.md" />

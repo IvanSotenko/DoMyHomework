@@ -163,26 +163,26 @@ let parallelAddBinTree (tree1: BinTree<'A>) (tree2: BinTree<'B>) (func: Option<'
     core tree1 tree2 pLevel
 
 
-let rec myMinInTree (tree: BinTree<'A>): Option<'A> =
+let rec min (tree: BinTree<'A>): Option<'A> =
     match tree with
     | Empty -> None
     | Leaf v -> Some v
     | Node (l, r) ->
-        match (myMinInTree l), (myMinInTree r) with
+        match (min l), (min r) with
         | None, None -> None
         | l, None -> l
         | None, r -> r
-        | l, r -> min l r
+        | l, r -> Operators.min l r
 
 
-let parallelMinInTree level tree =
+let pMin level tree =
 
     let rec collectTasks level tree =
         if level = 0 then
-            [async {return myMinInTree tree}]
+            [async {return min tree}]
         else
             match tree with
-            | Leaf _ | Empty -> [async {return myMinInTree tree}]
+            | Leaf _ | Empty -> [async {return min tree}]
             | Node (l, r) -> (collectTasks (level - 1) l) @ (collectTasks (level - 1) r)
 
     let tasks = collectTasks level tree
