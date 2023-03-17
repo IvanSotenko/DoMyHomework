@@ -13,7 +13,7 @@ module randomGeneration =
 
     let genRandomMatrixWithDensity len1 len2 density =
         if not ((1 <= density) && (density <= 100)) then
-            failwith "Incorrect value for density. The density should be in the range from 1 to 100"
+            failwith $"Incorrect value for matrix density ({density}). The density should be in the range from 1 to 100"
 
         let initializer _ _ =
             if rnd.Next(1, 100) <= density then
@@ -27,7 +27,7 @@ module randomGeneration =
 
     let genRandomVectorWithDensity len density =
         if not ((1 <= density) && (density <= 100)) then
-            failwith "Incorrect value for density. The density should be in the range from 1 to 100"
+            failwith $"Incorrect value for vector density ({density}). The density should be in the range from 1 to 100"
 
         let initializer _ =
             if rnd.Next(1, 100) <= density then
@@ -57,7 +57,7 @@ open randomGeneration
 open OptionIntOperations
 
 [<MemoryDiagnoser>]
-type vectorMap2Benchmark() =
+type VectorMap2Benchmark() =
 
     [<DefaultValue>]
     val mutable vector1: Vector<int>
@@ -81,15 +81,15 @@ type vectorMap2Benchmark() =
     [<Arguments(2)>]
     [<Arguments(3)>]
     [<Arguments(4)>]
-    member self.parallelMap2(pLevel: int) =
+    member self.ParallelMap2(pLevel: int) =
         pMap2 addInt self.vector1 self.vector2 pLevel
 
     [<Benchmark(Baseline = true)>]
-    member self.regularMap2() = map2 addInt self.vector1 self.vector2
+    member self.RegularMap2() = map2 addInt self.vector1 self.vector2
 
 
 [<MemoryDiagnoser>]
-type vecMatMultiplyBenchmark() =
+type VecMatMultiplyBenchmark() =
 
     [<DefaultValue>]
     val mutable vector: Vector<int>
@@ -117,9 +117,9 @@ type vecMatMultiplyBenchmark() =
     [<Arguments(2)>]
     [<Arguments(3)>]
     [<Arguments(4)>]
-    member self.parallelMult(pLevel: int) =
+    member self.ParallelMult(pLevel: int) =
         parallelVecMatMultiply self.vector self.matrix addInt multInt pLevel
 
     [<Benchmark(Baseline = true)>]
-    member self.regularMult() =
+    member self.RegularMult() =
         vecMatMultiply self.vector self.matrix addInt multInt
