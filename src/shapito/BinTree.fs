@@ -134,17 +134,24 @@ let init (count: int) (initializer: int -> Option<'A>) : BinTree<'A> =
 
         subInit depth 0
 
-let parallelAddBinTree (tree1: BinTree<'A>) (tree2: BinTree<'B>) (func: Option<'A> -> Option<'B> -> Option<'C>) (pLevel: int) =
+let parallelAddBinTree
+    (tree1: BinTree<'A>)
+    (tree2: BinTree<'B>)
+    (func: Option<'A> -> Option<'B> -> Option<'C>)
+    (pLevel: int)
+    =
 
     let rec core tree1 tree2 pLevel =
 
         let parallelCompute (l1, l2) (r1, r2) pLevel =
-            let tasks = [async { return core l1 l2 pLevel }
-                         async { return core r1 r2 pLevel }]
+            let tasks =
+                [ async { return core l1 l2 pLevel }
+                  async { return core r1 r2 pLevel } ]
 
             let nodes = tasks |> Async.Parallel |> Async.RunSynchronously
 
-            if (Array.length nodes) <> 2 then printfn $"ERROR: {nodes}"
+            if (Array.length nodes) <> 2 then
+                printfn $"ERROR: {nodes}"
 
             Node(nodes[0], nodes[1]) |> binCollapse
 
@@ -163,7 +170,7 @@ let parallelAddBinTree (tree1: BinTree<'A>) (tree2: BinTree<'B>) (func: Option<'
     core tree1 tree2 pLevel
 
 
-let rec min (tree: BinTree<'A>): Option<'A> =
+let rec min (tree: BinTree<'A>) : Option<'A> =
     match tree with
     | Empty -> None
     | Leaf v -> Some v
@@ -179,11 +186,14 @@ let pMin level tree =
 
     let rec collectTasks level tree =
         if level = 0 then
-            [async {return min tree}]
+            [ async { return min tree } ]
         else
             match tree with
-            | Leaf _ | Empty -> [async {return min tree}]
-            | Node (l, r) -> (collectTasks (level - 1) l) @ (collectTasks (level - 1) r)
+            | Leaf _
+            | Empty -> [ async { return min tree } ]
+            | Node (l, r) ->
+                (collectTasks (level - 1) l)
+                @ (collectTasks (level - 1) r)
 
     let tasks = collectTasks level tree
     let values = tasks |> Async.Parallel |> Async.RunSynchronously

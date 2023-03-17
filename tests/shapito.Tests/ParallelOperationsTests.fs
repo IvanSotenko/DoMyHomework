@@ -59,7 +59,10 @@ let multiplyTests =
               let mat = Matrix(QTree.Empty, 0, 0)
               let vec = Vector(Empty, 0)
 
-              let actualResult = (parallelVecMatMultiply vec mat addInt multInt 2).Data
+              let actualResult =
+                  (parallelVecMatMultiply vec mat addInt multInt 2)
+                      .Data
+
               Expect.equal actualResult Empty "the results were different"
 
 
@@ -78,7 +81,9 @@ let multiplyTests =
               let vec = genRandomNoneVector vecLen
 
               Expect.throws
-                  (fun _ -> parallelVecMatMultiply vec mat addInt multInt 2 |> ignore)
+                  (fun _ ->
+                      parallelVecMatMultiply vec mat addInt multInt 2
+                      |> ignore)
                   $"The dimensions of the matrix are incompatible
                     for multiplication with the dimensions of the vector:
                     vector length is {vec.Length} but matrix size is {mat.Length1}x{mat.Length2}"
@@ -91,7 +96,10 @@ let multiplyTests =
               let mat = genRandomNoneMatrix len1 len2
               let vec = genRandomNoneVector len1
 
-              let actualResult = (parallelVecMatMultiply vec mat addInt multInt 2).Data
+              let actualResult =
+                  (parallelVecMatMultiply vec mat addInt multInt 2)
+                      .Data
+
               let expectedResult = collapseBinTree actualResult
 
               Expect.equal actualResult expectedResult "the results were different" ]

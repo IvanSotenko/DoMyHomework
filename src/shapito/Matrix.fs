@@ -53,7 +53,7 @@ type Matrix<'A when 'A: equality> =
                 find this.Data (size - 1, size - 1) (size / 2)
 
 
-let readMtxMatrix (path: string) (converter: string -> 'A): Matrix<'A> =
+let readMtxMatrix (path: string) (converter: string -> 'A) : Matrix<'A> =
 
     if FileInfo(path).Extension <> ".mtx" then
         failwith $"Incorrect matrix path: file has wrong extension ({FileInfo(path).Extension})"
@@ -87,7 +87,7 @@ let readMtxMatrix (path: string) (converter: string -> 'A): Matrix<'A> =
     Matrix(init length1 length2 initializer, length1, length2)
 
 
-let readMtxMatrixRec (path: string) (toType: string -> 'A): Matrix<'A> =
+let readMtxMatrixRec (path: string) (toType: string -> 'A) : Matrix<'A> =
 
     if FileInfo(path).Extension <> ".mtx" then
         failwith $"Incorrect matrix path: file has wrong extension ({FileInfo(path).Extension})"

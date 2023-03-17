@@ -55,18 +55,30 @@ let multiplyCore bTree qTree level add mult =
 
             | BinTree.Node (l, r), leafOrEmpty ->
                 BinTree.Node(
-                    (addBinTree (multiplyCoreSub l leafOrEmpty (level - 1)) (multiplyCoreSub r leafOrEmpty (level - 1)) add)
+                    (addBinTree
+                        (multiplyCoreSub l leafOrEmpty (level - 1))
+                        (multiplyCoreSub r leafOrEmpty (level - 1))
+                        add)
                     |> binCollapse,
-                    (addBinTree (multiplyCoreSub l leafOrEmpty (level - 1)) (multiplyCoreSub r leafOrEmpty (level - 1)) add)
+                    (addBinTree
+                        (multiplyCoreSub l leafOrEmpty (level - 1))
+                        (multiplyCoreSub r leafOrEmpty (level - 1))
+                        add)
                     |> binCollapse
                 )
                 |> binCollapse
 
             | leafOrEmpty, Node (nw, ne, sw, se) ->
                 BinTree.Node(
-                    (addBinTree (multiplyCoreSub leafOrEmpty nw (level - 1)) (multiplyCoreSub leafOrEmpty sw (level - 1)) add)
+                    (addBinTree
+                        (multiplyCoreSub leafOrEmpty nw (level - 1))
+                        (multiplyCoreSub leafOrEmpty sw (level - 1))
+                        add)
                     |> binCollapse,
-                    (addBinTree (multiplyCoreSub leafOrEmpty ne (level - 1)) (multiplyCoreSub leafOrEmpty se (level - 1)) add)
+                    (addBinTree
+                        (multiplyCoreSub leafOrEmpty ne (level - 1))
+                        (multiplyCoreSub leafOrEmpty se (level - 1))
+                        add)
                     |> binCollapse
                 )
                 |> binCollapse
@@ -136,12 +148,28 @@ let parallelVecMatMultiply
     let rec parallelCore bTree qTree treeLevel pLevel =
 
         let parallelCompute (l, r) (nw, ne, sw, se) pLevel =
-            let tasks = [async { return (addBinTree (parallelCore l nw (treeLevel - 1) (pLevel - 1)) (parallelCore r sw (treeLevel - 1) (pLevel - 1)) add) |> binCollapse }
-                         async { return (addBinTree (parallelCore l ne (treeLevel - 1) (pLevel - 1)) (parallelCore r se (treeLevel - 1) (pLevel - 1)) add) |> binCollapse }]
+            let tasks =
+                [ async {
+                      return
+                          (addBinTree
+                              (parallelCore l nw (treeLevel - 1) (pLevel - 1))
+                              (parallelCore r sw (treeLevel - 1) (pLevel - 1))
+                              add)
+                          |> binCollapse
+                  }
+                  async {
+                      return
+                          (addBinTree
+                              (parallelCore l ne (treeLevel - 1) (pLevel - 1))
+                              (parallelCore r se (treeLevel - 1) (pLevel - 1))
+                              add)
+                          |> binCollapse
+                  } ]
 
             let nodes = tasks |> Async.Parallel |> Async.RunSynchronously
 
-            if (Array.length nodes) <> 2 then printfn $"ERROR: {nodes}"
+            if (Array.length nodes) <> 2 then
+                printfn $"ERROR: {nodes}"
 
             BinTree.Node(nodes[0], nodes[1]) |> binCollapse
 
@@ -159,9 +187,13 @@ let parallelVecMatMultiply
         else
             match bTree, qTree with
             | BinTree.Node (l, r), Node (nw, ne, sw, se) -> parallelCompute (l, r) (nw, ne, sw, se) pLevel
-            | BinTree.Node (l, r), leafOrEmpty -> parallelCompute (l, r) (leafOrEmpty, leafOrEmpty, leafOrEmpty, leafOrEmpty) pLevel
+
+            | BinTree.Node (l, r), leafOrEmpty ->
+                parallelCompute (l, r) (leafOrEmpty, leafOrEmpty, leafOrEmpty, leafOrEmpty) pLevel
+
             | leafOrEmpty, Node (nw, ne, sw, se) -> parallelCompute (leafOrEmpty, leafOrEmpty) (nw, ne, sw, se) pLevel
-            | leafOrEmptyBin, leafOrEmptyQ  ->
+
+            | leafOrEmptyBin, leafOrEmptyQ ->
                 let summand = (multiplyCore leafOrEmptyBin leafOrEmptyQ (treeLevel - 1) add mult)
                 let tree = addBinTree summand summand add |> binCollapse
                 BinTree.Node(tree, tree) |> binCollapse

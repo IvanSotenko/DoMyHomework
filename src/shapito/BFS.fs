@@ -34,6 +34,7 @@ let resultMask iterNum a b =
 let BFS (startVertices: uint list) (adjMat: Matrix<'A>) =
 
     let set = Set.ofList startVertices
+
     let initMarkFront (index: int) =
         if Set.contains (uint (index + 1)) set then
             Some Mark
@@ -106,6 +107,7 @@ let naiveBFS (startVertices: uint list) (adjMat: Matrix<'A>) =
 let pBFS (startVertices: uint list) (adjMat: Matrix<'A>) pLevel =
 
     let set = Set.ofList startVertices
+
     let initMarkFront (index: int) =
         if Set.contains (uint (index + 1)) set then
             Some Mark
@@ -117,7 +119,8 @@ let pBFS (startVertices: uint list) (adjMat: Matrix<'A>) pLevel =
 
     let rec subBFS front result iterNum =
 
-        let newFront = map2 frontMask (parallelVecMatMultiply front adjMat add mult pLevel) result
+        let newFront =
+            map2 frontMask (parallelVecMatMultiply front adjMat add mult pLevel) result
 
         if newFront.IsEmpty then
             result
