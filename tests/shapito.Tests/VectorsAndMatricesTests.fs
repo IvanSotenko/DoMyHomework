@@ -45,35 +45,21 @@ module naiveConversions =
 
         uintList
 
-
-module OptionIntOperations =
-    let addInt (a: Option<int>) (b: Option<int>) =
-        match a, b with
-        | Some x, Some y -> Some(x + y)
-        | Some x, None -> Some x
-        | None, Some x -> Some x
-        | None, None -> None
-
-    let multInt (a: Option<int>) (b: Option<int>) =
-        match a, b with
-        | Some x, Some y -> Some(x * y)
-        | _ -> None
-
 open OptionIntOperations
 open naiveConversions
 
 [<Tests>]
 let multiplyTests =
     testList
-        "Tests for Multiply.vecMatMultiply function"
+        "Tests for MatrixAlgebra.vecMatMultiply function"
         [ testProperty "vecMatMultiply is naiveVecMatMultiply (without None)"
           <| fun _ ->
-              let len1, len2 = rnd.Next(1, 25), rnd.Next(1, 25)
+              let len1, len2 = genRandomLength (), genRandomLength ()
 
               let mat = genRandomMatrix len1 len2
               let vec = genRandomVector len1
 
-              let actualResult = vecMatMultiply vec mat addInt multInt
+              let actualResult = vecMatMultiply vec mat addInt multInt 0
               let expectedResult = naiveVecMatMultiply vec mat addInt multInt
 
               Expect.equal actualResult.Data expectedResult.Data "the results were different"
@@ -81,12 +67,12 @@ let multiplyTests =
 
           testProperty "vecMatMultiply is naiveVecMatMultiply (with None)"
           <| fun _ ->
-              let len1, len2 = rnd.Next(1, 25), rnd.Next(1, 25)
+              let len1, len2 = genRandomLength (), genRandomLength ()
 
               let mat = genRandomNoneMatrix len1 len2
               let vec = genRandomNoneVector len1
 
-              let actualResult = vecMatMultiply vec mat addInt multInt
+              let actualResult = vecMatMultiply vec mat addInt multInt 0
               let expectedResult = naiveVecMatMultiply vec mat addInt multInt
 
               Expect.equal actualResult.Data expectedResult.Data "the results were different"
@@ -97,7 +83,7 @@ let multiplyTests =
               let mat = Matrix(Empty, 0, 0)
               let vec = Vector(BinTree.Empty, 0)
 
-              let actualResult = (vecMatMultiply vec mat addInt multInt).Data
+              let actualResult = (vecMatMultiply vec mat addInt multInt 0).Data
               Expect.equal actualResult BinTree.Empty "the results were different"
 
 
@@ -116,7 +102,7 @@ let multiplyTests =
               let vec = genRandomNoneVector vecLen
 
               Expect.throws
-                  (fun _ -> vecMatMultiply vec mat addInt multInt |> ignore)
+                  (fun _ -> vecMatMultiply vec mat addInt multInt 0 |> ignore)
                   $"The dimensions of the matrix are incompatible
                     for multiplication with the dimensions of the vector:
                     vector length is {vec.Length} but matrix size is {mat.Length1}x{mat.Length2}"
@@ -124,12 +110,12 @@ let multiplyTests =
 
           testProperty "Multiply function returns fully collapsed tree"
           <| fun _ ->
-              let len1, len2 = rnd.Next(1, 100), rnd.Next(1, 100)
+              let len1, len2 = genRandomLength (), genRandomLength ()
 
               let mat = genRandomNoneMatrix len1 len2
               let vec = genRandomNoneVector len1
 
-              let actualResult = (vecMatMultiply vec mat addInt multInt).Data
+              let actualResult = (vecMatMultiply vec mat addInt multInt 0).Data
               let expectedResult = collapseBinTree actualResult
 
               Expect.equal actualResult expectedResult "the results were different" ]
@@ -143,7 +129,7 @@ let vectorTypeTests =
           // Index access
           testProperty "Index access test"
           <| fun _ ->
-              let len = rnd.Next(1, 100)
+              let len = genRandomLength ()
 
               let arr = genRandomNoneArray len
               let vec = Vector(arr)
@@ -156,7 +142,7 @@ let vectorTypeTests =
           // Array vector constructor
           testProperty "Array constructor test (arr1 -> vec -> arr2) ==> (arr1 = arr2)"
           <| fun _ ->
-              let len = rnd.Next(1, 100)
+              let len = genRandomLength ()
 
               let expectedResult = genRandomNoneArray len
               let vec = Vector(expectedResult)
@@ -167,7 +153,7 @@ let vectorTypeTests =
 
           testProperty "The array Vector constructor returns a fully collapsed tree"
           <| fun _ ->
-              let len = rnd.Next(1, 100)
+              let len = genRandomLength ()
 
               let actualResult = (genRandomNoneVector len).Data
               let expectedResult = collapseBinTree actualResult
@@ -183,7 +169,7 @@ let matrixTypeTests =
           // Index access
           testProperty "Index access test"
           <| fun _ ->
-              let len1, len2 = rnd.Next(1, 50), rnd.Next(1, 50)
+              let len1, len2 = genRandomLength (), genRandomLength ()
 
               let arr2D = genRandomNoneArray2D len1 len2
               let mat = Matrix(arr2D)
@@ -196,7 +182,7 @@ let matrixTypeTests =
           // Array2D constructor
           testProperty "Array2D constructor tests (arr2D1 -> mat -> arr2D2) ==> (arr2D2 = arr2D2)"
           <| fun _ ->
-              let len1, len2 = rnd.Next(1, 50), rnd.Next(1, 50)
+              let len1, len2 = genRandomLength (), genRandomLength ()
 
               let expectedResult = genRandomNoneArray2D len1 len2
               let mat = Matrix(expectedResult)
@@ -207,7 +193,7 @@ let matrixTypeTests =
 
           testProperty "Array2D Matrix constructor returns a fully collapsed tree"
           <| fun _ ->
-              let len1, len2 = rnd.Next(1, 50), rnd.Next(1, 50)
+              let len1, len2 = genRandomLength (), genRandomLength ()
 
               let actualResult = (genRandomNoneMatrix len1 len2).Data
               let expectedResult = collapseQTree actualResult
@@ -224,7 +210,7 @@ let BinTreeTests =
           // AddBinTree
           testProperty "AddBinTree is commutative"
           <| fun _ ->
-              let len = rnd.Next(1, 50)
+              let len = genRandomLength ()
               let tree1 = (genRandomNoneVector len).Data
               let tree2 = (genRandomNoneVector len).Data
 
@@ -236,7 +222,7 @@ let BinTreeTests =
 
           testProperty "AddBinTree is associative"
           <| fun _ ->
-              let len = rnd.Next(1, 50)
+              let len = genRandomLength ()
               let tree1 = (genRandomNoneVector len).Data
               let tree2 = (genRandomNoneVector len).Data
               let tree3 = (genRandomNoneVector len).Data
@@ -249,7 +235,7 @@ let BinTreeTests =
 
           testProperty "(AddBinTree tree emptyTree) is tree"
           <| fun _ ->
-              let len = rnd.Next(1, 50)
+              let len = genRandomLength ()
               let tree = (genRandomNoneVector len).Data
               let emptyTree = BinTree.Empty
 
@@ -260,7 +246,7 @@ let BinTreeTests =
 
           testProperty "(AddBinTree tree zeroTree) is tree"
           <| fun _ ->
-              let len = rnd.Next(1, 50)
+              let len = genRandomLength ()
               let tree = (genRandomVector len).Data
               let zeroTree = Vector(Array.init len (fun _ -> Some 0)).Data
 
@@ -271,10 +257,10 @@ let BinTreeTests =
           // expandBinTree cutBinTree
           testProperty "tree expansion is the opposite of tree cutting"
           <| fun _ ->
-              let len = rnd.Next(1, 50)
+              let len = genRandomLength ()
               let expectedResult = (genRandomNoneVector len).Data
 
-              let additionalLen = rnd.Next(1, 10)
+              let additionalLen = genRandomLength ()
               let expanded = expandBinTree expectedResult len (len + additionalLen)
               let actualResult = cutBinTree expanded len (len + additionalLen)
 

@@ -4,8 +4,9 @@ namespace DoMyHomework
 // open Benchmarks
 
 module Main =
+
     [<EntryPoint>]
     let main _ =
-        // BenchmarkRunner.Run typeof<vectorMap2Benchmark> |> ignore
-        // BenchmarkRunner.Run typeof<vecMatMultiplyBenchmark> |> ignore
+        // BenchmarkRunner.Run typeof<VectorMap2Benchmark> |> ignore
+        // BenchmarkRunner.Run typeof<VecMatMultiplyBenchmark> |> ignore
         0

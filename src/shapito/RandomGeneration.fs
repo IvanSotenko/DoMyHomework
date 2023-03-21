@@ -1,7 +1,6 @@
 ﻿module DoMyHomework.RandomGeneration
 
 open System
-open DoMyHomework
 
 open Vector
 open Matrix
@@ -11,12 +10,14 @@ let rnd = Random()
 let genRandomArray n =
     Array.init n (fun _ -> Some(rnd.Next(-5, 5)))
 
+
 let genRandomNoneArray n =
     Array.init n (fun _ ->
         if rnd.Next(1, 5) = 4 then
             None
         else
             Some(rnd.Next(-5, 5)))
+
 
 let genRandomVector n = Vector(genRandomArray n)
 let genRandomNoneVector n = Vector(genRandomNoneArray n)
@@ -25,6 +26,7 @@ let genRandomNoneVector n = Vector(genRandomNoneArray n)
 let genRandomArray2D x y =
     Array2D.init x y (fun _ _ -> Some(rnd.Next(-5, 5)))
 
+
 let genRandomNoneArray2D x y =
     Array2D.init x y (fun _ _ ->
         if rnd.Next(1, 5) = 4 then
@@ -32,8 +34,10 @@ let genRandomNoneArray2D x y =
         else
             Some(rnd.Next(-5, 5)))
 
+
 let genRandomMatrix x y = Matrix(genRandomArray2D x y)
 let genRandomNoneMatrix x y = Matrix(genRandomNoneArray2D x y)
+
 
 let randomVerts n =
 
@@ -55,3 +59,36 @@ let randomVerts n =
 
     let newInit, newLst = transfer initList lst
     generator newInit newLst
+
+
+let genRandomMatrixWithDensity len1 len2 density =
+    if not ((1 <= density) && (density <= 100)) then
+        failwith $"Incorrect value for matrix density ({density}). The density should be in the range from 1 to 100"
+
+    let initializer _ _ =
+        if rnd.Next(1, 100) <= density then
+            Some(rnd.Next(-1000, 1000))
+        else
+            None
+
+    let arr2D = Array2D.init len1 len2 initializer
+
+    Matrix(arr2D)
+
+
+let genRandomVectorWithDensity len density =
+    if not ((1 <= density) && (density <= 100)) then
+        failwith $"Incorrect value for vector density ({density}). The density should be in the range from 1 to 100"
+
+    let initializer _ =
+        if rnd.Next(1, 100) <= density then
+            Some(rnd.Next(-1000, 1000))
+        else
+            None
+
+    let arr = Array.init len initializer
+
+    Vector(arr)
+
+
+let genRandomLength () = rnd.Next(1, 50)

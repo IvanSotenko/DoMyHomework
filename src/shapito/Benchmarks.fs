@@ -1,59 +1,12 @@
 ﻿module DoMyHomework.Benchmarks
 
-open System
 open BenchmarkDotNet.Attributes
 
 open Vector
 open Matrix
 open MatrixAlgebra
 
-
-module randomGeneration =
-    let rnd = Random()
-
-    let genRandomMatrixWithDensity len1 len2 density =
-        if not ((1 <= density) && (density <= 100)) then
-            failwith $"Incorrect value for matrix density ({density}). The density should be in the range from 1 to 100"
-
-        let initializer _ _ =
-            if rnd.Next(1, 100) <= density then
-                Some(rnd.Next(-1000, 1000))
-            else
-                None
-
-        let arr2D = Array2D.init len1 len2 initializer
-
-        Matrix(arr2D)
-
-    let genRandomVectorWithDensity len density =
-        if not ((1 <= density) && (density <= 100)) then
-            failwith $"Incorrect value for vector density ({density}). The density should be in the range from 1 to 100"
-
-        let initializer _ =
-            if rnd.Next(1, 100) <= density then
-                Some(rnd.Next(-1000, 1000))
-            else
-                None
-
-        let arr = Array.init len initializer
-
-        Vector(arr)
-
-
-module OptionIntOperations =
-    let addInt (a: Option<int>) (b: Option<int>) =
-        match a, b with
-        | Some x, Some y -> Some(x + y)
-        | Some x, None -> Some x
-        | None, Some x -> Some x
-        | None, None -> None
-
-    let multInt (a: Option<int>) (b: Option<int>) =
-        match a, b with
-        | Some x, Some y -> Some(x * y)
-        | _ -> None
-
-open randomGeneration
+open RandomGeneration
 open OptionIntOperations
 
 [<MemoryDiagnoser>]
@@ -82,10 +35,10 @@ type VectorMap2Benchmark() =
     [<Arguments(3)>]
     [<Arguments(4)>]
     member self.ParallelMap2(pLevel: int) =
-        pMap2 addInt self.vector1 self.vector2 pLevel
+        map2 addInt self.vector1 self.vector2 pLevel
 
     [<Benchmark(Baseline = true)>]
-    member self.RegularMap2() = map2 addInt self.vector1 self.vector2
+    member self.RegularMap2() = map2 addInt self.vector1 self.vector2 0
 
 
 [<MemoryDiagnoser>]
@@ -118,8 +71,8 @@ type VecMatMultiplyBenchmark() =
     [<Arguments(3)>]
     [<Arguments(4)>]
     member self.ParallelMult(pLevel: int) =
-        parallelVecMatMultiply self.vector self.matrix addInt multInt pLevel
+        vecMatMultiply self.vector self.matrix addInt multInt pLevel
 
     [<Benchmark(Baseline = true)>]
     member self.RegularMult() =
-        vecMatMultiply self.vector self.matrix addInt multInt
+        vecMatMultiply self.vector self.matrix addInt multInt 0

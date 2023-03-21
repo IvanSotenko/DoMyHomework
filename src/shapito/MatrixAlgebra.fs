@@ -96,35 +96,6 @@ let vecMatMultiply
     (mat: Matrix<'B>)
     (add: Option<'C> -> Option<'C> -> Option<'C>)
     (mult: Option<'A> -> Option<'B> -> Option<'C>)
-    =
-
-    if vec.Length <> mat.Length1 then
-        failwith
-            $"The dimensions of the matrix are incompatible
-              for multiplication with the dimensions of the vector:
-              vector length is {vec.Length} but matrix size is {mat.Length1}x{mat.Length2}"
-
-    let size = max mat.Length1 mat.Length2
-
-    let depth =
-        if size = 1 || size = 0 then
-            0
-        else
-            int (System.Math.Ceiling(System.Math.Log(size, 2)))
-
-    let qTree = mat.Data
-    let binTree = expandBinTree vec.Data vec.Length size
-    let rawRes = multiplyCore binTree qTree depth add mult
-    let res = cutBinTree rawRes mat.Length2 size
-
-    Vector(res, mat.Length2)
-
-
-let parallelVecMatMultiply
-    (vec: Vector<'A>)
-    (mat: Matrix<'B>)
-    (add: Option<'C> -> Option<'C> -> Option<'C>)
-    (mult: Option<'A> -> Option<'B> -> Option<'C>)
     (pLevel: int)
     =
 
