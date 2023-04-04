@@ -176,9 +176,8 @@ let rec min (tree: BinTree<'A>) : Option<'A> =
     | Leaf v -> Some v
     | Node (l, r) ->
         match (min l), (min r) with
-        | None, None -> None
-        | l, None -> l
-        | None, r -> r
+        | noneOrLeaf, None
+        | None, noneOrLeaf -> noneOrLeaf
         | l, r -> Operators.min l r
 
 

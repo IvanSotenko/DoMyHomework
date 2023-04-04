@@ -53,15 +53,20 @@ type Matrix<'A when 'A: equality> =
                 find this.Data (size - 1, size - 1) (size / 2)
 
 
-let readMtxMatrix (path: string) (converter: string -> 'A) : Matrix<'A> =
-
-    if FileInfo(path).Extension <> ".mtx" then
-        failwith $"Incorrect matrix path: file has wrong extension ({FileInfo(path).Extension})"
+let readMtxFile path =
 
     if not (File.Exists(path)) then
         failwith $"Incorrect matrix path: file does not exist ({path}) (curDir = {Directory.GetCurrentDirectory()})"
 
-    let lines = File.ReadAllLines(path)
+    if FileInfo(path).Extension <> ".mtx" then
+        failwith $"Incorrect matrix path: file has wrong extension ({FileInfo(path).Extension})"
+
+    File.ReadAllLines(path)
+
+
+let readMtxMatrix (path: string) (converter: string -> 'A) : Matrix<'A> =
+
+    let lines = readMtxFile path
     let dict = Dictionary<int * int, 'A>()
     let mutable descriptionOver = false
     let mutable length1, length2 = 0, 0
@@ -89,13 +94,7 @@ let readMtxMatrix (path: string) (converter: string -> 'A) : Matrix<'A> =
 
 let readMtxMatrixRec (path: string) (toType: string -> 'A) : Matrix<'A> =
 
-    if FileInfo(path).Extension <> ".mtx" then
-        failwith $"Incorrect matrix path: file has wrong extension ({FileInfo(path).Extension})"
-
-    if not (File.Exists(path)) then
-        failwith $"Incorrect matrix path: file does not exist ({path}) (curDir = {Directory.GetCurrentDirectory()})"
-
-    let lines = File.ReadAllLines(path)
+    let lines = readMtxFile path
     let len = lines.Length
     let dict = Dictionary<int * int, 'A>()
 
