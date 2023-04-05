@@ -64,34 +64,6 @@ let readMtxFile path =
     File.ReadAllLines(path)
 
 
-let readMtxMatrix (path: string) (converter: string -> 'A) : Matrix<'A> =
-
-    let lines = readMtxFile path
-    let dict = Dictionary<int * int, 'A>()
-    let mutable descriptionOver = false
-    let mutable length1, length2 = 0, 0
-
-    for str in lines do
-        if str[0] <> '%' then
-            let splittedStr = str.Split(' ')
-
-            if descriptionOver then
-                dict.Add(((int splittedStr[0], int splittedStr[1]), converter splittedStr[2]))
-
-            else
-                length1 <- int splittedStr[0]
-                length2 <- int splittedStr[1]
-                descriptionOver <- true
-
-    let initializer (x: int) (y: int) =
-        if dict.ContainsKey((x + 1, y + 1)) then
-            Some(dict[(x + 1, y + 1)])
-        else
-            None
-
-    Matrix(init length1 length2 initializer, length1, length2)
-
-
 let readMtxMatrixRec (path: string) (toType: string -> 'A) : Matrix<'A> =
 
     let lines = readMtxFile path
