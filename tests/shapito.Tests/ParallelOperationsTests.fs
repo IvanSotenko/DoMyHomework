@@ -5,6 +5,7 @@ open Expecto
 open DoMyHomework.RandomGeneration
 
 open BinTree
+open FsCheck
 open Vector
 open Matrix
 open MatrixAlgebra
@@ -15,11 +16,10 @@ let multiplyTests =
     testList
         "Tests for MatrixAlgebra.vecMatMultiply function with nonzero pLevel parameter"
         [ testProperty "parallelVecMatMultiply is vecMatMultiply (level of parallelism = 1)"
-          <| fun _ ->
-              let len1, len2 = genRandomLength (), genRandomLength ()
+          <| fun (len1: PositiveInt) (len2: PositiveInt) ->
 
-              let mat = genRandomNoneMatrix len1 len2
-              let vec = genRandomNoneVector len1
+              let mat = genRandomNoneMatrix (int len1) (int len2)
+              let vec = genRandomNoneVector (int len1)
 
               let actualResult = vecMatMultiply vec mat addInt multInt 0
               let expectedResult = vecMatMultiply vec mat addInt multInt 1
@@ -28,11 +28,10 @@ let multiplyTests =
 
 
           testProperty "parallelVecMatMultiply is vecMatMultiply (level of parallelism = 3)"
-          <| fun _ ->
-              let len1, len2 = genRandomLength (), genRandomLength ()
+          <| fun (len1: PositiveInt) (len2: PositiveInt) ->
 
-              let mat = genRandomNoneMatrix len1 len2
-              let vec = genRandomNoneVector len1
+              let mat = genRandomNoneMatrix (int len1) (int len2)
+              let vec = genRandomNoneVector (int len1)
 
               let actualResult = vecMatMultiply vec mat addInt multInt 0
               let expectedResult = vecMatMultiply vec mat addInt multInt 3
@@ -57,11 +56,11 @@ let multiplyTests =
               // the goal is to make (matLen1 <> vecLen)
               let vecLen =
                   if rnd.Next(1, 3) = 1 then
-                      rnd.Next(1, matLen1)
+                      rnd.Next(1, int matLen1)
                   else
-                      rnd.Next(matLen1 + 1, 101)
+                      rnd.Next(int matLen1 + 1, 101)
 
-              let mat = genRandomNoneMatrix matLen1 len2
+              let mat = genRandomNoneMatrix (int matLen1) len2
               let vec = genRandomNoneVector vecLen
 
               Expect.throws
@@ -72,11 +71,10 @@ let multiplyTests =
 
 
           testProperty "Multiply function returns fully collapsed tree"
-          <| fun _ ->
-              let len1, len2 = genRandomLength (), genRandomLength ()
+          <| fun (len1: PositiveInt) (len2: PositiveInt) ->
 
-              let mat = genRandomNoneMatrix len1 len2
-              let vec = genRandomNoneVector len1
+              let mat = genRandomNoneMatrix (int len1) (int len2)
+              let vec = genRandomNoneVector (int len1)
 
               let actualResult = (vecMatMultiply vec mat addInt multInt 2).Data
 
@@ -90,11 +88,10 @@ let addBinTreeTests =
     testList
         "Tests for BinTree.parallelAddBinTree"
         [ testProperty "parallelAddBinTree2 is addBinTree (level of parallelism = 1)"
-          <| fun _ ->
-              let len = genRandomLength ()
+          <| fun (len: PositiveInt) ->
 
-              let tree1 = (genRandomNoneVector len).Data
-              let tree2 = (genRandomNoneVector len).Data
+              let tree1 = (genRandomNoneVector (int len)).Data
+              let tree2 = (genRandomNoneVector (int len)).Data
 
               let res1 = parallelAddBinTree tree1 tree2 addInt 1
               let res2 = addBinTree tree1 tree2 addInt
@@ -103,11 +100,10 @@ let addBinTreeTests =
 
 
           testProperty "parallelAddBinTree2 is addBinTree (level of parallelism = 3)"
-          <| fun _ ->
-              let len = genRandomLength ()
+          <| fun (len: PositiveInt) ->
 
-              let tree1 = (genRandomNoneVector len).Data
-              let tree2 = (genRandomNoneVector len).Data
+              let tree1 = (genRandomNoneVector (int len)).Data
+              let tree2 = (genRandomNoneVector (int len)).Data
 
               let res1 = parallelAddBinTree tree1 tree2 addInt 3
               let res2 = addBinTree tree1 tree2 addInt
@@ -116,9 +112,8 @@ let addBinTreeTests =
 
 
           testProperty "(AddBinTree tree emptyTree) is tree"
-          <| fun _ ->
-              let len = genRandomLength ()
-              let tree = (genRandomNoneVector len).Data
+          <| fun (len: PositiveInt) ->
+              let tree = (genRandomNoneVector (int len)).Data
               let emptyTree = Empty
 
               let actualResult = parallelAddBinTree tree emptyTree addInt 2
