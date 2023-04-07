@@ -7,6 +7,7 @@
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="AssemblyInfo.fs" />
+        <Compile Include="Generators.fs" />
         <Compile Include="TestMatrices.fs" />
         <Compile Include="Homework1Tests.fs" />
         <Compile Include="LinkedListsTests.fs" />
