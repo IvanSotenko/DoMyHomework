@@ -63,7 +63,11 @@ let expandBinTree tree (actualLen: int) (reqLen: int) =
         tree
     else
 
-        let depth = int (System.Math.Ceiling(System.Math.Log(actualLen, 2)))
+        let depth =
+            if actualLen = 0
+            then 0
+            else
+                int (System.Math.Ceiling(System.Math.Log(actualLen, 2)))
         let targetDepth = int (System.Math.Ceiling(System.Math.Log(reqLen, 2)))
 
         let rec expand tree curDepth =
