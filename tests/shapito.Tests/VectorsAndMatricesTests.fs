@@ -93,7 +93,10 @@ let multiplyTests =
           testPropertyWithConfig config "Multiply function returns fully collapsed tree"
           <| fun (pack: MultipliableVectorAndMatrix<int>) ->
 
-              let actualResult = (vecMatMultiply pack.Vector pack.Matrix addInt multInt 0).Data
+              let actualResult =
+                  (vecMatMultiply pack.Vector pack.Matrix addInt multInt 0)
+                      .Data
+
               let expectedResult = collapseBinTree actualResult
 
               Expect.equal actualResult expectedResult "the results were different" ]
@@ -106,7 +109,7 @@ let vectorTypeTests =
         [
           // Index access
           testProperty "Index access test"
-          <| fun (arr:NonEmptyArray<Option<int>>) ->
+          <| fun (arr: NonEmptyArray<Option<int>>) ->
 
               let vec = Vector(arr.Get)
               let index = rnd.Next(0, arr.Get.Length)
@@ -216,7 +219,9 @@ let BinTreeTests =
 
               let expectedResult = vec.Data
 
-              let expanded = expandBinTree expectedResult vec.Length (vec.Length + additionalLen.Get)
+              let expanded =
+                  expandBinTree expectedResult vec.Length (vec.Length + additionalLen.Get)
+
               let actualResult = cutBinTree expanded vec.Length (vec.Length + additionalLen.Get)
 
               Expect.equal actualResult expectedResult "the results were different" ]

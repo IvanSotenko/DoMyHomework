@@ -58,7 +58,10 @@ let multiplyTests =
           testPropertyWithConfig config "Multiply function returns fully collapsed tree"
           <| fun (pack: MultipliableVectorAndMatrix<int>) ->
 
-              let actualResult = (vecMatMultiply pack.Vector pack.Matrix addInt multInt 2).Data
+              let actualResult =
+                  (vecMatMultiply pack.Vector pack.Matrix addInt multInt 2)
+                      .Data
+
               let expectedResult = collapseBinTree actualResult
 
               Expect.equal actualResult expectedResult "the results were different" ]
