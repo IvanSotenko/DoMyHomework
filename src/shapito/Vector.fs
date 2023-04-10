@@ -40,8 +40,15 @@ type Vector<'A when 'A: equality> =
                 find this.Data i (len - 1) (len / 2)
 
 
-let map2 (mapping: Option<'A> -> Option<'B> -> Option<'C>) (vector1: Vector<'A>) (vector2: Vector<'B>) : Vector<'C> =
+let map2
+    (mapping: Option<'A> -> Option<'B> -> Option<'C>)
+    (vector1: Vector<'A>)
+    (vector2: Vector<'B>)
+    (pLevel: int)
+    : Vector<'C> =
+
     if vector1.Length <> vector2.Length then
-        failwith "Map2 cannot be executed: vector lengths do not match"
+        failwith
+            $"Map2 cannot be executed: vector lengths do not match. Lengths of vectors are {vector1.Length} and {vector2.Length}"
     else
-        Vector(addBinTree vector1.Data vector2.Data mapping, vector1.Length)
+        Vector(parallelAddBinTree vector1.Data vector2.Data mapping pLevel, vector1.Length)

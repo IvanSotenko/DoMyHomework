@@ -40,7 +40,7 @@ let BFSTest =
               let verts = randomVerts 115u
 
               let expectedResult = (naiveBFS verts testMat1).Data
-              let actualResult = (BFS verts testMat1).Data
+              let actualResult = (BFS verts testMat1 0).Data
 
               Expect.equal actualResult expectedResult $"the results were different, startVerts = {verts}"
 
@@ -51,7 +51,7 @@ let BFSTest =
               let verts = randomVerts 131u
 
               let expectedResult = (naiveBFS verts testMat2).Data
-              let actualResult = (BFS verts testMat2).Data
+              let actualResult = (BFS verts testMat2 0).Data
 
               Expect.equal actualResult expectedResult $"the results were different, startVerts = {verts}"
 
@@ -62,7 +62,7 @@ let BFSTest =
               let verts = randomVerts 100u
 
               let expectedResult = (naiveBFS verts testMat3).Data
-              let actualResult = (BFS verts testMat3).Data
+              let actualResult = (BFS verts testMat3 0).Data
 
               Expect.equal actualResult expectedResult $"the results were different, startVerts = {verts}"
 
@@ -72,7 +72,7 @@ let BFSTest =
 
               let verts = []
               let expectedResult = BinTree.Empty
-              let actualResult = (BFS verts testMat3).Data
+              let actualResult = (BFS verts testMat3 0).Data
 
               Expect.equal actualResult expectedResult "the results were different"
 
@@ -84,6 +84,6 @@ let BFSTest =
               let mat = Matrix(QTree.Empty, 100, 100)
 
               let expectedResult = BinTree.Empty
-              let actualResult = (BFS verts mat).Data
+              let actualResult = (BFS verts mat 0).Data
 
               Expect.equal actualResult expectedResult "the results were different" ]

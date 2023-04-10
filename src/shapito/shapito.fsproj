@@ -27,7 +27,13 @@
         <Compile Include="Vector.fs" />
         <Compile Include="MatrixAlgebra.fs" />
         <Compile Include="BFS.fs" />
+        <Compile Include="OptionIntOperations.fs" />
+        <Compile Include="RandomGeneration.fs" />
+        <Compile Include="Benchmarks.fs" />
         <Compile Include="Main.fs" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="BenchmarkDotNet" Version="0.13.5" />
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

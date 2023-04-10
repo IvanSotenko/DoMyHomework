@@ -31,30 +31,6 @@ let resultMask iterNum a b =
     | None, Some _ -> Some iterNum
     | None, None -> None
 
-let BFS (startVertices: uint list) (adjMat: Matrix<'A>) =
-
-    let set = Set.ofList startVertices
-    let initMarkFront (index: int) =
-        if Set.contains (uint (index + 1)) set then
-            Some Mark
-        else
-            None
-
-    let front = Vector(init adjMat.Length1 initMarkFront, adjMat.Length1)
-    let result = Vector(Empty, adjMat.Length1)
-
-    let rec subBFS front result iterNum =
-
-        let newFront = map2 frontMask (vecMatMultiply front adjMat add mult) result
-
-        if newFront.IsEmpty then
-            result
-        else
-            subBFS newFront (map2 (resultMask iterNum) result newFront) (iterNum + 1u)
-
-    subBFS front result 1u
-
-
 
 // Naive iterative BFS using queue
 let increaseBy1 (a: Option<uint>) =
@@ -101,3 +77,29 @@ let naiveBFS (startVertices: uint list) (adjMat: Matrix<'A>) =
                     queue.Enqueue(uint (indW + 1))
 
     Vector(result)
+
+
+let BFS (startVertices: uint list) (adjMat: Matrix<'A>) pLevel =
+
+    let set = Set.ofList startVertices
+
+    let initMarkFront (index: int) =
+        if Set.contains (uint (index + 1)) set then
+            Some Mark
+        else
+            None
+
+    let front = Vector(init adjMat.Length1 initMarkFront, adjMat.Length1)
+    let result = Vector(Empty, adjMat.Length1)
+
+    let rec subBFS front result iterNum =
+
+        let newFront =
+            map2 frontMask (vecMatMultiply front adjMat add mult pLevel) result pLevel
+
+        if newFront.IsEmpty then
+            result
+        else
+            subBFS newFront (map2 (resultMask iterNum) result newFront pLevel) (iterNum + 1u)
+
+    subBFS front result 1u

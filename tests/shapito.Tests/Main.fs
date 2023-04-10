@@ -1,9 +1,10 @@
 namespace DoMyHomework.Tests
 
-module ExpectoTemplate =
+module testRunner =
 
     open Expecto
 
     [<EntryPoint>]
     let main argv =
-        Tests.runTestsInAssembly defaultConfig argv
+        runTestsInAssembly defaultConfig argv |> ignore
+        0

@@ -1,5 +1,7 @@
 module DoMyHomework.BinTree
 
+open Microsoft.FSharp.Control
+
 type BinTree<'Value> =
     | Node of leftChild: BinTree<'Value> * rightChild: BinTree<'Value>
     | Leaf of value: 'Value
@@ -61,7 +63,12 @@ let expandBinTree tree (actualLen: int) (reqLen: int) =
         tree
     else
 
-        let depth = int (System.Math.Ceiling(System.Math.Log(actualLen, 2)))
+        let depth =
+            if actualLen = 0 then
+                0
+            else
+                int (System.Math.Ceiling(System.Math.Log(actualLen, 2)))
+
         let targetDepth = int (System.Math.Ceiling(System.Math.Log(reqLen, 2)))
 
         let rec expand tree curDepth =
@@ -131,3 +138,68 @@ let init (count: int) (initializer: int -> Option<'A>) : BinTree<'A> =
                 Node(left, right) |> binCollapse
 
         subInit depth 0
+
+let parallelAddBinTree
+    (tree1: BinTree<'A>)
+    (tree2: BinTree<'B>)
+    (func: Option<'A> -> Option<'B> -> Option<'C>)
+    (pLevel: int)
+    =
+
+    let rec core tree1 tree2 pLevel =
+
+        let parallelCompute (l1, l2) (r1, r2) pLevel =
+            let tasks =
+                [ async { return core l1 l2 pLevel }
+                  async { return core r1 r2 pLevel } ]
+
+            let nodes = tasks |> Async.Parallel |> Async.RunSynchronously
+
+            if (Array.length nodes) <> 2 then
+                printfn $"ERROR: {nodes}"
+
+            Node(nodes[0], nodes[1]) |> binCollapse
+
+        if pLevel = 0 then
+            addBinTree tree1 tree2 func
+        else
+            match tree1, tree2 with
+            | Node (l1, r1), Node (l2, r2) -> parallelCompute (l1, l2) (r1, r2) (pLevel - 1)
+            | Node (l, r), leafOrEmpty -> parallelCompute (l, leafOrEmpty) (r, leafOrEmpty) (pLevel - 1)
+            | leafOrEmpty, Node (l, r) -> parallelCompute (leafOrEmpty, l) (leafOrEmpty, r) (pLevel - 1)
+
+            | leafOrEmpty1, leafOrEmpty2 ->
+                (func (BinTreeToOption leafOrEmpty1) (BinTreeToOption leafOrEmpty2))
+                |> optionToBinTree
+
+    core tree1 tree2 pLevel
+
+
+let rec min (tree: BinTree<'A>) : Option<'A> =
+    match tree with
+    | Empty -> None
+    | Leaf v -> Some v
+    | Node (l, r) ->
+        match (min l), (min r) with
+        | noneOrLeaf, None
+        | None, noneOrLeaf -> noneOrLeaf
+        | l, r -> Operators.min l r
+
+
+let pMin level tree =
+
+    let rec collectTasks level tree =
+        if level = 0 then
+            [ async { return min tree } ]
+        else
+            match tree with
+            | Leaf _
+            | Empty -> [ async { return min tree } ]
+            | Node (l, r) ->
+                (collectTasks (level - 1) l)
+                @ (collectTasks (level - 1) r)
+
+    let tasks = collectTasks level tree
+    let values = tasks |> Async.Parallel |> Async.RunSynchronously
+
+    Array.min values
